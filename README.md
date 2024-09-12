@@ -1,2 +1,0 @@
-# deepgesture-unity
-DeepGesture Unity
