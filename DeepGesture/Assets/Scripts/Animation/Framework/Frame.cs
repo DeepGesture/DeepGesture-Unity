@@ -1,7 +1,7 @@
 ﻿#if UNITY_EDITOR
 using UnityEngine;
 
-namespace AI4Animation {
+namespace OpenHuman {
 	[System.Serializable]
 	public class Frame {
 		public MotionAsset Asset;

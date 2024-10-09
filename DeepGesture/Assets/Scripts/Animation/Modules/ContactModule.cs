@@ -8,7 +8,7 @@ using System;
 using UnityEngine.Events;
 #endif
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public class ContactModule : Module {
 		
 		#if UNITY_EDITOR

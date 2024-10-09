@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using UnityEditor;
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public class StyleModule : Module {
 
 		public enum STATE {Passive, Active, Inactive}

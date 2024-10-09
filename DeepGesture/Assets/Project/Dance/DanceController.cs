@@ -1,10 +1,10 @@
 # if UNITY_EDITOR
 using UnityEngine;
-using AI4Animation;
+using OpenHuman;
 using UltimateIK;
 using Unity.Barracuda;
 
-namespace DeepPhase {
+namespace DeepGesture {
     
     public class DanceController : MonoBehaviour {
 

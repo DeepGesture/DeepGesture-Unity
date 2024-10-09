@@ -7,7 +7,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
-namespace AI4Animation
+namespace OpenHuman
 {
     public class MotionAsset : ScriptableObject
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace AI4Animation
+namespace OpenHuman
 {
     public class AudioSpectrum : ScriptableObject
     {

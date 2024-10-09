@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-namespace AI4Animation {
+namespace OpenHuman {
     public abstract class AssetPipelineSetup : ScriptableObject {
         [NonSerialized] public AssetPipeline Pipeline;
         public abstract void Inspector();

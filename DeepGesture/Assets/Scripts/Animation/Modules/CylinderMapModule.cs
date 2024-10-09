@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public class CylinderMapModule : Module {
 
 		public float Size = 1f;

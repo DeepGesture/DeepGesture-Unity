@@ -4,7 +4,7 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace AI4Animation {
+namespace OpenHuman {
     public class RootVelocityAnalyzer : BatchProcessor {
 
         public float Resolution = 0.1f;

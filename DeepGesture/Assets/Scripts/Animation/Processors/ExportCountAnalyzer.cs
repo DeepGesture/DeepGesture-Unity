@@ -4,7 +4,7 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace AI4Animation {
+namespace OpenHuman {
     public class ExportCountAnalyzer : BatchProcessor {
 
         private MotionEditor Editor = null;

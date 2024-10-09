@@ -4,9 +4,9 @@ using UnityEditor;
 using System;
 using System.Collections;
 using System.Linq;
-using AI4Animation;
+using OpenHuman;
 
-namespace DeepPhase
+namespace DeepGesture
 {
     public class DancePipeline : AssetPipelineSetup 
     {

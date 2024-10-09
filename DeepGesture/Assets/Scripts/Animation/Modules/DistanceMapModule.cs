@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public class DistanceMapModule : Module {
 
 		public Vector3 Size = Vector3.one;

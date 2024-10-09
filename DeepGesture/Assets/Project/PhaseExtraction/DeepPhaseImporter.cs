@@ -4,7 +4,7 @@ using UnityEditor;
 using System.IO;
 using System.Collections;
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public class DeepPhaseImporter : EditorWindow {
 
 		public static EditorWindow Window;

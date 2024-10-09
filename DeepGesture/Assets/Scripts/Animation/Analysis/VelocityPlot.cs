@@ -1,7 +1,7 @@
 ﻿#if UNITY_EDITOR
 using UnityEngine;
 
-namespace AI4Animation {
+namespace OpenHuman {
     public class VelocityPlot : MonoBehaviour {
 
         public float ArrowSize = 0.1f;

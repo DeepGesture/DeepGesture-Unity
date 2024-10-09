@@ -1,12 +1,12 @@
 # if UNITY_EDITOR
 
 using UnityEngine;
-using AI4Animation;
+using OpenHuman;
 using UltimateIK;
 using System.Collections.Generic;
 using Unity.Barracuda;
 
-namespace DeepPhase {
+namespace DeepGesture {
     public class QuadrupedController_GNN : AnimationController {
 
         public ONNXNetwork NeuralNetwork;

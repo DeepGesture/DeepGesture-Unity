@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public class DeepPhaseModule : Module {
 
         public Channel[] Channels = new Channel[0];

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 #endif
 
-namespace AI4Animation {
+namespace OpenHuman {
     public class AlignmentModule : Module {
 
         #if UNITY_EDITOR

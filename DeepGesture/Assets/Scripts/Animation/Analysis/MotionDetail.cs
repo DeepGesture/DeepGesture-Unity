@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using AI4Animation;
+using OpenHuman;
 
 public class MotionDetail : MonoBehaviour {
 

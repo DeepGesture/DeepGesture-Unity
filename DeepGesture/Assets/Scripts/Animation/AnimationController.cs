@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using AI4Animation;
+using OpenHuman;
 
 [RequireComponent(typeof(Actor))]
 public abstract class AnimationController : MonoBehaviour {

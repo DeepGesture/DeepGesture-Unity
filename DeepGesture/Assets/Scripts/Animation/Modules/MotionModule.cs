@@ -3,7 +3,7 @@
 using UnityEditor;
 #endif
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public class MotionModule : Module {
 
 		#if UNITY_EDITOR

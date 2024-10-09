@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEditorInternal;
 #endif
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public class RootModule : Module {
 
 		#if UNITY_EDITOR

@@ -6,7 +6,7 @@
 // using System.Collections;
 // using System.IO;
 
-// namespace AI4Animation {
+// namespace OpenHuman {
 //     public class BVHExporter : BatchProcessor {
 //         public bool OfflineProcessing = false;
 //         public string Destination = string.Empty;

@@ -2,9 +2,9 @@
 
 using UnityEngine;
 using UnityEditor;
-using AI4Animation;
+using OpenHuman;
 
-namespace DeepPhase {
+namespace DeepGesture {
     public class MusicClipPlayer : MonoBehaviour {
 
         public AudioSpectrum AudioSpectrum;

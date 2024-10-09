@@ -3,7 +3,7 @@
 using UnityEditor;
 #endif
 
-namespace AI4Animation {
+namespace OpenHuman {
 	[System.Serializable]
 	public class Interval {
 		public int Start;

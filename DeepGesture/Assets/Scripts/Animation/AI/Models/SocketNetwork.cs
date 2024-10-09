@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace AI4Animation {
+namespace OpenHuman {
     
     [Serializable]
     public class SocketNetwork : NeuralNetwork {

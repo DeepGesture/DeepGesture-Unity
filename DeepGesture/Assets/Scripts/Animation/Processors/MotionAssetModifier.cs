@@ -7,7 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Serialization;
 
-namespace AI4Animation {
+namespace OpenHuman {
     public class MotionAssetModifier : BatchProcessor {
 
         public string Source = string.Empty;

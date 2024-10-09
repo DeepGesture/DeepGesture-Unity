@@ -5,7 +5,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace AI4Animation {
+namespace OpenHuman {
     public class MotionAssetCopier : BatchProcessor {
 
         public string Source = string.Empty;

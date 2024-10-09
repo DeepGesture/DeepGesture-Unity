@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AI4Animation {
+namespace OpenHuman {
     public class FootSkating : MonoBehaviour {
 
         public float Framerate = 60f;

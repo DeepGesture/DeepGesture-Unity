@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public class FootSliding : MonoBehaviour {
 
 		public int Frames = 100;

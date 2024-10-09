@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Globalization;
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public class AssetPipeline : BatchProcessor {
 
 		public AssetPipelineSetup Setup = null;

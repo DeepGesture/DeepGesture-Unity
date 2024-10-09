@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public class ClassificationModule : Module {
 
 		public float Threshold = 0.25f;

@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public abstract class BatchProcessor : EditorWindow {
 
 		[System.Serializable]

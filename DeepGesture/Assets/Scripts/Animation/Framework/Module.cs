@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEditor;
 #endif
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public abstract class Module : ScriptableObject {
 
 		#if UNITY_EDITOR

@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEditor;
-using AI4Animation;
+using OpenHuman;
 
 public class Example_ONNX : MonoBehaviour {
 

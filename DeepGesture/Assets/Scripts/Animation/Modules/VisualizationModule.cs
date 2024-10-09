@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public class VisualizationModule : Module {
 
         public float LineWidth = 0.025f;

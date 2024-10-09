@@ -6,7 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace AI4Animation {
+namespace OpenHuman {
 	[ExecuteInEditMode]
 	public class MotionEditor : MonoBehaviour {
 		public bool AutoSave = true;

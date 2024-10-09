@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Winterdust;
-using AI4Animation;
+using OpenHuman;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

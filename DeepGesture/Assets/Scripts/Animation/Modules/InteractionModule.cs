@@ -1,7 +1,7 @@
 ﻿#if UNITY_EDITOR
 using UnityEditor;
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public class MultiAssetModule : Module {
 		
 		public string[] Assets = new string[0];

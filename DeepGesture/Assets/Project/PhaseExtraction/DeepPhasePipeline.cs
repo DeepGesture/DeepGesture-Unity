@@ -3,9 +3,9 @@ using UnityEngine;
 using UnityEditor;
 using System;
 using System.Collections;
-using AI4Animation;
+using OpenHuman;
 
-namespace DeepPhase
+namespace DeepGesture
 {
     public class DeepPhasePipeline : AssetPipelineSetup
     {

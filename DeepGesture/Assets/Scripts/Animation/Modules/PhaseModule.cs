@@ -4,7 +4,7 @@ using UnityEditor;
 using System;
 using System.Threading.Tasks;
 
-namespace AI4Animation {
+namespace OpenHuman {
     public class PhaseModule : Module {
 
         public int MaxIterations = 10;

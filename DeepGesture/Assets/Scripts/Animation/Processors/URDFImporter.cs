@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System;
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public class URDFImporter : EditorWindow {
 
 		[MenuItem ("AI4Animation/Importer/URDF Importer")]

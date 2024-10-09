@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public class AudioSpectrumModule : Module {
         
         public AudioSpectrum AudioSpectrum = null;

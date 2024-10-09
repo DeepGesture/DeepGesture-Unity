@@ -4,9 +4,9 @@ using UnityEditor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using AI4Animation;
+using OpenHuman;
 
-namespace DeepPhase {
+namespace DeepGesture {
     public class QuadrupedPipeline : AssetPipelineSetup {
 
         public enum MODE {ProcessAssets, ExportController, ExportControllerLMP, ExportControllerMANN};

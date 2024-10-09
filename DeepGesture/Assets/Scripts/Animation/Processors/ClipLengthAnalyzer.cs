@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 
-namespace AI4Animation {
+namespace OpenHuman {
     public class ClipLengthAnalyzer : BatchProcessor {
 
         public float Resolution = 0.1f;

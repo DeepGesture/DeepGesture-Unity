@@ -5,9 +5,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using AI4Animation;
+using OpenHuman;
 
-namespace DeepPhase
+namespace DeepGesture
 {
     // public class BipedPipeline : QuadrupedPipeline
     public class BipedPipeline: AssetPipelineSetup

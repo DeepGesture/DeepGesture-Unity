@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using AI4Animation;
+using OpenHuman;
 
 public class MotionRecording : ScriptableObject {
 

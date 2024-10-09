@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditorInternal;
 
-namespace AI4Animation {
+namespace OpenHuman {
 	public class SineModule : Module {
 
         public float MinAmplitude;
