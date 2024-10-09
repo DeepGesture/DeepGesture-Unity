@@ -152,13 +152,13 @@ public class EditorCoroutines
 		}
 		else
 		{
-			returnValue = methodInfo.Invoke(thisReference, new object[] {value});
+			returnValue = methodInfo.Invoke(thisReference, new object[] { value });
 		}
 
 		if (returnValue is IEnumerator)
 		{
 			CreateInstanceIfNeeded();
-			return instance.GoStartCoroutine((IEnumerator) returnValue, thisReference);
+			return instance.GoStartCoroutine((IEnumerator)returnValue, thisReference);
 		}
 		else
 		{
@@ -291,7 +291,7 @@ public class EditorCoroutines
 
 	void OnUpdate()
 	{
-		float deltaTime = (float) (DateTime.Now.Subtract(previousTimeSinceStartup).TotalMilliseconds / 1000.0f);
+		float deltaTime = (float)(DateTime.Now.Subtract(previousTimeSinceStartup).TotalMilliseconds / 1000.0f);
 
 		previousTimeSinceStartup = DateTime.Now;
 		if (coroutineDict.Count == 0)
@@ -352,11 +352,11 @@ public class EditorCoroutines
 		else if (current is WaitForSeconds)
 		{
 			float seconds = float.Parse(GetInstanceField(typeof(WaitForSeconds), current, "m_Seconds").ToString());
-			coroutine.currentYield = new YieldWaitForSeconds() {timeLeft = (float) seconds};
+			coroutine.currentYield = new YieldWaitForSeconds() { timeLeft = (float)seconds };
 		}
 		else if (current is UnityWebRequest)
 		{
-			coroutine.currentYield = new YieldWWW {WWW = (UnityWebRequest) current};
+			coroutine.currentYield = new YieldWWW { WWW = (UnityWebRequest)current };
 		}
 		else if (current is WaitForFixedUpdate)
 		{
@@ -364,11 +364,11 @@ public class EditorCoroutines
 		}
 		else if (current is AsyncOperation)
 		{
-			coroutine.currentYield = new YieldAsync {asyncOperation = (AsyncOperation) current};
+			coroutine.currentYield = new YieldAsync { asyncOperation = (AsyncOperation)current };
 		}
 		else if (current is EditorCoroutine)
 		{
-			coroutine.currentYield = new YieldNestedCoroutine { coroutine= (EditorCoroutine) current};
+			coroutine.currentYield = new YieldNestedCoroutine { coroutine = (EditorCoroutine)current };
 		}
 		else
 		{

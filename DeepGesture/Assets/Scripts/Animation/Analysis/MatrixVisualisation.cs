@@ -41,7 +41,7 @@
 //     }
 
 // 	void FixedUpdate() {
-// 		if(GetComponent<AI4Animation.AnimationController>().SkipVisualizer) {
+// 		if(GetComponent<OpenHuman.AnimationController>().SkipVisualizer) {
 // 			return;
 // 		}
         

@@ -15,7 +15,7 @@ namespace OpenHuman {
 		private List<string> Imported;
 		private List<string> Skipped;
 
-		[MenuItem ("AI4Animation/Importer/FBX Importer")]
+		[MenuItem ("OpenHuman/Importer/FBX Importer")]
 		static void Init() {
 			Window = EditorWindow.GetWindow(typeof(FBXImporter));
 			Scroll = Vector3.zero;

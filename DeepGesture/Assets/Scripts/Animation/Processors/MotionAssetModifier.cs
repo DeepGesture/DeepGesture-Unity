@@ -42,7 +42,7 @@ namespace OpenHuman {
 		private List<string> Imported;
 		private List<string> Skipped;
 
-        [MenuItem ("AI4Animation/Tools/Motion Asset Modifier")]
+        [MenuItem ("OpenHuman/Tools/Motion Asset Modifier")]
         static void Init() {
             Window = EditorWindow.GetWindow(typeof(MotionAssetModifier));
             Scroll = Vector3.zero;

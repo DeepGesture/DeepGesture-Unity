@@ -16,7 +16,7 @@
 //         private List<string> BoneMapping = new List<string>();
 //         private List<Quaternion> TPoseRotation = new List<Quaternion>();
 
-//         [MenuItem ("AI4Animation/Exporter/BVH Exporter")]
+//         [MenuItem ("OpenHuman/Exporter/BVH Exporter")]
 //         static void Init() {
 //             Window = EditorWindow.GetWindow(typeof(BVHExporter));
 //             Scroll = Vector3.zero;

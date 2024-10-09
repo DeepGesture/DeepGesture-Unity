@@ -9,7 +9,7 @@ using System;
 namespace OpenHuman {
 	public class URDFImporter : EditorWindow {
 
-		[MenuItem ("AI4Animation/Importer/URDF Importer")]
+		[MenuItem ("OpenHuman/Importer/URDF Importer")]
 		static void Init() {
 			EditorWindow window = EditorWindow.GetWindow(typeof (URDFImporter));
 			window.minSize = new Vector2(500, 145);

@@ -17,7 +17,7 @@ namespace OpenHuman {
 		private List<string> Imported;
 		private List<string> Skipped;
 
-		[MenuItem ("AI4Animation/Importer/BVH Importer")]
+		[MenuItem ("OpenHuman/Importer/BVH Importer")]
 		static void Init() {
 			Window = EditorWindow.GetWindow(typeof(BVHImporter));
 			Scroll = Vector3.zero;

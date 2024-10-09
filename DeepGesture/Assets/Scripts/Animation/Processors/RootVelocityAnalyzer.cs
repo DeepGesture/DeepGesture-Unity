@@ -13,7 +13,7 @@ namespace OpenHuman {
 
         private MotionEditor Editor = null;
 
-        [MenuItem ("AI4Animation/Tools/Root Velocity Analyzer")]
+        [MenuItem ("OpenHuman/Tools/Root Velocity Analyzer")]
         static void Init() {
             Window = EditorWindow.GetWindow(typeof(RootVelocityAnalyzer));
             Scroll = Vector3.zero;

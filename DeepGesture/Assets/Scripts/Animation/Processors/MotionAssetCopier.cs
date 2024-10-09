@@ -14,7 +14,7 @@ namespace OpenHuman {
 		private List<string> Imported;
 		private List<string> Skipped;
 
-        [MenuItem ("AI4Animation/Tools/Motion Asset Copier")]
+        [MenuItem ("OpenHuman/Tools/Motion Asset Copier")]
         static void Init() {
             Window = EditorWindow.GetWindow(typeof(MotionAssetCopier));
             Scroll = Vector3.zero;

@@ -9,7 +9,7 @@ public class ScriptableObjectCreator : EditorWindow {
 
     public string Type = string.Empty;
 
-	[MenuItem ("AI4Animation/Tools/Scriptable Object Creator")]
+	[MenuItem ("OpenHuman/Tools/Scriptable Object Creator")]
 	static void Init() {
 		Window = EditorWindow.GetWindow(typeof(ScriptableObjectCreator));
 		Scroll = Vector3.zero;

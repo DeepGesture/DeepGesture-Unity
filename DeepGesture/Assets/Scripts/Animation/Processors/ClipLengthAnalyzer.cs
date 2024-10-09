@@ -11,7 +11,7 @@ namespace OpenHuman {
 
 		private MotionEditor Editor = null;
 
-        [MenuItem ("AI4Animation/Tools/Clip Length Analyzer")]
+        [MenuItem ("OpenHuman/Tools/Clip Length Analyzer")]
         static void Init() {
             Window = EditorWindow.GetWindow(typeof(ClipLengthAnalyzer));
             Scroll = Vector3.zero;

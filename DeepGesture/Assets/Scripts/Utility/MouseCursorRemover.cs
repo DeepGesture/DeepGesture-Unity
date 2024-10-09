@@ -28,7 +28,7 @@ public class MouseCursorRemover : EditorWindow {
     private Texture2D Extracted = null;
     private Texture2D Filtered = null;
 
-	[MenuItem ("AI4Animation/Tools/Mouse Cursor Remover")]
+	[MenuItem ("OpenHuman/Tools/Mouse Cursor Remover")]
 	static void Init() {
 		Window = EditorWindow.GetWindow(typeof(MouseCursorRemover));
 		Scroll = Vector3.zero;

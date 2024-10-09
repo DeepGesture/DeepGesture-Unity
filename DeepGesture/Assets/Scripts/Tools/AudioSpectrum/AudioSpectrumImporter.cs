@@ -14,7 +14,7 @@ namespace OpenHuman
 		public string Destination = string.Empty;
 		public int Framerate = 60;
 
-		[MenuItem("AI4Animation/Importer/Audio Spectrum Importer")]
+		[MenuItem("OpenHuman/Importer/Audio Spectrum Importer")]
 		static void Init()
 		{
 			Window = EditorWindow.GetWindow(typeof(AudioSpectrumImporter));

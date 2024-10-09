@@ -17,7 +17,7 @@ namespace OpenHuman {
 
 		private MotionAsset Asset;
 
-		[MenuItem ("AI4Animation/Importer/FBX Connect Importer")]
+		[MenuItem ("OpenHuman/Importer/FBX Connect Importer")]
 		static void Init() {
 			Window = EditorWindow.GetWindow(typeof(FBXConnectImporter));
 			Scroll = Vector3.zero;

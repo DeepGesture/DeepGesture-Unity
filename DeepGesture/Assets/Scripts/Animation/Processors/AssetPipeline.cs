@@ -16,7 +16,7 @@ namespace OpenHuman {
 
 		private MotionEditor Editor = null;
 
-		[MenuItem ("AI4Animation/Tools/Asset Pipeline")]
+		[MenuItem ("OpenHuman/Tools/Asset Pipeline")]
 		static void Init() {
 			Window = EditorWindow.GetWindow(typeof(AssetPipeline));
 			Scroll = Vector3.zero;
