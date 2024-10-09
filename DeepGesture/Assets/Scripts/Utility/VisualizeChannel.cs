@@ -20,6 +20,7 @@ public class VisualizeChannel : EditorWindow
 	public bool DrawWindowPoses = false;
 	public bool DrawPhaseSpace = true;
 	public bool DrawPivot = true;
+	public float LineHeight = 50f;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -77,6 +78,8 @@ public class VisualizeChannel : EditorWindow
 
 		if (editor == null) { return; }
 		if (asset == null) { return; }
+		if (module == null) { return; }
+		if (channels == null) { return; }
 
 		Scroll = EditorGUILayout.BeginScrollView(Scroll);
 
@@ -97,6 +100,7 @@ public class VisualizeChannel : EditorWindow
 			ShowNormalized = EditorGUILayout.Toggle("Show Normalized", ShowNormalized);
 			DrawWindowPoses = EditorGUILayout.Toggle("Draw Window Poses", DrawWindowPoses);
 			DrawPhaseSpace = EditorGUILayout.Toggle("Draw Phase Space", DrawPhaseSpace);
+			LineHeight = EditorGUILayout.Slider("Line Height", LineHeight, 10f, 100f);
 			GUILayout.Space(10f);
 
 			Vector3Int view = GetView();
@@ -105,20 +109,21 @@ public class VisualizeChannel : EditorWindow
 			float max = 1f;
 			float maxAmplitude = 1f;
 			float maxFrequency = editor.GetTimeSeries().MaximumFrequency;
-			// float maxOffset = 1f;
-			// if (ShowNormalized)
-			// {
-			// 	maxAmplitude = 0f;
-			// 	foreach (DeepPhaseModule.Channel c in Channels)
-			// 	{
-			// 		maxAmplitude = Mathf.Max(maxAmplitude, (Mirror ? c.MirroredAmplitudes : c.RegularAmplitudes).Max());
-			// 	}
-			// }
-
-			foreach (DeepPhaseModule.Channel c in channels)
+			float maxOffset = 1f;
+			if (ShowNormalized)
 			{
-				EditorGUILayout.Space(40f);
-				EditorGUILayout.LabelField("Channel: ");
+				maxAmplitude = 0f;
+				foreach (DeepPhaseModule.Channel c in channels)
+				{
+					maxAmplitude = Mathf.Max(maxAmplitude, (Mirror ? c.MirroredAmplitudes : c.RegularAmplitudes).Max());
+				}
+			}
+
+			for (int i = 0; i < channels.Length; i++)
+			{
+				DeepPhaseModule.Channel c = channels[i];
+				EditorGUILayout.Space(50f);
+				EditorGUILayout.LabelField("Channel: " + i, EditorStyles.miniLabel);
 				EditorGUILayout.BeginHorizontal();
 
 				EditorGUILayout.BeginVertical(GUILayout.Height(height));
@@ -129,9 +134,9 @@ public class VisualizeChannel : EditorWindow
 				// Zero
 				{
 					float prevX = rect.xMin;
-					float prevY = rect.yMax - (0f).Normalize(min, max, 0f, 1f) * rect.height;
+					float prevY = rect.yMax - (0f).Normalize(min, max, 0f, 1f) * LineHeight;
 					float newX = rect.xMin + rect.width;
-					float newY = rect.yMax - (0f).Normalize(min, max, 0f, 1f) * rect.height;
+					float newY = rect.yMax - (0f).Normalize(min, max, 0f, 1f) * LineHeight;
 					UltiDraw.Begin();
 					UltiDraw.DrawLine(new Vector3(prevX, prevY), new Vector3(newX, newY), UltiDraw.White.Opacity(0.5f));
 					UltiDraw.End();
@@ -144,7 +149,7 @@ public class VisualizeChannel : EditorWindow
 					float prevX = rect.xMin + (float)(j) / (view.z - 1) * rect.width;
 					float prevY = rect.yMax;
 					float newX = rect.xMin + (float)(j) / (view.z - 1) * rect.width;
-					float newY = rect.yMax - c.GetPhaseValue(asset.GetFrame(view.x + j).Timestamp, Mirror) * rect.height;
+					float newY = rect.yMax - c.GetPhaseValue(asset.GetFrame(view.x + j).Timestamp, Mirror) * LineHeight;
 					float weight = c.GetAmplitude(asset.GetFrame(view.x + j).Timestamp, Mirror).Normalize(0f, maxAmplitude, 0f, 1f);
 					UltiDraw.Begin();
 					UltiDraw.DrawLine(new Vector3(prevX, prevY), new Vector3(newX, newY), UltiDraw.Cyan.Opacity(weight));
@@ -155,26 +160,26 @@ public class VisualizeChannel : EditorWindow
 				for (int j = 1; j < view.z; j++)
 				{
 					float prevX = rect.xMin + (float)(j - 1) / (view.z - 1) * rect.width;
-					float prevY = rect.yMax - (float)c.GetManifoldVector(asset.GetFrame(view.x + j - 1).Timestamp, Mirror).x.Normalize(-1f, 1f, 0f, 1f) * rect.height;
+					float prevY = rect.yMax - (float)c.GetManifoldVector(asset.GetFrame(view.x + j - 1).Timestamp, Mirror).x.Normalize(-1f, 1f, 0f, 1f) * LineHeight;
 					float newX = rect.xMin + (float)(j) / (view.z - 1) * rect.width;
-					float newY = rect.yMax - (float)c.GetManifoldVector(asset.GetFrame(view.x + j).Timestamp, Mirror).x.Normalize(-1f, 1f, 0f, 1f) * rect.height;
+					float newY = rect.yMax - (float)c.GetManifoldVector(asset.GetFrame(view.x + j).Timestamp, Mirror).x.Normalize(-1f, 1f, 0f, 1f) * LineHeight;
 					float weight = c.GetAmplitude(asset.GetFrame(view.x + j).Timestamp, Mirror).Normalize(0f, maxAmplitude, 0f, 1f);
-					// UltiDraw.DrawLine(new Vector3(prevX, prevY), new Vector3(newX, newY), UltiDraw.Orange.Opacity(weight));
 					UltiDraw.Begin();
-					UltiDraw.DrawLine(new Vector3(prevX, prevY), new Vector3(newX, newY), UltiDraw.Red.Opacity(weight));
+					// UltiDraw.DrawLine(new Vector3(prevX, prevY), new Vector3(newX, newY), UltiDraw.Red.Opacity(weight));
+					UltiDraw.DrawLine(new Vector3(prevX, prevY), new Vector3(newX, newY), UltiDraw.Orange.Opacity(weight));
 					UltiDraw.End();
 				}
 				// Phase 2D Y (Cosine)
 				for (int j = 1; j < view.z; j++)
 				{
 					float prevX = rect.xMin + (float)(j - 1) / (view.z - 1) * rect.width;
-					float prevY = rect.yMax - (float)c.GetManifoldVector(asset.GetFrame(view.x + j - 1).Timestamp, Mirror).y.Normalize(-1f, 1f, 0f, 1f) * rect.height;
+					float prevY = rect.yMax - (float)c.GetManifoldVector(asset.GetFrame(view.x + j - 1).Timestamp, Mirror).y.Normalize(-1f, 1f, 0f, 1f) * LineHeight;
 					float newX = rect.xMin + (float)(j) / (view.z - 1) * rect.width;
-					float newY = rect.yMax - (float)c.GetManifoldVector(asset.GetFrame(view.x + j).Timestamp, Mirror).y.Normalize(-1f, 1f, 0f, 1f) * rect.height;
+					float newY = rect.yMax - (float)c.GetManifoldVector(asset.GetFrame(view.x + j).Timestamp, Mirror).y.Normalize(-1f, 1f, 0f, 1f) * LineHeight;
 					float weight = c.GetAmplitude(asset.GetFrame(view.x + j).Timestamp, Mirror).Normalize(0f, maxAmplitude, 0f, 1f);
-					// UltiDraw.DrawLine(new Vector3(prevX, prevY), new Vector3(newX, newY), UltiDraw.Magenta.Opacity(weight));
 					UltiDraw.Begin();
-					UltiDraw.DrawLine(new Vector3(prevX, prevY), new Vector3(newX, newY), UltiDraw.Blue.Opacity(weight));
+					UltiDraw.DrawLine(new Vector3(prevX, prevY), new Vector3(newX, newY), UltiDraw.Magenta.Opacity(weight));
+					// UltiDraw.DrawLine(new Vector3(prevX, prevY), new Vector3(newX, newY), UltiDraw.Blue.Opacity(weight));
 					UltiDraw.End();
 				}
 
