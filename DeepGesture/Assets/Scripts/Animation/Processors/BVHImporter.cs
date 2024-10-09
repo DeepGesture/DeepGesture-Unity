@@ -124,6 +124,10 @@ namespace OpenHuman {
 
 				MotionAsset asset = ScriptableObject.CreateInstance<MotionAsset>();
 				asset.name = file.Name;
+
+				// Model: Character
+				asset.Model = "Character";
+
 				AssetDatabase.CreateAsset(asset, target+"/"+asset.name+".asset");
 
 				string[] lines = System.IO.File.ReadAllLines(file.FullName);
@@ -207,68 +211,6 @@ namespace OpenHuman {
 						MotionAsset.Hierarchy.Bone bone = asset.Source.FindBone(name);
 						parent = bone == null || bone.Parent == -1 ? "None" : asset.Source.Bones[bone.Parent].Name;
 					}
-
-					// Old Pipeline
-					// string[] entries = lines[index].Split(whitespace);
-					// for(int entry=0; entry<entries.Length; entry++) {
-					// 	if(entries[entry].Contains("ROOT")) {
-					// 		parent = "None";
-					// 		name = entries[entry+1];
-					// 		break;
-					// 	} else if(entries[entry].Contains("JOINT")) {
-					// 		parent = name;
-					// 		name = entries[entry+1];
-					// 		break;
-					// 	} else if(entries[entry].Contains("End")) {
-					// 		parent = name;
-					// 		name = name+entries[entry+1];
-					// 		string[] subEntries = lines[index+2].Split(whitespace);
-					// 		for(int subEntry=0; subEntry<subEntries.Length; subEntry++) {
-					// 			if(subEntries[subEntry].Contains("OFFSET")) {
-					// 				offset.x = FileUtility.ReadFloat(subEntries[subEntry+1]);
-					// 				offset.y = FileUtility.ReadFloat(subEntries[subEntry+2]);
-					// 				offset.z = FileUtility.ReadFloat(subEntries[subEntry+3]);
-					// 				break;
-					// 			}
-					// 		}
-					// 		asset.Source.AddBone(name, parent);
-					// 		offsets.Add(offset);
-					// 		channels.Add(new int[0]);
-					// 		index += 2;
-					// 		break;
-					// 	} else if(entries[entry].Contains("OFFSET")) {
-					// 		offset.x = FileUtility.ReadFloat(entries[entry+1]);
-					// 		offset.y = FileUtility.ReadFloat(entries[entry+2]);
-					// 		offset.z = FileUtility.ReadFloat(entries[entry+3]);
-					// 		break;
-					// 	} else if(entries[entry].Contains("CHANNELS")) {
-					// 		channel = new int[FileUtility.ReadInt(entries[entry+1])];
-					// 		for(int i=0; i<channel.Length; i++) {
-					// 			if(entries[entry+2+i] == "Xposition") {
-					// 				channel[i] = 1;
-					// 			} else if(entries[entry+2+i] == "Yposition") {
-					// 				channel[i] = 2;
-					// 			} else if(entries[entry+2+i] == "Zposition") {
-					// 				channel[i] = 3;
-					// 			} else if(entries[entry+2+i] == "Xrotation") {
-					// 				channel[i] = 4;
-					// 			} else if(entries[entry+2+i] == "Yrotation") {
-					// 				channel[i] = 5;
-					// 			} else if(entries[entry+2+i] == "Zrotation") {
-					// 				channel[i] = 6;
-					// 			}
-					// 		}
-					// 		asset.Source.AddBone(name, parent);
-					// 		offsets.Add(offset);
-					// 		channels.Add(channel);
-					// 		break;
-					// 	} else if(entries[entry].Contains("}")) {
-					// 		name = parent;
-					// 		parent = name == "None" ? "None" : asset.Source.FindBone(name).Parent;
-					// 		break;
-					// 	}
-					// }
-					
 				}
 
 				//Set Frames

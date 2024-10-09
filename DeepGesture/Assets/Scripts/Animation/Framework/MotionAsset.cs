@@ -16,12 +16,12 @@ namespace OpenHuman
         public Module[] Modules = new Module[0];
         public Interval[] Sequences = new Interval[0];
 
-        public float Framerate = 1f;
+        public float Framerate = 60f;
 
         public string Model = string.Empty;
         public Vector3 Translation = Vector3.zero;
         public Vector3 Rotation = Vector3.zero;
-        public float Scale = 1f;
+        public float Scale = 0.01f;
         public Axis MirrorAxis = Axis.XPositive;
         public bool Export = true;
         public int[] Symmetry = new int[0];
