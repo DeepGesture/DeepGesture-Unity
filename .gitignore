@@ -130,7 +130,6 @@ crashlytics-build.properties
 Thumbs.db
 Desktop.ini
 
-*.asset
 *.wav
 *.bvh.unity
 *.onnx
