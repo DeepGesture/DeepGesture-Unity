@@ -183,134 +183,15 @@ namespace DeepGesture
         {
             if (mode == Mode.ProcessAssets)
             {
-                foreach (var t in Pipeline.GetEditor().Assets)
+                foreach (string t in Pipeline.GetEditor().Assets)
                 {
                     //MotionAsset.Retrieve(Pipeline.GetEditor().Assets[i]).ResetSequences();
-                    MotionAsset.Retrieve(t).Export = true;
-                }
-
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[0]).SetSequence(0, 2000, 48000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[1]).SetSequence(0, 3800, 23000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[2]).SetSequence(0, 2500, 26500);
-
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[3]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[4]).Export = false;
-
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[5]).SetSequence(0, 700, 43000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[6]).SetSequence(0, 500, 20000);
-
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[7]).SetSequence(0, 2000, 23000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[8]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[9]).SetSequence(0, 2000, 24000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[7]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[8]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[9]).Export = false;
-
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[10]).SetSequence(0, 2000, 30000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[11]).SetSequence(0, 1000, 16000);
-
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[12]).SetSequence(0, 1000, 19500);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[13]).SetSequence(0, 1000, 19500);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[14]).SetSequence(0, 2000, 30000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[12]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[13]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[14]).Export = false;
-
-
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[15]).SetSequence(0, 2000, 30000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[16]).SetSequence(0, 1500, 24000);
-
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[17]).SetSequence(0, 1000, 8000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[18]).SetSequence(0, 2000, 20000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[17]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[18]).Export = false;
-
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[19]).SetSequence(0, 1500, 20000);
-
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[20]).SetSequence(0, 1000, 18000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[21]).SetSequence(0, 2000, 18000);
-
-
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[22]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[23]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[24]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[25]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[26]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[27]).SetSequence(0, 2000, 20000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[22]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[23]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[24]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[25]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[26]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[27]).Export = false;
-
-
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[28]).SetSequence(0, 2000, 30000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[29]).SetSequence(0, 2000, 30000);
-
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[30]).SetSequence(0, 2000, 30000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[31]).SetSequence(0, 2000, 40000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[32]).SetSequence(0, 2000, 20000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[33]).SetSequence(0, 2000, 30000);
-
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[34]).SetSequence(0, 2000, 10000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[35]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[36]).SetSequence(0, 2000, 3000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[37]).SetSequence(0, 2000, 20000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[34]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[35]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[36]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[37]).Export = false;
-
-
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[38]).SetSequence(0, 2000, 10000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[39]).SetSequence(0, 2000, 25000);
-
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[40]).SetSequence(0, 2000, 20000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[41]).SetSequence(0, 2000, 15000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[42]).SetSequence(0, 2000, 20000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[43]).SetSequence(0, 2000, 15000);
-
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[44]).SetSequence(0, 2000, 30000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[45]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[46]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[47]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[48]).SetSequence(0, 2000, 18000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[49]).SetSequence(0, 2000, 10000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[44]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[45]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[46]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[47]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[48]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[49]).Export = false;
-
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[50]).SetSequence(0, 2000, 20000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[51]).SetSequence(0, 2000, 20000);
-
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[52]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[53]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[54]).SetSequence(0, 2000, 15000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[55]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[56]).SetSequence(0, 2000, 15000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[52]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[53]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[54]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[55]).Export = false;
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[56]).Export = false;
-
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[57]).SetSequence(0, 2000, 10000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[58]).SetSequence(0, 2000, 15000);
-
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[59]).SetSequence(0, 2000, 20000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[59]).Export = false;
-
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[60]).SetSequence(0, 2000, 15000);
-                MotionAsset.Retrieve(Pipeline.GetEditor().Assets[61]).SetSequence(0, 2000, 20000);
-
-                foreach (var t in Pipeline.GetEditor().Assets)
-                {
+                    MotionAsset asset = MotionAsset.Retrieve(t);
+                    asset.Export = true;
+                    MotionAsset.Retrieve(t).SetSequence(0, 0, asset.Frames.Length - 1);
                     MotionAsset.Retrieve(t).MarkDirty(true, false);
                 }
+
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
                 Resources.UnloadUnusedAssets();
