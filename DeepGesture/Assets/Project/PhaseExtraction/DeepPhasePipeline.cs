@@ -64,7 +64,7 @@ namespace DeepGesture
             Samples = 0;
             Sequence = 0;
             S = AssetPipeline.Data.CreateFile("Sequences", AssetPipeline.Data.TYPE.Text);
-            X = new AssetPipeline.Data("Data", false, false, true);
+            X = new AssetPipeline.Data("Data", true, false, true);
         }
 
         private void WriteSequenceInfo(int sequence, int frame, bool mirrored, MotionAsset asset)
@@ -151,7 +151,6 @@ namespace DeepGesture
                 X.Feed(DeepPhaseModule.Curves.Collect(timestamp, mirrored), "MotionFeature-");
             }
         }
-
     }
 }
 #endif
