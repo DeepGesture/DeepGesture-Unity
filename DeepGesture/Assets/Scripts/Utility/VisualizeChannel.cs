@@ -19,8 +19,7 @@ public class VisualizeChannel : EditorWindow
 	public bool ShowNormalized = false;
 	public bool DrawWindowPoses = false;
 	public bool DrawPhaseSpace = true;
-	public bool DrawPivot = true;
-	public float LineHeight = 50f;
+	public float LineHeight = 100f;
 	public float TargetFramerate = 60f;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -28,21 +27,18 @@ public class VisualizeChannel : EditorWindow
 	private static MotionEditor editor = null;
 	private static MotionAsset asset = null;
 	private static DeepPhaseModule module = null;
-	// private bool isLoad = false;
 	private DeepPhaseModule.Channel[] channels = null;
 
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~
 	public static float Timestamp = 0f;
 	public static int FrameIndex = 1;
-	public static float Zoom = 0.02f;
+	public static float Zoom = 0.2f;
 	public static float totalTime = 0f;
 	public static float frameRate = 60f;
 	public static string assetName = string.Empty;
-	
 
 
-	public string Type = string.Empty;
 
 	[MenuItem("OpenHuman/Visualize/Visualize Channel")]
 	static void Init()
@@ -103,7 +99,7 @@ public class VisualizeChannel : EditorWindow
 			ShowNormalized = EditorGUILayout.Toggle("Show Normalized", ShowNormalized);
 			DrawWindowPoses = EditorGUILayout.Toggle("Draw Window Poses", DrawWindowPoses);
 			DrawPhaseSpace = EditorGUILayout.Toggle("Draw Phase Space", DrawPhaseSpace);
-			LineHeight = EditorGUILayout.Slider("Line Height", LineHeight, 10f, 100f);
+			LineHeight = EditorGUILayout.Slider("Line Height", LineHeight, 10f, 200f);
 			GUILayout.Space(10f);
 
 			Vector3Int view = GetView();

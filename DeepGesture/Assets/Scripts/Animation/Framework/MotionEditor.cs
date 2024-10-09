@@ -26,7 +26,7 @@ namespace OpenHuman
 		public int FutureKeys = 6;
 		public float PastWindow = 1f;
 		public float FutureWindow = 1f;
-		public int Resolution = 1;
+		public int Resolution = 10;
 		public bool Mirror = false;
 
 		public bool AutoPlay = false;
