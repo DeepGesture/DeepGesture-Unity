@@ -19,7 +19,7 @@ namespace DeepGesture
         public bool DrawAudio = false;
         public bool DrawNoise = false;
 
-        public int Channels = 10;
+        public int Channels = 8;
         public int NoiseSamples = 8;
         [Range(0f, 5f)] public float NoiseStrength = 0f;
         [Range(0f, 5f)] public float NoiseReset = 1f;

@@ -12,7 +12,7 @@ namespace OpenHuman {
 		public string Destination = string.Empty;
 
 		public int Framerate = 60;
-		public float Scale = 1f;
+		public float Scale = 0.01f;
 
 		[MenuItem ("OpenHuman/Importer/FBX Multi Importer")]
 		static void Init() {

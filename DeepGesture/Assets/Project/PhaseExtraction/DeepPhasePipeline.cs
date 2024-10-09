@@ -11,7 +11,7 @@ namespace DeepGesture
     {
         public SocketNetwork Network;
 
-        public int Channels = 5;
+        public int Channels = 8;
         public bool WriteMirror = true;
 
         public string TagSuffix = string.Empty;

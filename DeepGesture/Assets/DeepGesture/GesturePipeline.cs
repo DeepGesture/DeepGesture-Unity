@@ -188,7 +188,7 @@ namespace DeepGesture
                     //MotionAsset.Retrieve(Pipeline.GetEditor().Assets[i]).ResetSequences();
                     MotionAsset asset = MotionAsset.Retrieve(t);
                     asset.Export = true;
-                    MotionAsset.Retrieve(t).SetSequence(0, 0, asset.Frames.Length - 1);
+                    MotionAsset.Retrieve(t).SetSequence(0, 1, asset.Frames.Length - 1);
                     MotionAsset.Retrieve(t).MarkDirty(true, false);
                 }
 
