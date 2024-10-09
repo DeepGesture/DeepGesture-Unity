@@ -21,6 +21,7 @@ public class VisualizeChannel : EditorWindow
 	public bool DrawPhaseSpace = true;
 	public bool DrawPivot = true;
 	public float LineHeight = 50f;
+	public float TargetFramerate = 60f;
 
 	// ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -38,6 +39,7 @@ public class VisualizeChannel : EditorWindow
 	public static float totalTime = 0f;
 	public static float frameRate = 60f;
 	public static string assetName = string.Empty;
+	
 
 
 	public string Type = string.Empty;
@@ -222,7 +224,7 @@ public class VisualizeChannel : EditorWindow
 			{
 				DeepPhaseModule.Channel c = channels[i];
 				EditorGUILayout.LabelField("Channels " + (i + 1), EditorStyles.miniLabel);
-				EditorGUILayout.HelpBox("Frequency: " + c.GetFrequency(Timestamp, editor.Mirror).ToString("F3") + " / " + "Delta: " + (editor.TargetFramerate * c.GetDelta(Timestamp, editor.Mirror, 1f / editor.TargetFramerate)).ToString("F3"), MessageType.None);
+				EditorGUILayout.HelpBox("Frequency: " + c.GetFrequency(Timestamp, Mirror).ToString("F3") + " / " + "Delta: " + (TargetFramerate * c.GetDelta(Timestamp, Mirror, 1f / TargetFramerate)).ToString("F3"), MessageType.None);
 			}
 
 			EditorGUILayout.Space(50f);
@@ -250,9 +252,9 @@ public class VisualizeChannel : EditorWindow
 					for (int j = 1; j < view.z; j++)
 					{
 						prevPos.x = rect.xMin + (float)(j - 1) / (view.z - 1) * rect.width;
-						prevPos.y = rect.yMax - (float)c.GetAmplitude(asset.GetFrame(view.x + j - 1).Timestamp, editor.Mirror).Normalize(0f, maxAmplitude, 0f, 1f) * rect.height;
+						prevPos.y = rect.yMax - (float)c.GetAmplitude(asset.GetFrame(view.x + j - 1).Timestamp, Mirror).Normalize(0f, maxAmplitude, 0f, 1f) * rect.height;
 						newPos.x = rect.xMin + (float)(j) / (view.z - 1) * rect.width;
-						newPos.y = rect.yMax - (float)c.GetAmplitude(asset.GetFrame(view.x + j).Timestamp, editor.Mirror).Normalize(0f, maxAmplitude, 0f, 1f) * rect.height;
+						newPos.y = rect.yMax - (float)c.GetAmplitude(asset.GetFrame(view.x + j).Timestamp, Mirror).Normalize(0f, maxAmplitude, 0f, 1f) * rect.height;
 						UltiDraw.DrawLine(prevPos, newPos, UltiDraw.GetRainbowColor(i, channels.Length));
 					}
 				}
@@ -289,9 +291,9 @@ public class VisualizeChannel : EditorWindow
 					for (int j = 1; j < view.z; j++)
 					{
 						prevPos.x = rect.xMin + (float)(j - 1) / (view.z - 1) * rect.width;
-						prevPos.y = rect.yMax - (float)c.GetFrequency(asset.GetFrame(view.x + j - 1).Timestamp, editor.Mirror).Normalize(0f, maxFrequency, 0f, 1f) * rect.height;
+						prevPos.y = rect.yMax - (float)c.GetFrequency(asset.GetFrame(view.x + j - 1).Timestamp, Mirror).Normalize(0f, maxFrequency, 0f, 1f) * rect.height;
 						newPos.x = rect.xMin + (float)(j) / (view.z - 1) * rect.width;
-						newPos.y = rect.yMax - (float)c.GetFrequency(asset.GetFrame(view.x + j).Timestamp, editor.Mirror).Normalize(0f, maxFrequency, 0f, 1f) * rect.height;
+						newPos.y = rect.yMax - (float)c.GetFrequency(asset.GetFrame(view.x + j).Timestamp, Mirror).Normalize(0f, maxFrequency, 0f, 1f) * rect.height;
 						UltiDraw.DrawLine(prevPos, newPos, UltiDraw.GetRainbowColor(i, channels.Length));
 					}
 				}
@@ -328,9 +330,9 @@ public class VisualizeChannel : EditorWindow
 					for (int j = 1; j < view.z; j++)
 					{
 						prevPos.x = rect.xMin + (float)(j - 1) / (view.z - 1) * rect.width;
-						prevPos.y = rect.yMax - (float)c.GetOffset(asset.GetFrame(view.x + j - 1).Timestamp, editor.Mirror).Normalize(-maxOffset, maxOffset, 0f, 1f) * rect.height;
+						prevPos.y = rect.yMax - (float)c.GetOffset(asset.GetFrame(view.x + j - 1).Timestamp, Mirror).Normalize(-maxOffset, maxOffset, 0f, 1f) * rect.height;
 						newPos.x = rect.xMin + (float)(j) / (view.z - 1) * rect.width;
-						newPos.y = rect.yMax - (float)c.GetOffset(asset.GetFrame(view.x + j).Timestamp, editor.Mirror).Normalize(-maxOffset, maxOffset, 0f, 1f) * rect.height;
+						newPos.y = rect.yMax - (float)c.GetOffset(asset.GetFrame(view.x + j).Timestamp, Mirror).Normalize(-maxOffset, maxOffset, 0f, 1f) * rect.height;
 						UltiDraw.DrawLine(prevPos, newPos, UltiDraw.GetRainbowColor(i, channels.Length));
 					}
 				}
