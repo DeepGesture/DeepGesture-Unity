@@ -296,3 +296,5 @@ Data/*
 150_GVNN.onnx
 DeepGesture/Assets/Project/Dance/Test Music/Mine/116.onnx
 DeepGesture/Assets/Project/Dance/Test Music/Original/150_GVNN.onnx
+
+*.bvh
