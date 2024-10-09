@@ -105,7 +105,7 @@ namespace OpenHuman
             public MotionAsset Asset;
             public Actor Actor;
             public TimeSeries TimeSeries;
-            public Curve[] Curves;
+            public Curve[] Curves; //  [Bones.Length][Frames.Length]
             public float MinView = -2f;
             public float MaxView = 2f;
 
@@ -122,7 +122,7 @@ namespace OpenHuman
                 RootModule rootModule = Asset.GetModule<RootModule>();
                 int[] mapping = Asset.Source.GetBoneIndices(Actor.GetBoneNames());
 
-                Curves = new Curve[mapping.Length];
+                Curves = new Curve[mapping.Length]; // Bone length
                 for (int i = 0; i < Curves.Length; i++)
                 {
                     Curves[i] = new Curve(this);
@@ -141,7 +141,7 @@ namespace OpenHuman
                     // }
 
                     //Velocities
-                    Vector3[] velocities = mirrored ? Curves[i].MirroredValues : Curves[i].OriginalValues;
+                    Vector3[] velocities = mirrored ? Curves[i].MirroredValues : Curves[i].OriginalValues; // assign pointer reference value
                     {
                         for (int j = 0; j < velocities.Length; j++)
                         {
@@ -222,8 +222,8 @@ namespace OpenHuman
             public class Curve
             {
                 public CurveSeries Series;
-                public Vector3[] OriginalValues;
-                public Vector3[] MirroredValues;
+                public Vector3[] OriginalValues; // [Frames.Length]
+                public Vector3[] MirroredValues; // [Frames.Length]
 
                 public Curve(CurveSeries series)
                 {
@@ -261,12 +261,12 @@ namespace OpenHuman
         {
             public DeepPhaseModule Module;
 
-            public float[] RegularPhaseValues;
+            public float[] RegularPhaseValues; // [Frames.Length]
             public float[] RegularFrequencies;
             public float[] RegularAmplitudes;
             public float[] RegularOffsets;
 
-            public float[] MirroredPhaseValues;
+            public float[] MirroredPhaseValues; // [Frames.Length]
             public float[] MirroredFrequencies;
             public float[] MirroredAmplitudes;
             public float[] MirroredOffsets;
@@ -513,7 +513,7 @@ namespace OpenHuman
                 DrawPivot = EditorGUILayout.Toggle("Draw Pivot", DrawPivot);
 
                 Vector3Int view = editor.GetView();
-                float height = 50f;
+                float height = 100f;
                 float min = -1f;
                 float max = 1f;
                 float maxAmplitude = 1f;
@@ -529,6 +529,9 @@ namespace OpenHuman
                 }
                 for (int i = 0; i < Channels.Length; i++)
                 {
+                    EditorGUILayout.Space(40f);
+                    EditorGUILayout.LabelField("Channel: " + i, EditorStyles.miniLabel);
+
                     Channel c = Channels[i];
                     EditorGUILayout.BeginHorizontal();
 
@@ -541,8 +544,6 @@ namespace OpenHuman
 
                     Vector3 prevPos = Vector3.zero;
                     Vector3 newPos = Vector3.zero;
-                    Vector3 bottom = new Vector3(0f, rect.yMax, 0f);
-                    Vector3 top = new Vector3(0f, rect.yMax - rect.height, 0f);
 
                     //Zero
                     {
@@ -550,7 +551,7 @@ namespace OpenHuman
                         prevPos.y = rect.yMax - (0f).Normalize(min, max, 0f, 1f) * rect.height;
                         newPos.x = rect.xMin + rect.width;
                         newPos.y = rect.yMax - (0f).Normalize(min, max, 0f, 1f) * rect.height;
-                        UltiDraw.DrawLine(prevPos, newPos, UltiDraw.Magenta.Opacity(0.5f));
+                        UltiDraw.DrawLine(prevPos, newPos, UltiDraw.White.Opacity(0.5f));
                     }
 
                     //Phase 1D
@@ -573,7 +574,7 @@ namespace OpenHuman
                         newPos.y = rect.yMax - (float)c.GetManifoldVector(Asset.GetFrame(view.x + j).Timestamp, editor.Mirror).x.Normalize(-1f, 1f, 0f, 1f) * rect.height;
                         float weight = c.GetAmplitude(Asset.GetFrame(view.x + j).Timestamp, editor.Mirror).Normalize(0f, maxAmplitude, 0f, 1f);
                         // UltiDraw.DrawLine(prevPos, newPos, UltiDraw.Orange.Opacity(weight));
-                        UltiDraw.DrawLine(prevPos, newPos, UltiDraw.White.Opacity(weight));
+                        UltiDraw.DrawLine(prevPos, newPos, UltiDraw.Red.Opacity(weight));
                     }
                     //Phase 2D Y
                     for (int j = 1; j < view.z; j++)
@@ -584,7 +585,7 @@ namespace OpenHuman
                         newPos.y = rect.yMax - (float)c.GetManifoldVector(Asset.GetFrame(view.x + j).Timestamp, editor.Mirror).y.Normalize(-1f, 1f, 0f, 1f) * rect.height;
                         float weight = c.GetAmplitude(Asset.GetFrame(view.x + j).Timestamp, editor.Mirror).Normalize(0f, maxAmplitude, 0f, 1f);
                         // UltiDraw.DrawLine(prevPos, newPos, UltiDraw.Magenta.Opacity(weight));
-                        UltiDraw.DrawLine(prevPos, newPos, UltiDraw.White.Opacity(weight));
+                        UltiDraw.DrawLine(prevPos, newPos, UltiDraw.Blue.Opacity(weight));
                     }
 
                     UltiDraw.End();

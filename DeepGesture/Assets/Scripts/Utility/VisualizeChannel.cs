@@ -82,6 +82,7 @@ public class VisualizeChannel : EditorWindow
 		if (channels == null) { return; }
 
 		Scroll = EditorGUILayout.BeginScrollView(Scroll);
+		float height = 100f;
 
 		using (new GUILayout.VerticalScope("Box"))
 		{
@@ -104,12 +105,11 @@ public class VisualizeChannel : EditorWindow
 			GUILayout.Space(10f);
 
 			Vector3Int view = GetView();
-			float height = 100f;
+
 			float min = -1f;
 			float max = 1f;
 			float maxAmplitude = 1f;
-			float maxFrequency = editor.GetTimeSeries().MaximumFrequency;
-			float maxOffset = 1f;
+
 			if (ShowNormalized)
 			{
 				maxAmplitude = 0f;
@@ -197,12 +197,152 @@ public class VisualizeChannel : EditorWindow
 				EditorGUILayout.EndHorizontal();
 			}
 
-			// for (int i = 0; i < Channels.Length; i++)
-			// {
-			// 	DeepPhaseModule.Channel c = Channels[i];
-
-			// }
 			// EditorGUILayout.HelpBox(Channels[i].GetFrequency(Timestamp, Mirror).ToString(), MessageType.None, true);
+		}
+
+		using (new GUILayout.VerticalScope("Box"))
+		{
+			Vector3Int view = GetView();
+			float maxOffset = 1f;
+			float maxAmplitude = 1f;
+			float maxFrequency = editor.GetTimeSeries().MaximumFrequency;
+			if (ShowNormalized)
+			{
+				maxAmplitude = 0f;
+				foreach (DeepPhaseModule.Channel c in channels)
+				{
+					maxAmplitude = Mathf.Max(maxAmplitude, (Mirror ? c.MirroredAmplitudes : c.RegularAmplitudes).Max());
+				}
+			}
+
+
+			EditorGUILayout.LabelField("Channels", EditorStyles.boldLabel);
+
+			for (int i = 0; i < channels.Length; i++)
+			{
+				DeepPhaseModule.Channel c = channels[i];
+				EditorGUILayout.LabelField("Channels " + (i + 1), EditorStyles.miniLabel);
+				EditorGUILayout.HelpBox("Frequency: " + c.GetFrequency(Timestamp, editor.Mirror).ToString("F3") + " / " + "Delta: " + (editor.TargetFramerate * c.GetDelta(Timestamp, editor.Mirror, 1f / editor.TargetFramerate)).ToString("F3"), MessageType.None);
+			}
+
+			EditorGUILayout.Space(50f);
+
+			EditorGUILayout.LabelField("Amplitude (" + channels.Length + " channel)", EditorStyles.boldLabel);
+
+			{
+				EditorGUILayout.BeginHorizontal();
+
+
+
+				EditorGUILayout.BeginVertical(GUILayout.Height(height));
+				Rect ctrl = EditorGUILayout.GetControlRect();
+				Rect rect = new Rect(ctrl.x, ctrl.y, ctrl.width, height);
+				EditorGUI.DrawRect(rect, UltiDraw.Black);
+
+				UltiDraw.Begin();
+
+				Vector3 prevPos = Vector3.zero;
+				Vector3 newPos = Vector3.zero;
+
+				for (int i = 0; i < channels.Length; i++)
+				{
+					DeepPhaseModule.Channel c = channels[i];
+					for (int j = 1; j < view.z; j++)
+					{
+						prevPos.x = rect.xMin + (float)(j - 1) / (view.z - 1) * rect.width;
+						prevPos.y = rect.yMax - (float)c.GetAmplitude(asset.GetFrame(view.x + j - 1).Timestamp, editor.Mirror).Normalize(0f, maxAmplitude, 0f, 1f) * rect.height;
+						newPos.x = rect.xMin + (float)(j) / (view.z - 1) * rect.width;
+						newPos.y = rect.yMax - (float)c.GetAmplitude(asset.GetFrame(view.x + j).Timestamp, editor.Mirror).Normalize(0f, maxAmplitude, 0f, 1f) * rect.height;
+						UltiDraw.DrawLine(prevPos, newPos, UltiDraw.GetRainbowColor(i, channels.Length));
+					}
+				}
+
+				UltiDraw.End();
+
+				DrawPivotRect(rect);
+
+				EditorGUILayout.EndVertical();
+
+				EditorGUILayout.EndHorizontal();
+			}
+
+			EditorGUILayout.Space(50f);
+
+			EditorGUILayout.LabelField("Frequency (" + channels.Length + " channel)", EditorStyles.boldLabel);
+
+			{
+				EditorGUILayout.BeginHorizontal();
+
+				EditorGUILayout.BeginVertical(GUILayout.Height(height));
+				Rect ctrl = EditorGUILayout.GetControlRect();
+				Rect rect = new Rect(ctrl.x, ctrl.y, ctrl.width, height);
+				EditorGUI.DrawRect(rect, UltiDraw.Black);
+
+				UltiDraw.Begin();
+
+				Vector3 prevPos = Vector3.zero;
+				Vector3 newPos = Vector3.zero;
+
+				for (int i = 0; i < channels.Length; i++)
+				{
+					DeepPhaseModule.Channel c = channels[i];
+					for (int j = 1; j < view.z; j++)
+					{
+						prevPos.x = rect.xMin + (float)(j - 1) / (view.z - 1) * rect.width;
+						prevPos.y = rect.yMax - (float)c.GetFrequency(asset.GetFrame(view.x + j - 1).Timestamp, editor.Mirror).Normalize(0f, maxFrequency, 0f, 1f) * rect.height;
+						newPos.x = rect.xMin + (float)(j) / (view.z - 1) * rect.width;
+						newPos.y = rect.yMax - (float)c.GetFrequency(asset.GetFrame(view.x + j).Timestamp, editor.Mirror).Normalize(0f, maxFrequency, 0f, 1f) * rect.height;
+						UltiDraw.DrawLine(prevPos, newPos, UltiDraw.GetRainbowColor(i, channels.Length));
+					}
+				}
+
+				UltiDraw.End();
+
+				DrawPivotRect(rect);
+
+				EditorGUILayout.EndVertical();
+
+				EditorGUILayout.EndHorizontal();
+			}
+
+			EditorGUILayout.Space(50f);
+
+			EditorGUILayout.LabelField("Offset (" + channels.Length + " channel)", EditorStyles.boldLabel);
+
+			{
+				EditorGUILayout.BeginHorizontal();
+
+				EditorGUILayout.BeginVertical(GUILayout.Height(height));
+				Rect ctrl = EditorGUILayout.GetControlRect();
+				Rect rect = new Rect(ctrl.x, ctrl.y, ctrl.width, height);
+				EditorGUI.DrawRect(rect, UltiDraw.Black);
+
+				UltiDraw.Begin();
+
+				Vector3 prevPos = Vector3.zero;
+				Vector3 newPos = Vector3.zero;
+
+				for (int i = 0; i < channels.Length; i++)
+				{
+					DeepPhaseModule.Channel c = channels[i];
+					for (int j = 1; j < view.z; j++)
+					{
+						prevPos.x = rect.xMin + (float)(j - 1) / (view.z - 1) * rect.width;
+						prevPos.y = rect.yMax - (float)c.GetOffset(asset.GetFrame(view.x + j - 1).Timestamp, editor.Mirror).Normalize(-maxOffset, maxOffset, 0f, 1f) * rect.height;
+						newPos.x = rect.xMin + (float)(j) / (view.z - 1) * rect.width;
+						newPos.y = rect.yMax - (float)c.GetOffset(asset.GetFrame(view.x + j).Timestamp, editor.Mirror).Normalize(-maxOffset, maxOffset, 0f, 1f) * rect.height;
+						UltiDraw.DrawLine(prevPos, newPos, UltiDraw.GetRainbowColor(i, channels.Length));
+					}
+				}
+
+				UltiDraw.End();
+
+				DrawPivotRect(rect);
+
+				EditorGUILayout.EndVertical();
+
+				EditorGUILayout.EndHorizontal();
+			}
 		}
 
 
