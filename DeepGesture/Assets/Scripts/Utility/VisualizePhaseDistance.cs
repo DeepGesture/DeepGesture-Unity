@@ -6,7 +6,7 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 
 #if UNITY_EDITOR
-public class VisualizeBones : EditorWindow
+public class VisualizePhaseDistance : EditorWindow
 {
 
 	public static EditorWindow Window;
@@ -21,9 +21,8 @@ public class VisualizeBones : EditorWindow
 
 	private static MotionEditor editor = null;
 	private static MotionAsset asset = null;
-	private static DeepPhaseModule.CurveSeries curves = null;
-	private static string[] boneNames = null;
-
+	private static DeepPhaseModule.DistanceSeries distances = null;
+	private static DeepPhaseModule module = null;
 
 	//  ~~~~~~~~~~~~~~~~~~~~~~~~
 	public static float Timestamp = 0f;
@@ -32,14 +31,14 @@ public class VisualizeBones : EditorWindow
 	public static float totalTime = 0f;
 	public static float frameRate = 60f;
 	public static string assetName = string.Empty;
+	public static float height = 50f;
 
-	public float MinView = -2f;
-	public float MaxView = 2f;
+	public string Tag = "8Channels";
 
-	[MenuItem("OpenHuman/Visualize/Visualize Bones")]
+	[MenuItem("OpenHuman/Visualize/Visualize Phase Distance")]
 	static void Init()
 	{
-		Window = EditorWindow.GetWindow(typeof(VisualizeBones));
+		Window = EditorWindow.GetWindow(typeof(VisualizePhaseDistance));
 		Scroll = Vector3.zero;
 	}
 
@@ -48,10 +47,35 @@ public class VisualizeBones : EditorWindow
 		Repaint();
 	}
 
+	void DrawChannel(DeepPhaseModule.DistanceSeries.Map channel, Color color, Vector3Int view)
+	{
+		EditorGUILayout.BeginVertical(GUILayout.Height(height));
+		Rect ctrl = EditorGUILayout.GetControlRect();
+		Rect rect = new Rect(ctrl.x, ctrl.y, ctrl.width, height);
+		EditorGUI.DrawRect(rect, UltiDraw.Black);
+		UltiDraw.Begin();
+
+		int pivot = editor.GetCurrentFrame().Index - 1;
+		for (int j = 1; j < view.z; j++)
+		{
+			float prevx = rect.xMin + (float)(j - 1) / (view.z - 1) * rect.width;
+			float prevy = rect.yMax - (float)channel.Values[pivot][view.x + j - 1 - 1].Normalize(channel.Min, channel.Max, 0f, 1f) * rect.height;
+			float newx = rect.xMin + (float)(j) / (view.z - 1) * rect.width;
+			float newy = rect.yMax - (float)channel.Values[pivot][view.x + j - 1].Normalize(channel.Min, channel.Max, 0f, 1f) * rect.height;
+			UltiDraw.DrawLine(new Vector3(prevx, prevy), new Vector3(newx, newy), color);
+		}
+
+		UltiDraw.End();
+
+		DrawPivotRect(rect);
+
+		EditorGUILayout.EndVertical();
+	}
+
 	void OnGUI()
 	{
 		GUILayout.Space(20f);
-		if (GUILayout.Button("Load Bones"))
+		if (GUILayout.Button("Load Phase Distance"))
 		{
 			editor = GameObjectExtensions.Find<MotionEditor>(true);
 			asset = editor.GetSession().Asset;
@@ -59,19 +83,17 @@ public class VisualizeBones : EditorWindow
 			assetName = asset.name;
 
 			Actor actor = editor.GetSession().GetActor();
-			boneNames = actor.GetBoneNames();
 			TimeSeries timeSeries = editor.GetTimeSeries();
-			curves = new DeepPhaseModule.CurveSeries(asset, actor, timeSeries);
+			module = asset.GetModule<DeepPhaseModule>(Tag);
+			distances = new DeepPhaseModule.DistanceSeries(asset, actor, timeSeries, module);
 		}
 		GUILayout.FlexibleSpace();
 
 		if (editor == null) { return; }
 		if (asset == null) { return; }
-		if (curves == null) { return; }
-		if (boneNames == null) { return; }
+		if (distances == null) { return; }
 
 		Scroll = EditorGUILayout.BeginScrollView(Scroll);
-		float height = 100f;
 
 		using (new GUILayout.VerticalScope("Box"))
 		{
@@ -84,74 +106,27 @@ public class VisualizeBones : EditorWindow
 			GUILayout.Label("Visualize Bones", EditorStyles.boldLabel);
 
 			assetName = EditorGUILayout.TextField("Asset name", assetName);
+			Tag = EditorGUILayout.TextField("Tag", Tag);
 			LineHeight = EditorGUILayout.Slider("Line Height", LineHeight, 10f, 200f);
 			GUILayout.Space(10f);
 
 			Vector3Int view = GetView();
 
 			//  ~~~~~~~~~~~~~~~~~~~~~~~~~
-			using (new EditorGUILayout.VerticalScope("Box"))
+			using (new GUILayout.VerticalScope("Box"))
 			{
-				MinView = EditorGUILayout.FloatField("Min View", MinView);
-				MaxView = EditorGUILayout.FloatField("Max View", MaxView);
+				GUILayout.Space(20f);
+				DrawChannel(distances.GlobalChannel, Color.cyan, view);
+				GUILayout.Space(10f);
 
-				EditorGUILayout.HelpBox("Curves " + curves.Curves.Length, MessageType.None);
-				TimeSeries timeSeries = editor.GetTimeSeries();
-				Actor actor = editor.GetSession().GetActor();
-
-				for (int i = 0; i < curves.Curves.Length; i++)
+				foreach (DeepPhaseModule.DistanceSeries.Map channel in distances.LocalChannels)
 				{
-					EditorGUILayout.Space(5f);
-					GUILayout.Label("Bones: " + boneNames[i], EditorStyles.miniLabel);
-
-					EditorGUILayout.BeginVertical(GUILayout.Height(height));
-					Rect ctrl = EditorGUILayout.GetControlRect();
-					Rect rect = new Rect(ctrl.x, ctrl.y, ctrl.width, height);
-					EditorGUI.DrawRect(rect, UltiDraw.Black);
-					UltiDraw.Begin();
-
-					// Zero
-					{
-						float prevx = rect.xMin;
-						float prevy = rect.yMax - (0f).Normalize(MinView, MaxView, 0f, 1f) * LineHeight;
-						float newx = rect.xMin + rect.width;
-						float newy = rect.yMax - (0f).Normalize(MinView, MaxView, 0f, 1f) * LineHeight;
-						UltiDraw.DrawLine(new Vector3(prevx, prevy), new Vector3(newx, newy), UltiDraw.Magenta.Opacity(0.5f));
-					}
-
-					// Values
-					Vector3[] values = curves.Curves[i].GetValues(Mirror);
-					for (int j = 1; j < view.z; j++)
-					{
-						float prevx = rect.xMin + (float)(j - 1) / (view.z - 1) * rect.width;
-						float prevy = rect.yMax - (float)values[view.x + j - 1 - 1].x.Normalize(MinView, MaxView, 0f, 1f) * LineHeight;
-						float newx = rect.xMin + (float)(j) / (view.z - 1) * rect.width;
-						float newy = rect.yMax - (float)values[view.x + j - 1].x.Normalize(MinView, MaxView, 0f, 1f) * LineHeight;
-						UltiDraw.DrawLine(new Vector3(prevx, prevy), new Vector3(newx, newy), UltiDraw.Red);
-					}
-					for (int j = 1; j < view.z; j++)
-					{
-						float prevx = rect.xMin + (float)(j - 1) / (view.z - 1) * rect.width;
-						float prevy = rect.yMax - (float)values[view.x + j - 1 - 1].y.Normalize(MinView, MaxView, 0f, 1f) * LineHeight;
-						float newx = rect.xMin + (float)(j) / (view.z - 1) * rect.width;
-						float newy = rect.yMax - (float)values[view.x + j - 1].y.Normalize(MinView, MaxView, 0f, 1f) * LineHeight;
-						UltiDraw.DrawLine(new Vector3(prevx, prevy), new Vector3(newx, newy), UltiDraw.Green);
-					}
-					for (int j = 1; j < view.z; j++)
-					{
-						float prevx = rect.xMin + (float)(j - 1) / (view.z - 1) * rect.width;
-						float prevy = rect.yMax - (float)values[view.x + j - 1 - 1].z.Normalize(MinView, MaxView, 0f, 1f) * LineHeight;
-						float newx = rect.xMin + (float)(j) / (view.z - 1) * rect.width;
-						float newy = rect.yMax - (float)values[view.x + j - 1].z.Normalize(MinView, MaxView, 0f, 1f) * LineHeight;
-						UltiDraw.DrawLine(new Vector3(prevx, prevy), new Vector3(newx, newy), UltiDraw.Blue);
-					}
-					UltiDraw.End();
-
-					DrawPivotRect(rect);
-
-					EditorGUILayout.EndVertical();
+					GUILayout.Space(10f);
+					DrawChannel(channel, Color.white, view);
 				}
 			}
+
+
 		}
 
 		EditorGUILayout.EndScrollView();

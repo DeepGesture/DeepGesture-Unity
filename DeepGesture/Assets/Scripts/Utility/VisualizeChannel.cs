@@ -33,11 +33,10 @@ public class VisualizeChannel : EditorWindow
 	// ~~~~~~~~~~~~~~~~~~~~~~~~
 	public static float Timestamp = 0f;
 	public static int FrameIndex = 1;
-	public static float Zoom = 0.2f;
+	public static float Zoom = 0.12f;
 	public static float totalTime = 0f;
 	public static float frameRate = 60f;
 	public static string assetName = string.Empty;
-
 
 
 	[MenuItem("OpenHuman/Visualize/Visualize Channel")]
@@ -45,11 +44,6 @@ public class VisualizeChannel : EditorWindow
 	{
 		Window = EditorWindow.GetWindow(typeof(VisualizeChannel));
 		Scroll = Vector3.zero;
-
-		editor = GameObjectExtensions.Find<MotionEditor>(true);
-		asset = editor.GetSession().Asset;
-
-		assetName = asset.name;
 	}
 
 	public void OnInspectorUpdate()
@@ -59,11 +53,8 @@ public class VisualizeChannel : EditorWindow
 
 	void OnGUI()
 	{
-		//
-		// GUILayout.EndVertical();
-
 		GUILayout.Space(20f);
-		if (GUILayout.Button("Load Channel Asset"))
+		if (GUILayout.Button("Load Channels"))
 		{
 			editor = GameObjectExtensions.Find<MotionEditor>(true);
 			asset = editor.GetSession().Asset;
@@ -353,8 +344,8 @@ public class VisualizeChannel : EditorWindow
 		float PastWindow = 1f;
 		float FutureWindow = 1f;
 
-		Frame pastFrame = asset.GetFrame(Mathf.Clamp(Timestamp - PastWindow, 0f, asset.GetTotalTime()));
-		Frame futureFrame = asset.GetFrame(Mathf.Clamp(Timestamp + FutureWindow, 0f, asset.GetTotalTime()));
+		Frame pastFrame = asset.GetFrame(Mathf.Clamp(Timestamp - PastWindow, 0f, totalTime));
+		Frame futureFrame = asset.GetFrame(Mathf.Clamp(Timestamp + FutureWindow, 0f, totalTime));
 		DrawRect(
 			pastFrame.Index,
 			futureFrame.Index,
