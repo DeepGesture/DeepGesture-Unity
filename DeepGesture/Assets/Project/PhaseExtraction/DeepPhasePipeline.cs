@@ -5,9 +5,10 @@ using System;
 using System.Collections;
 using AI4Animation;
 
-namespace DeepPhase {
-    public class DeepPhasePipeline : AssetPipelineSetup {
-
+namespace DeepPhase
+{
+    public class DeepPhasePipeline : AssetPipelineSetup
+    {
         public SocketNetwork Network;
 
         public int Channels = 5;
@@ -26,12 +27,14 @@ namespace DeepPhase {
         private AssetPipeline.Data.File S;
         private AssetPipeline.Data X, Y;
 
-        public override void Inspector() {
+        public override void Inspector()
+        {
             EditorGUI.BeginDisabledGroup(true);
             EditorGUILayout.TextField("Export Path", AssetPipeline.Data.GetExportPath());
             EditorGUI.EndDisabledGroup();
             WriteMirror = EditorGUILayout.Toggle("Write Mirror", WriteMirror);
-            if(Pipeline.IsProcessing() || Pipeline.IsAborting()) {
+            if (Pipeline.IsProcessing() || Pipeline.IsAborting())
+            {
                 EditorGUI.BeginDisabledGroup(true);
                 EditorGUILayout.FloatField("Samples Per Second", SamplesPerSecond);
                 EditorGUI.EndDisabledGroup();
@@ -46,22 +49,26 @@ namespace DeepPhase {
             }
         }
 
-        public override void Inspector(AssetPipeline.Item item) {
+        public override void Inspector(AssetPipeline.Item item)
+        {
 
         }
 
-        public override bool CanProcess() {
+        public override bool CanProcess()
+        {
             return true;
         }
 
-        public override void Begin() {
+        public override void Begin()
+        {
             Samples = 0;
             Sequence = 0;
             S = AssetPipeline.Data.CreateFile("Sequences", AssetPipeline.Data.TYPE.Text);
             X = new AssetPipeline.Data("Data", false, false, true);
         }
 
-        private void WriteSequenceInfo(int sequence, int frame, bool mirrored, MotionAsset asset) {
+        private void WriteSequenceInfo(int sequence, int frame, bool mirrored, MotionAsset asset)
+        {
             //Sequence - Frame - Mirroring - Name - GUID
             S.WriteLine(
                 sequence.ToString() + AssetPipeline.Data.Separator +
@@ -71,30 +78,41 @@ namespace DeepPhase {
                 Utility.GetAssetGUID(asset));
         }
 
-        public override IEnumerator Iterate(MotionAsset asset) {
+        public override IEnumerator Iterate(MotionAsset asset)
+        {
             Pipeline.GetEditor().LoadSession(Utility.GetAssetGUID(asset));
-            if(asset.Export) {
+            if (asset.Export)
+            {
                 TimeSeries timeSeries = Pipeline.GetEditor().GetTimeSeries();
                 Actor actor = Pipeline.GetEditor().GetSession().GetActor();
-                for(int i=1; i<=2; i++) {
-                    if(i==1) {
+                for (int i = 1; i <= 2; i++)
+                {
+                    if (i == 1)
+                    {
                         Pipeline.GetEditor().SetMirror(false);
-                    } else if(i==2 && WriteMirror) {
+                    }
+                    else if (i == 2 && WriteMirror)
+                    {
                         Pipeline.GetEditor().SetMirror(true);
-                    } else {
+                    }
+                    else
+                    {
                         break;
                     }
-                    foreach(Interval seq in asset.Sequences) {
+                    foreach (Interval seq in asset.Sequences)
+                    {
                         Sequence += 1;
-                        for(int frame=seq.Start; frame<=seq.End; frame++) {
+                        for (int frame = seq.Start; frame <= seq.End; frame++)
+                        {
                             float timestamp = asset.GetFrame(frame).Timestamp;
                             bool mirrored = Pipeline.GetEditor().Mirror;
                             TrainingSetup.Export(this, X, asset, timestamp, mirrored, timeSeries, actor);
                             X.Store();
                             WriteSequenceInfo(Sequence, frame, mirrored, asset);
                             Samples += 1;
-                            if(Utility.GetElapsedTime(Timestamp) >= 0.1f) {
-                                Progress = frame.Ratio(seq.Start, seq.End-1);
+                            if (Utility.GetElapsedTime(Timestamp) >= 0.1f)
+                            {
+                                Progress = frame.Ratio(seq.Start, seq.End - 1);
                                 SamplesPerSecond = Samples / (float)Utility.GetElapsedTime(Timestamp);
                                 Samples = 0;
                                 Timestamp = Utility.GetTimestamp();
@@ -106,18 +124,23 @@ namespace DeepPhase {
             }
         }
 
-        public override void Callback() {
+        public override void Callback()
+        {
             Resources.UnloadUnusedAssets();
         }
 
-        public override void Finish() {
+        public override void Finish()
+        {
             S.Close();
             X.Finish();
         }
 
-        private class TrainingSetup {
-            public static void Export(DeepPhasePipeline setup, AssetPipeline.Data X, MotionAsset asset, float timestamp, bool mirrored, TimeSeries timeSeries, Actor actor) {
-                if(DeepPhaseModule.Curves == null || DeepPhaseModule.Curves.Asset != asset) {
+        private class TrainingSetup
+        {
+            public static void Export(DeepPhasePipeline setup, AssetPipeline.Data X, MotionAsset asset, float timestamp, bool mirrored, TimeSeries timeSeries, Actor actor)
+            {
+                if (DeepPhaseModule.Curves == null || DeepPhaseModule.Curves.Asset != asset)
+                {
                     Debug.Log("Computing curves in asset: " + asset.name);
                     DeepPhaseModule.ComputeCurves(
                         asset,
