@@ -25,6 +25,7 @@ namespace DeepGesture
             Utility.SetFPS(Mathf.RoundToInt(Framerate));
             if (AudioSpectrum == null)
             {
+                Debug.Log("AudioSpectrum is null");
                 return;
             }
 
