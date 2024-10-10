@@ -1,10 +1,8 @@
 ﻿using System;
 using UnityEngine;
 
-namespace OpenHuman
-{
-    public class SpeechSpectrum : ScriptableObject
-    {
+namespace OpenHuman {
+    public class SpeechSpectrum : ScriptableObject {
         public AudioClip Clip;
         public int Framerate;
         public Sample[] Samples;
@@ -14,39 +12,31 @@ namespace OpenHuman
 
         private AudioSource AudioSource;
 
-        public float GetLength()
-        {
+        public float GetLength() {
             return (Samples.Length - 1) / (float)Framerate;
         }
 
-        public bool IsPlaying()
-        {
+        public bool IsPlaying() {
             return AudioSource == null ? false : AudioSource.isPlaying;
         }
 
-        public float GetTimestamp()
-        {
+        public float GetTimestamp() {
             return AudioSource == null ? 0f : AudioSource.time;
         }
 
-        public void PlayMusic(float timestamp, bool reset)
-        {
-            if (AudioSource == null)
-            {
+        public void PlaySpeech(float timestamp, bool reset) {
+            if (AudioSource == null) {
                 string id = "Speech Source " + name;
                 GameObject instance = GameObject.Find(id);
-                if (instance == null)
-                {
+                if (instance == null) {
                     instance = new GameObject(id);
                     AudioSource = instance.gameObject.AddComponent<AudioSource>();
                 }
-                else
-                {
+                else {
                     AudioSource = instance.gameObject.GetComponent<AudioSource>();
                 }
             }
-            if (!AudioSource.isPlaying || reset)
-            {
+            if (!AudioSource.isPlaying || reset) {
                 AudioSource.clip = Clip;
                 AudioSource.time = timestamp;
                 AudioSource.loop = false;
@@ -54,68 +44,52 @@ namespace OpenHuman
             }
         }
 
-        public void StopMusic()
-        {
-            if (AudioSource != null)
-            {
+        public void StopMusic() {
+            if (AudioSource != null) {
                 Utility.Destroy(AudioSource.gameObject);
             }
         }
 
-        public void ApplyPitch(float pitch)
-        {
-            if (AudioSource != null)
-            {
+        public void ApplyPitch(float pitch) {
+            if (AudioSource != null) {
                 AudioSource.pitch = pitch;
             }
         }
 
-        public Sample GetSample(float timestamp)
-        {
+        public Sample GetSample(float timestamp) {
             return Samples[Mathf.Clamp(Mathf.RoundToInt(timestamp * Framerate), 0, Samples.Length - 1)];
         }
 
-        public Sample GetFiltered(float timestamp, float lowPassHz = 0f)
-        {
-            if (LowPassHz == lowPassHz)
-            {
+        public Sample GetFiltered(float timestamp, float lowPassHz = 0f) {
+            if (LowPassHz == lowPassHz) {
                 return Filtered[Mathf.Clamp(Mathf.RoundToInt(timestamp * Framerate), 0, Filtered.Length - 1)];
             }
             // Debug.Log("Recomputing filtered music data for " + lowPassHz + "Hz.");
             LowPassHz = lowPassHz;
-            float[][] Filter(int var)
-            {
+            float[][] Filter(int var) {
                 float[][] values = new float[Samples.Length][];
-                for (int i = 0; i < Samples.Length; i++)
-                {
-                    if (var == 1)
-                    {
+                for (int i = 0; i < Samples.Length; i++) {
+                    if (var == 1) {
                         values[i] = Samples[i].Spectogram;
                     }
-                    if (var == 2)
-                    {
+                    if (var == 2) {
                         values[i] = Samples[i].Beats;
                     }
-                    if (var == 3)
-                    {
+                    if (var == 3) {
                         values[i] = Samples[i].Flux;
                     }
-                    if (var == 4)
-                    {
+                    if (var == 4) {
                         values[i] = Samples[i].MFCC;
                     }
-                    if (var == 5)
-                    {
+                    if (var == 5) {
                         values[i] = Samples[i].Chroma;
                     }
-                    if (var == 6)
-                    {
+                    if (var == 6) {
                         values[i] = Samples[i].ZeroCrossing;
                     }
                 }
                 values = values.GetTranspose();
-                for (int i = 0; i < values.Length; i++)
-                {
+                for (int i = 0; i < values.Length; i++) {
                     values[i] = Utility.Butterworth(values[i], 1f / Framerate, LowPassHz);
                 }
                 values = values.GetTranspose();
@@ -128,24 +102,21 @@ namespace OpenHuman
             float[][] chroma = Filter(5);
             float[][] zeroCrossing = Filter(6);
             Filtered = new Sample[Samples.Length];
-            for (int i = 0; i < Samples.Length; i++)
-            {
+            for (int i = 0; i < Samples.Length; i++) {
                 Filtered[i] = new Sample(spectogram[i], beats[i], flux[i], mfcc[i], chroma[i], zeroCrossing[i]);
             }
             return GetFiltered(timestamp, lowPassHz);
         }
 
         [Serializable]
-        public class Sample
-        {
+        public class Sample {
             public float[] Spectogram;
             public float[] Beats;
             public float[] Flux;
             public float[] MFCC;
             public float[] Chroma;
             public float[] ZeroCrossing;
-            public Sample(float[] spectogram, float[] beats, float[] flux, float[] mfcc, float[] chroma, float[] zeroCrossing)
-            {
+            public Sample(float[] spectogram, float[] beats, float[] flux, float[] mfcc, float[] chroma, float[] zeroCrossing) {
                 Spectogram = spectogram;
                 Beats = beats;
                 Flux = flux;
