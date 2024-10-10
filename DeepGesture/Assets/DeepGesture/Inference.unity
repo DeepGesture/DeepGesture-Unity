@@ -881,7 +881,7 @@ MonoBehaviour:
   NoiseSampler: 110
   DrawGUI: 1
   DrawDebug: 1
-  DrawAudio: 1
+  DrawAudio: 0
   DrawNoise: 0
   Channels: 8
   NoiseSamples: 8

@@ -32,7 +32,7 @@ namespace DeepGesture {
 
         private Actor Actor = null;
 
-        private TimeSeries TimeSeries;
+        private TimeSeries GestureSeries;
         private TimeSeries SpeechSeries;
 
         private RootModule.Series RootSeries;
@@ -56,12 +56,12 @@ namespace DeepGesture {
             Debug.Log("GestureController Start");
             Actor = GetComponent<Actor>();
 
-            TimeSeries = new TimeSeries(6, 6, 1f, 1f, 10);
+            GestureSeries = new TimeSeries(6, 6, 1f, 1f, 10);
             SpeechSeries = new TimeSeries(20, 20, 1f, 1f, 3);
 
-            RootSeries = new RootModule.Series(TimeSeries, transform);
-            ContactSeries = new ContactModule.Series(TimeSeries, "LeftFoot", "RightFoot");
-            PhaseSeries = new DeepPhaseModule.Series(TimeSeries, Channels);
+            RootSeries = new RootModule.Series(GestureSeries, transform);
+            ContactSeries = new ContactModule.Series(GestureSeries, "LeftFoot", "RightFoot");
+            PhaseSeries = new DeepPhaseModule.Series(GestureSeries, Channels);
             SpectrumSeries = new AudioSpectrumModule.Series(SpeechSeries);
 
             LeftFootIK = IK.Create(Actor.FindTransform("LeftUpLeg"), Actor.GetBoneTransforms("LeftToeBase"));
@@ -101,11 +101,11 @@ namespace DeepGesture {
             Actor.GetRoot().transform.rotation = reference.GetRotation();
             Actor.SetBoneTransformations(asset.GetFrame(timestamp).GetBoneTransformations(Actor.GetBoneNames(), mirrored).TransformationsFromTo(reference, root, true));
             Actor.SetBoneVelocities(asset.GetFrame(timestamp).GetBoneVelocities(Actor.GetBoneNames(), mirrored).DirectionsFromTo(reference, root, true));
-            RootSeries = asset.GetModule<RootModule>().ExtractSeries(TimeSeries, timestamp, mirrored) as RootModule.Series;
+            RootSeries = asset.GetModule<RootModule>().ExtractSeries(GestureSeries, timestamp, mirrored) as RootModule.Series;
             RootSeries.TransformFromTo(reference, root);
 
-            ContactSeries = asset.GetModule<ContactModule>().ExtractSeries(TimeSeries, timestamp, mirrored) as ContactModule.Series;
-            PhaseSeries = asset.GetModule<DeepPhaseModule>(GetTag()).ExtractSeries(TimeSeries, timestamp, mirrored) as DeepPhaseModule.Series;
+            ContactSeries = asset.GetModule<ContactModule>().ExtractSeries(GestureSeries, timestamp, mirrored) as ContactModule.Series;
+            PhaseSeries = asset.GetModule<DeepPhaseModule>(GetTag()).ExtractSeries(GestureSeries, timestamp, mirrored) as DeepPhaseModule.Series;
             SpectrumSeries = asset.GetModule<AudioSpectrumModule>().ExtractSeries(SpeechSeries, timestamp, mirrored) as AudioSpectrumModule.Series;
             foreach (Objective o in LeftFootIK.Objectives) {
                 o.TargetPosition = LeftFootIK.Joints[o.Joint].Transform.position;
@@ -118,7 +118,7 @@ namespace DeepGesture {
         }
 
         public void AnimateGesture(object[] parameters) {
-            MusicControl(parameters);
+            SpeechControl(parameters);
             Feed();
             NeuralNetwork.RunSession();
             Read();
@@ -155,13 +155,13 @@ namespace DeepGesture {
             return lerp;
         }
 
-        private void MusicControl(object[] parameters) {
+        private void SpeechControl(object[] parameters) {
             AudioSpectrum spectrum = (AudioSpectrum)parameters[0];
             float timestamp = (float)parameters[1];
             float pitch = (float)parameters[2];
 
-            //Set Music
-            SpectrumSeries.Increment(0, TimeSeries.Pivot);
+            //Set Speech
+            SpectrumSeries.Increment(0, GestureSeries.Pivot);
             for (int i = 0; i < SpectrumSeries.Samples.Length; i++) {
                 if (SpectrumSeries.Values[i] == null) {
                     SpectrumSeries.Values[i] = spectrum.GetFiltered(timestamp + pitch * SpectrumSeries.Samples[i].Timestamp, SpeechSeries.MaximumFrequency);
@@ -181,8 +181,8 @@ namespace DeepGesture {
             Matrix4x4 root = Actor.GetRoot().GetWorldMatrix();
 
             //Input Timeseries
-            for (int i = 0; i < TimeSeries.KeyCount; i++) {
-                int index = TimeSeries.GetKey(i).Index;
+            for (int i = 0; i < GestureSeries.KeyCount; i++) {
+                int index = GestureSeries.GetKey(i).Index;
                 NeuralNetwork.FeedXZ(RootSeries.GetPosition(index).PositionTo(prev));
                 NeuralNetwork.FeedXZ(RootSeries.GetDirection(index).DirectionTo(prev));
                 NeuralNetwork.FeedXZ(RootSeries.Velocities[index].DirectionTo(prev));
@@ -211,26 +211,26 @@ namespace DeepGesture {
             NeuralNetwork.Feed(PhaseSeries.GetAlignment());
 
             //Feed Noise
-            // NeuralNetwork.Feed(Noise);
+            NeuralNetwork.Feed(Noise);
         }
 
         private void Read() {
             //Update Past States
-            RootSeries.Increment(0, TimeSeries.Pivot);
-            ContactSeries.Increment(0, TimeSeries.Pivot);
-            PhaseSeries.Increment(0, TimeSeries.Pivot);
+            RootSeries.Increment(0, GestureSeries.Pivot);
+            ContactSeries.Increment(0, GestureSeries.Pivot);
+            PhaseSeries.Increment(0, GestureSeries.Pivot);
 
             //Update Root State
             Vector3 offset = NeuralNetwork.ReadVector3();
 
             Matrix4x4 reference = Actor.GetRoot().GetWorldMatrix();
             Matrix4x4 root = reference * Matrix4x4.TRS(new Vector3(offset.x, 0f, offset.z), Quaternion.AngleAxis(offset.y, Vector3.up), Vector3.one);
-            RootSeries.Transformations[TimeSeries.Pivot] = root;
-            RootSeries.Velocities[TimeSeries.Pivot] = NeuralNetwork.ReadXZ().DirectionFrom(root);
+            RootSeries.Transformations[GestureSeries.Pivot] = root;
+            RootSeries.Velocities[GestureSeries.Pivot] = NeuralNetwork.ReadXZ().DirectionFrom(root);
 
             //Read Future States
-            for (int i = TimeSeries.PivotKey + 1; i < TimeSeries.KeyCount; i++) {
-                int index = TimeSeries.GetKey(i).Index;
+            for (int i = GestureSeries.PivotKey + 1; i < GestureSeries.KeyCount; i++) {
+                int index = GestureSeries.GetKey(i).Index;
                 RootSeries.Transformations[index] = Utility.Interpolate(
                     RootSeries.Transformations[index],
                     Matrix4x4.TRS(NeuralNetwork.ReadXZ().PositionFrom(reference), Quaternion.LookRotation(NeuralNetwork.ReadXZ().DirectionFrom(reference).normalized, Vector3.up), Vector3.one),
@@ -259,19 +259,19 @@ namespace DeepGesture {
             //Update Contacts
             float[] contacts = NeuralNetwork.Read(ContactSeries.Bones.Length, 0f, 1f);
             for (int i = 0; i < ContactSeries.Bones.Length; i++) {
-                ContactSeries.Values[TimeSeries.Pivot][i] = contacts[i].SmoothStep(ContactPower, ContactThreshold);
+                ContactSeries.Values[GestureSeries.Pivot][i] = contacts[i].SmoothStep(ContactPower, ContactThreshold);
             }
 
             //Update Phases
             PhaseSeries.UpdateAlignment(NeuralNetwork.Read((1 + PhaseSeries.FutureKeys) * PhaseSeries.Channels * 4), PhaseStability, 1f / Framerate, MinAmplitude);
 
             //Interpolate Timeseries
-            RootSeries.Interpolate(TimeSeries.Pivot, TimeSeries.Samples.Length);
-            PhaseSeries.Interpolate(TimeSeries.Pivot, TimeSeries.Samples.Length);
+            RootSeries.Interpolate(GestureSeries.Pivot, GestureSeries.Samples.Length);
+            PhaseSeries.Interpolate(GestureSeries.Pivot, GestureSeries.Samples.Length);
 
             //Assign Posture
-            transform.position = RootSeries.GetPosition(TimeSeries.Pivot);
-            transform.rotation = RootSeries.GetRotation(TimeSeries.Pivot);
+            transform.position = RootSeries.GetPosition(GestureSeries.Pivot);
+            transform.rotation = RootSeries.GetRotation(GestureSeries.Pivot);
             for (int i = 0; i < Actor.Bones.Length; i++) {
                 Actor.Bones[i].SetVelocity(velocities[i]);
                 Actor.Bones[i].SetPosition(positions[i]);
@@ -282,8 +282,8 @@ namespace DeepGesture {
             Actor.RestoreAlignment();
 
             //Process Contact States
-            ProcessFootIK(LeftFootIK, ContactSeries.Values[TimeSeries.Pivot][0]);
-            ProcessFootIK(RightFootIK, ContactSeries.Values[TimeSeries.Pivot][1]);
+            ProcessFootIK(LeftFootIK, ContactSeries.Values[GestureSeries.Pivot][0]);
+            ProcessFootIK(RightFootIK, ContactSeries.Values[GestureSeries.Pivot][1]);
 
             PhaseSeries.AddGatingHistory(NeuralNetwork.GetOutput("W").AsFloats());
         }
