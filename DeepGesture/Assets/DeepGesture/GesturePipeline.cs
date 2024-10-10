@@ -26,7 +26,7 @@ namespace DeepGesture {
         private bool m_updateAudioAssets = true;
         private bool m_updateContact = true;
 
-        private TimeSeries m_musicSerious;
+        private TimeSeries m_speechSeries;
         private int m_pastKeys = 6; //  20
         private int m_futureKeys = 6; //  20
         private float m_pastWindow = 1f;
@@ -127,7 +127,7 @@ namespace DeepGesture {
                 m_samples = 0;
                 m_sequence = 0;
                 m_progress = 0;
-                m_musicSerious = new TimeSeries(m_pastKeys, m_futureKeys, m_pastWindow, m_futureWindow, m_resolution);
+                m_speechSeries = new TimeSeries(m_pastKeys, m_futureKeys, m_pastWindow, m_futureWindow, m_resolution);
                 s = AssetPipeline.Data.CreateFile("Sequences", AssetPipeline.Data.TYPE.Text);
                 x = new AssetPipeline.Data("Input");
                 y = new AssetPipeline.Data("Output");
@@ -259,7 +259,7 @@ namespace DeepGesture {
                             float tNext = start + (index + 1) / Pipeline.GetEditor().TargetFramerate;
                             index += 1;
 
-                            GestureControllerSetup.Export(this, x, y, tCurrent, tNext, m_musicSerious);
+                            GestureControllerSetup.Export(this, x, y, tCurrent, tNext, m_speechSeries);
 
                             x.Store();
                             y.Store();
@@ -292,13 +292,13 @@ namespace DeepGesture {
         }
 
         private static class GestureControllerSetup {
-            public static void Export(GesturePipeline setup, AssetPipeline.Data x, AssetPipeline.Data y, float tCurrent, float tNext, TimeSeries musicSeries) {
-                Container current = new Container(setup, tCurrent, musicSeries);
-                Container next = new Container(setup, tNext, musicSeries);
+            public static void Export(GesturePipeline setup, AssetPipeline.Data x, AssetPipeline.Data y, float tCurrent, float tNext, TimeSeries speechSeries) {
+                Container current = new Container(setup, tCurrent, speechSeries);
+                Container next = new Container(setup, tNext, speechSeries);
 
                 string[] contacts = { "LeftFoot", "RightFoot" };
 
-                // Input
+                // *************** Input ***************
                 // Control
                 for (int k = 0; k < current.TimeSeries.Samples.Length; k++) {
                     x.FeedXZ(next.RootSeries.GetPosition(k).PositionTo(current.Root), "TrajectoryPosition" + (k + 1));
@@ -327,7 +327,7 @@ namespace DeepGesture {
                 // Gating Variables
                 x.Feed(current.PhaseSeries.GetAlignment(), "PhaseSpace-");
 
-                // Output
+                // *************** Output ***************
                 // Root Update
                 Matrix4x4 delta = next.Root.TransformationTo(current.Root);
                 y.Feed(new Vector3(delta.GetPosition().x, Vector3.SignedAngle(Vector3.forward, delta.GetForward(), Vector3.up), delta.GetPosition().z), "RootUpdate");
@@ -373,7 +373,7 @@ namespace DeepGesture {
                 public Matrix4x4[] ActorPosture;
                 public Vector3[] ActorVelocities;
 
-                public Container(GesturePipeline setup, float timestamp, TimeSeries musicSeries) {
+                public Container(GesturePipeline setup, float timestamp, TimeSeries speechSeries) {
                     MotionEditor editor = setup.Pipeline.GetEditor();
                     editor.LoadFrame(timestamp);
                     Asset = editor.GetSession().Asset;
@@ -383,7 +383,7 @@ namespace DeepGesture {
                     RootSeries = Asset.GetModule<RootModule>().ExtractSeries(TimeSeries, timestamp, editor.Mirror) as RootModule.Series;
                     ContactSeries = Asset.GetModule<ContactModule>().ExtractSeries(TimeSeries, timestamp, editor.Mirror) as ContactModule.Series;
                     PhaseSeries = Asset.GetModule<DeepPhaseModule>(setup.channels + "Channels").ExtractSeries(TimeSeries, timestamp, editor.Mirror) as DeepPhaseModule.Series;
-                    SpectrumSeries = Asset.GetModule<AudioSpectrumModule>().ExtractSeries(musicSeries, timestamp, editor.Mirror) as AudioSpectrumModule.Series;
+                    SpectrumSeries = Asset.GetModule<AudioSpectrumModule>().ExtractSeries(speechSeries, timestamp, editor.Mirror) as AudioSpectrumModule.Series;
 
                     Root = editor.GetSession().GetActor().transform.GetWorldMatrix();
                     ActorPosture = editor.GetSession().GetActor().GetBoneTransformations();

@@ -16,14 +16,14 @@ namespace OpenHuman {
 
 		private MotionEditor Editor = null;
 
-		[MenuItem ("OpenHuman/Tools/Asset Pipeline")]
+		[MenuItem("OpenHuman/Tools/Asset Pipeline")]
 		static void Init() {
 			Window = EditorWindow.GetWindow(typeof(AssetPipeline));
 			Scroll = Vector3.zero;
 		}
 
 		public MotionEditor GetEditor() {
-			if(Editor == null) {
+			if (Editor == null) {
 				Editor = GameObjectExtensions.Find<MotionEditor>(true);
 			}
 			return Editor;
@@ -34,11 +34,11 @@ namespace OpenHuman {
 		}
 
 		public override void DerivedRefresh() {
-			
+
 		}
-		
+
 		public override void DerivedInspector() {
-			if(GetEditor() == null) {
+			if (GetEditor() == null) {
 				EditorGUILayout.LabelField("No editor available in scene.");
 				return;
 			}
@@ -47,18 +47,18 @@ namespace OpenHuman {
 
 			Assign((AssetPipelineSetup)EditorGUILayout.ObjectField("Setup", Setup, typeof(AssetPipelineSetup), true));
 
-			if(Setup != null) {
+			if (Setup != null) {
 				Setup.Inspector();
 			}
 
-			if(Utility.GUIButton("Refresh", UltiDraw.DarkGrey, UltiDraw.White)) {
+			if (Utility.GUIButton("Refresh", UltiDraw.DarkGrey, UltiDraw.White)) {
 				LoadItems(GetEditor().Assets.ToArray());
 			}
 
 		}
 
 		public override void DerivedInspector(Item item) {
-			if(Setup != null) {
+			if (Setup != null) {
 				Setup.Inspector(item);
 			}
 		}
@@ -73,7 +73,7 @@ namespace OpenHuman {
 
 		public override IEnumerator DerivedProcess(Item item) {
 			EditorCoroutines.EditorCoroutine c = this.StartCoroutine(Setup.Iterate(MotionAsset.Retrieve(item.ID)));
-			while(!c.finished) {
+			while (!c.finished) {
 				yield return new WaitForSeconds(0f);
 			}
 		}
@@ -88,13 +88,13 @@ namespace OpenHuman {
 
 		public void Assign(AssetPipelineSetup setup) {
 			Setup = setup;
-			if(Setup != null) {
+			if (Setup != null) {
 				setup.Pipeline = this;
 			}
 		}
 
 		public class Data {
-			public enum TYPE {Text, Binary}
+			public enum TYPE { Text, Binary }
 
 			public static string Separator = " ";
 			public static int Digits = 5;
@@ -123,70 +123,70 @@ namespace OpenHuman {
 				public object Writer;
 				public TYPE Type;
 				private int Lines = 0;
-				public File(string name, TYPE type, string directory="") {
+				public File(string name, TYPE type, string directory = "") {
 					Type = type;
 					directory = GetExportPath() + (directory == "" ? (directory) : ("/" + directory));
-					if(!Directory.Exists(directory)) {
+					if (!Directory.Exists(directory)) {
 						Directory.CreateDirectory(directory);
 					}
-					if(Type == TYPE.Text) {
+					if (Type == TYPE.Text) {
 						Writer = new StreamWriter(System.IO.File.Open(directory + "/" + name + ".txt", FileMode.Create));
 					}
-					if(Type == TYPE.Binary) {
+					if (Type == TYPE.Binary) {
 						Writer = new BinaryWriter(System.IO.File.Open(directory + "/" + name + ".bin", FileMode.Create));
 					}
 				}
 				public void WriteLine(string value) {
-					if(Type == TYPE.Text) {
-						if(Lines > 0) {
+					if (Type == TYPE.Text) {
+						if (Lines > 0) {
 							((StreamWriter)Writer).Write(((StreamWriter)Writer).NewLine);
 						}
 						((StreamWriter)Writer).Write(value);
 					}
-					if(Type == TYPE.Binary) {
+					if (Type == TYPE.Binary) {
 						((BinaryWriter)Writer).Write(value);
 					}
 					Lines += 1;
 				}
 				public void WriteLine(float[] values) {
-					if(Type == TYPE.Text) {
-						if(Lines > 0) {
+					if (Type == TYPE.Text) {
+						if (Lines > 0) {
 							((StreamWriter)Writer).Write(((StreamWriter)Writer).NewLine);
 						}
 						((StreamWriter)Writer).Write(String.Join(Separator, Array.ConvertAll(values, x => x.Round(Digits).ToString(Accuracy))));
 					}
-					if(Type == TYPE.Binary) {
-						foreach(float value in values) {
+					if (Type == TYPE.Binary) {
+						foreach (float value in values) {
 							((BinaryWriter)Writer).Write(value);
 						}
 					}
 					Lines += 1;
 				}
 				public void WriteLine(int[] values) {
-					if(Type == TYPE.Text) {
-						if(Lines > 0) {
+					if (Type == TYPE.Text) {
+						if (Lines > 0) {
 							((StreamWriter)Writer).Write(((StreamWriter)Writer).NewLine);
 						}
 						((StreamWriter)Writer).Write(String.Join(Separator, values));
 					}
-					if(Type == TYPE.Binary) {
-						foreach(int value in values) {
+					if (Type == TYPE.Binary) {
+						foreach (int value in values) {
 							((BinaryWriter)Writer).Write(value);
 						}
 					}
 					Lines += 1;
 				}
 				public void Close() {
-					if(Type == TYPE.Text) {
+					if (Type == TYPE.Text) {
 						((StreamWriter)Writer).Close();
 					}
-					if(Type == TYPE.Binary) {
+					if (Type == TYPE.Binary) {
 						((BinaryWriter)Writer).Close();
 					}
 				}
 			}
 
-			public static File CreateFile(string name, TYPE type, string directory="") {
+			public static File CreateFile(string name, TYPE type, string directory = "") {
 				return new File(name, type, directory);
 			}
 
@@ -198,115 +198,116 @@ namespace OpenHuman {
 				return path;
 			}
 
-			public Data(string name, bool exportLabels=true, bool exportNormalization=true, bool exportShape=true) {
+			public Data(string name, bool exportLabels = true, bool exportNormalization = true, bool exportShape = true) {
 				Name = name;
 				Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 				Features = CreateFile(name, TYPE.Binary);
-				if(exportLabels) {
-					Labels = CreateFile(name+"Labels", TYPE.Text);
+				if (exportLabels) {
+					Labels = CreateFile(name + "Labels", TYPE.Text);
 				}
-				if(exportNormalization) {
-					Normalization = CreateFile(name+"Normalization", TYPE.Text);
+				if (exportNormalization) {
+					Normalization = CreateFile(name + "Normalization", TYPE.Text);
 				}
-				if(exportShape) {
-					Shape = CreateFile(name+"Shape", TYPE.Text);
+				if (exportShape) {
+					Shape = CreateFile(name + "Shape", TYPE.Text);
 				}
 				Process = Task.Factory.StartNew(() => WriteData());
 			}
 
-			public void Feed(float value, string name, string meanGroup=null, string sigmaGroup=null) {
+			public void Feed(float value, string name, string meanGroup = null, string sigmaGroup = null) {
 				Dim += 1;
-				if(!Setup) {
+				if (!Setup) {
 					ArrayExtensions.Append(ref Values, value);
 					ArrayExtensions.Append(ref Names, name);
 					ArrayExtensions.Append(ref MeanGroups, meanGroup == null ? MeanGroups.Length.ToString() : meanGroup);
 					ArrayExtensions.Append(ref SigmaGroups, sigmaGroup == null ? SigmaGroups.Length.ToString() : sigmaGroup);
-				} else {
-					Values[Dim-1] = value;
+				}
+				else {
+					Values[Dim - 1] = value;
 				}
 			}
 
-			public void Feed(bool value, string name, string meanGroup=null, string sigmaGroup=null) {
+			public void Feed(bool value, string name, string meanGroup = null, string sigmaGroup = null) {
 				Feed(value ? 1f : 0f, name, meanGroup, sigmaGroup);
 			}
 
-			public void Feed(float[] values, string name, string meanGroup=null, string sigmaGroup=null) {
-				for(int i=0; i<values.Length; i++) {
-					Feed(values[i], Setup ? null : (name + (i+1)), meanGroup, sigmaGroup);
+			public void Feed(float[] values, string name, string meanGroup = null, string sigmaGroup = null) {
+				for (int i = 0; i < values.Length; i++) {
+					Feed(values[i], Setup ? null : (name + (i + 1)), meanGroup, sigmaGroup);
 				}
 			}
 
-			public void Feed(bool[] values, string name, string meanGroup=null, string sigmaGroup=null) {
-				for(int i=0; i<values.Length; i++) {
-					Feed(values[i], Setup ? null : (name + (i+1)), meanGroup, sigmaGroup);
+			public void Feed(bool[] values, string name, string meanGroup = null, string sigmaGroup = null) {
+				for (int i = 0; i < values.Length; i++) {
+					Feed(values[i], Setup ? null : (name + (i + 1)), meanGroup, sigmaGroup);
 				}
 			}
 
-			public void Feed(float[,] values, string name, string meanGroup=null, string sigmaGroup=null) {
-				for(int i=0; i<values.GetLength(0); i++) {
-					for(int j=0; j<values.GetLength(1); j++) {
-						Feed(values[i,j], Setup ? null : (name+(i*values.GetLength(1)+j+1)), meanGroup, sigmaGroup);
+			public void Feed(float[,] values, string name, string meanGroup = null, string sigmaGroup = null) {
+				for (int i = 0; i < values.GetLength(0); i++) {
+					for (int j = 0; j < values.GetLength(1); j++) {
+						Feed(values[i, j], Setup ? null : (name + (i * values.GetLength(1) + j + 1)), meanGroup, sigmaGroup);
 					}
 				}
 			}
 
-			public void Feed(bool[,] values, string name, string meanGroup=null, string sigmaGroup=null) {
-				for(int i=0; i<values.GetLength(0); i++) {
-					for(int j=0; j<values.GetLength(1); j++) {
-						Feed(values[i,j], Setup ? null : (name+(i*values.GetLength(1)+j+1)), meanGroup, sigmaGroup);
+			public void Feed(bool[,] values, string name, string meanGroup = null, string sigmaGroup = null) {
+				for (int i = 0; i < values.GetLength(0); i++) {
+					for (int j = 0; j < values.GetLength(1); j++) {
+						Feed(values[i, j], Setup ? null : (name + (i * values.GetLength(1) + j + 1)), meanGroup, sigmaGroup);
 					}
 				}
 			}
 
-			public void Feed(Vector2 value, string name, string meanGroup=null, string sigmaGroup=null) {
-				Feed(value.x, Setup ? null : (name+"X"), meanGroup, sigmaGroup);
-				Feed(value.y, Setup ? null : (name+"Y"), meanGroup, sigmaGroup);
+			public void Feed(Vector2 value, string name, string meanGroup = null, string sigmaGroup = null) {
+				Feed(value.x, Setup ? null : (name + "X"), meanGroup, sigmaGroup);
+				Feed(value.y, Setup ? null : (name + "Y"), meanGroup, sigmaGroup);
 			}
 
-			public void Feed(Vector3 value, string name, string meanGroup=null, string sigmaGroup=null) {
-				Feed(value.x, Setup ? null : (name+"X"), meanGroup, sigmaGroup);
-				Feed(value.y, Setup ? null : (name+"Y"), meanGroup, sigmaGroup);
-				Feed(value.z, Setup ? null : (name+"Z"), meanGroup, sigmaGroup);
+			public void Feed(Vector3 value, string name, string meanGroup = null, string sigmaGroup = null) {
+				Feed(value.x, Setup ? null : (name + "X"), meanGroup, sigmaGroup);
+				Feed(value.y, Setup ? null : (name + "Y"), meanGroup, sigmaGroup);
+				Feed(value.z, Setup ? null : (name + "Z"), meanGroup, sigmaGroup);
 			}
 
-			public void FeedXY(Vector3 value, string name, string meanGroup=null, string sigmaGroup=null) {
-				Feed(value.x, Setup ? null : (name+"X"), meanGroup, sigmaGroup);
-				Feed(value.y, Setup ? null : (name+"Y"), meanGroup, sigmaGroup);
+			public void FeedXY(Vector3 value, string name, string meanGroup = null, string sigmaGroup = null) {
+				Feed(value.x, Setup ? null : (name + "X"), meanGroup, sigmaGroup);
+				Feed(value.y, Setup ? null : (name + "Y"), meanGroup, sigmaGroup);
 			}
 
-			public void FeedXZ(Vector3 value, string name, string meanGroup=null, string sigmaGroup=null) {
-				Feed(value.x, Setup ? null : (name+"X"), meanGroup, sigmaGroup);
-				Feed(value.z, Setup ? null : (name+"Z"), meanGroup, sigmaGroup);
+			public void FeedXZ(Vector3 value, string name, string meanGroup = null, string sigmaGroup = null) {
+				Feed(value.x, Setup ? null : (name + "X"), meanGroup, sigmaGroup);
+				Feed(value.z, Setup ? null : (name + "Z"), meanGroup, sigmaGroup);
 			}
 
-			public void FeedYZ(Vector3 value, string name, string meanGroup=null, string sigmaGroup=null) {
-				Feed(value.y, Setup ? null : (name+"Y"), meanGroup, sigmaGroup);
-				Feed(value.z, Setup ? null : (name+"Z"), meanGroup, sigmaGroup);
+			public void FeedYZ(Vector3 value, string name, string meanGroup = null, string sigmaGroup = null) {
+				Feed(value.y, Setup ? null : (name + "Y"), meanGroup, sigmaGroup);
+				Feed(value.z, Setup ? null : (name + "Z"), meanGroup, sigmaGroup);
 			}
 
-			public void Feed(Quaternion value, string name, string meanGroup=null, string sigmaGroup=null) {
-				Feed(value.x, Setup ? null : (name+"X"), meanGroup, sigmaGroup);
-				Feed(value.y, Setup ? null : (name+"Y"), meanGroup, sigmaGroup);
-				Feed(value.z, Setup ? null : (name+"Z"), meanGroup, sigmaGroup);
-				Feed(value.w, Setup ? null : (name+"W"), meanGroup, sigmaGroup);
+			public void Feed(Quaternion value, string name, string meanGroup = null, string sigmaGroup = null) {
+				Feed(value.x, Setup ? null : (name + "X"), meanGroup, sigmaGroup);
+				Feed(value.y, Setup ? null : (name + "Y"), meanGroup, sigmaGroup);
+				Feed(value.z, Setup ? null : (name + "Z"), meanGroup, sigmaGroup);
+				Feed(value.w, Setup ? null : (name + "W"), meanGroup, sigmaGroup);
 			}
 
-			public void Feed(Matrix4x4 matrix, string name, string meanGroup=null, string sigmaGroup=null) {
+			public void Feed(Matrix4x4 matrix, string name, string meanGroup = null, string sigmaGroup = null) {
 				Feed(matrix.GetPosition(), name + "Position", meanGroup, sigmaGroup);
 				Feed(matrix.GetForward(), name + "Forward", meanGroup, sigmaGroup);
 				Feed(matrix.GetUp(), name + "Up", meanGroup, sigmaGroup);
 			}
 
 			private void WriteData() {
-				while(!Finished || Buffer.Count > 0) {
-					if(Buffer.Count > 0) {
+				while (!Finished || Buffer.Count > 0) {
+					if (Buffer.Count > 0) {
 						float[] item;
-						lock(Buffer) {
-							item = Buffer.Dequeue();	
+						lock (Buffer) {
+							item = Buffer.Dequeue();
 						}
-						if(Normalization != null) {
+						if (Normalization != null) {
 							//Update Mean and Std
-							for(int i=0; i<item.Length; i++) {
+							for (int i = 0; i < item.Length; i++) {
 								MeanStatistics[MeanGroups[i]].Add(item[i]);
 								SigmaStatistics[SigmaGroups[i]].Add(item[i]);
 							}
@@ -314,28 +315,29 @@ namespace OpenHuman {
 						//Write to File
 						Features.WriteLine(item);
 						Samples += 1;
-					} else {
+					}
+					else {
 						Thread.Sleep(1);
 					}
 				}
 			}
 
 			public void Store() {
-				if(!Setup) {
-					if(Labels != null) {
+				if (!Setup) {
+					if (Labels != null) {
 						//Write Labels
-						for(int i=0; i<Names.Length; i++) {
+						for (int i = 0; i < Names.Length; i++) {
 							Labels.WriteLine("[" + i + "]" + " " + Names[i]);
 						}
 						Labels.Close();
 					}
-					if(Normalization != null) {
+					if (Normalization != null) {
 						//Generate Normalization
-						for(int i=0; i<MeanGroups.Length; i++) {
-							if(!MeanStatistics.ContainsKey(MeanGroups[i])) {
+						for (int i = 0; i < MeanGroups.Length; i++) {
+							if (!MeanStatistics.ContainsKey(MeanGroups[i])) {
 								MeanStatistics.Add(MeanGroups[i], new RunningStatistics());
 							}
-							if(!SigmaStatistics.ContainsKey(SigmaGroups[i])) {
+							if (!SigmaStatistics.ContainsKey(SigmaGroups[i])) {
 								SigmaStatistics.Add(SigmaGroups[i], new RunningStatistics());
 							}
 						}
@@ -344,20 +346,20 @@ namespace OpenHuman {
 				}
 
 				//Skip If Nothing Written
-				if(Dim == 0) {
+				if (Dim == 0) {
 					Debug.LogWarning("Attempting to store feature vector with no values given.");
 					return;
 				}
-				
+
 				//Skip If Dim Mismatch
-				if(Dim != Values.Length) {
+				if (Dim != Values.Length) {
 					Debug.LogWarning("Writing different number of features than initially registered.");
 					return;
 				}
 
 				//Enqueue Sample
 				float[] item = (float[])Values.Clone();
-				lock(Buffer) {
+				lock (Buffer) {
 					Buffer.Enqueue(item);
 				}
 
@@ -372,13 +374,13 @@ namespace OpenHuman {
 				Task.WaitAll(Process);
 				Features.Close();
 
-				if(Normalization != null) {
+				if (Normalization != null) {
 					//Write Mean and Sigma
 					{
 						float[] mean = new float[MeanGroups.Length];
-						for(int i=0; i<MeanGroups.Length; i++) {
+						for (int i = 0; i < MeanGroups.Length; i++) {
 							mean[i] = MeanStatistics[MeanGroups[i]].Mean();
-							if(Normalization.Type == TYPE.Text) {
+							if (Normalization.Type == TYPE.Text) {
 								mean[i] = mean[i].Round(Digits);
 							}
 						}
@@ -386,12 +388,12 @@ namespace OpenHuman {
 					}
 					{
 						float[] sigma = new float[SigmaGroups.Length];
-						for(int i=0; i<MeanGroups.Length; i++) {
+						for (int i = 0; i < MeanGroups.Length; i++) {
 							sigma[i] = SigmaStatistics[SigmaGroups[i]].Sigma();
-							if(Normalization.Type == TYPE.Text) {
+							if (Normalization.Type == TYPE.Text) {
 								sigma[i] = sigma[i].Round(Digits);
 							}
-							if(sigma[i] == 0f) {
+							if (sigma[i] == 0f) {
 								Debug.LogWarning("Standard deviation for feature " + Names[i] + " in file " + Name + " is 0 and will be converted to 1.");
 								sigma[i] = 1f;
 							}
@@ -401,7 +403,7 @@ namespace OpenHuman {
 					Normalization.Close();
 				}
 
-				if(Shape != null) {
+				if (Shape != null) {
 					//Write Shape
 					Shape.WriteLine(Samples.ToString());
 					Shape.WriteLine(Values.Length.ToString());

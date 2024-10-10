@@ -3,10 +3,10 @@ using UnityEngine;
 using UnityEditor;
 
 namespace OpenHuman {
-    public class AudioSpectrumModule : Module {
+    public class SpeechSpectrumModule : Module {
 
-        public AudioSpectrum AudioSpectrum = null;
-        public AudioSpectrum[] AudioSpectrums = null;
+        public SpeechSpectrum SpeechSpectrum = null;
+        public SpeechSpectrum[] SpeechSpectrums = null;
         public bool AdaptiveLowpass = true;
 
         public override void DerivedResetPrecomputation() {
@@ -14,17 +14,17 @@ namespace OpenHuman {
         }
 
         public override TimeSeries.Component DerivedExtractSeries(TimeSeries global, float timestamp, bool mirrored, params object[] parameters) {
-            if (AudioSpectrum == null) {
+            if (SpeechSpectrum == null) {
                 return null;
             }
             Series instance = new Series(global);
             for (int i = 0; i < instance.Samples.Length; i++) {
                 float t = timestamp + instance.Samples[i].Timestamp;
                 if (AdaptiveLowpass) {
-                    instance.Values[i] = AudioSpectrum.GetFiltered(t, global.MaximumFrequency);
+                    instance.Values[i] = SpeechSpectrum.GetFiltered(t, global.MaximumFrequency);
                 }
                 else {
-                    instance.Values[i] = AudioSpectrum.GetSample(t);
+                    instance.Values[i] = SpeechSpectrum.GetSample(t);
                 }
             }
             return instance;
@@ -35,19 +35,19 @@ namespace OpenHuman {
         }
 
         protected override void DerivedLoad(MotionEditor editor) {
-            if (AudioSpectrums == null) {
-                AudioSpectrums = new AudioSpectrum[0];
+            if (SpeechSpectrums == null) {
+                SpeechSpectrums = new SpeechSpectrum[0];
             }
         }
 
         protected override void DerivedUnload(MotionEditor editor) {
-            if (AudioSpectrum != null) {
-                AudioSpectrum.StopMusic();
+            if (SpeechSpectrum != null) {
+                SpeechSpectrum.StopSpeech();
             }
-            if (AudioSpectrums != null) {
-                foreach (AudioSpectrum spectrum in AudioSpectrums) {
+            if (SpeechSpectrums != null) {
+                foreach (SpeechSpectrum spectrum in SpeechSpectrums) {
                     if (spectrum != null) {
-                        spectrum.StopMusic();
+                        spectrum.StopSpeech();
                     }
                 }
             }
@@ -55,55 +55,55 @@ namespace OpenHuman {
 
         public override void OnTriggerPlay(MotionEditor editor) {
             if (!editor.IsPlaying()) {
-                if (AudioSpectrum != null) {
-                    AudioSpectrum.StopMusic();
+                if (SpeechSpectrum != null) {
+                    SpeechSpectrum.StopSpeech();
                 }
-                if (AudioSpectrums != null) {
-                    foreach (AudioSpectrum spectrum in AudioSpectrums) {
+                if (SpeechSpectrums != null) {
+                    foreach (SpeechSpectrum spectrum in SpeechSpectrums) {
                         if (spectrum != null) {
-                            spectrum.StopMusic();
+                            spectrum.StopSpeech();
                         }
                     }
                 }
             }
         }
 
-        public AudioSpectrum GetAudioSpectrum(float timestamp) {
-            if (AudioSpectrums != null && AudioSpectrums.Length == 0) {
-                return AudioSpectrum;
+        public SpeechSpectrum GetSpeechSpectrum(float timestamp) {
+            if (SpeechSpectrums != null && SpeechSpectrums.Length == 0) {
+                return SpeechSpectrum;
             }
             int index = Asset.GetFrame(timestamp).Index;
             for (int i = 0; i < Asset.Sequences.Length; i++) {
                 if (Asset.Sequences[i].Contains(index)) {
-                    return AudioSpectrums[i];
+                    return SpeechSpectrums[i];
                 }
             }
             return null;
         }
 
-        public float GetAudioSpectrumTimestamp(float timestamp) {
-            if (AudioSpectrums != null && AudioSpectrums.Length == 0) {
+        public float GetSpeechSpectrumTimestamp(float timestamp) {
+            if (SpeechSpectrums != null && SpeechSpectrums.Length == 0) {
                 return timestamp;
             }
             int index = Asset.GetFrame(timestamp).Index;
             for (int i = 0; i < Asset.Sequences.Length; i++) {
                 if (Asset.Sequences[i].Contains(index)) {
                     int frames = index - Asset.Sequences[i].Start;
-                    return frames / (float)AudioSpectrums[i].Framerate;
+                    return frames / (float)SpeechSpectrums[i].Framerate;
                 }
             }
             return timestamp;
         }
 
         protected override void DerivedCallback(MotionEditor editor) {
-            AudioSpectrum active = GetAudioSpectrum(editor.GetTimestamp());
+            SpeechSpectrum active = GetSpeechSpectrum(editor.GetTimestamp());
             if (editor.IsPlaying()) {
                 bool force = Mathf.Abs(editor.GetTimestamp() - active.GetTimestamp()) > 0.1f;
-                active.PlayMusic(GetAudioSpectrumTimestamp(editor.GetTimestamp()), force);
+                active.PlaySpeech(GetSpeechSpectrumTimestamp(editor.GetTimestamp()), force);
             }
-            foreach (AudioSpectrum spectrum in AudioSpectrums) {
+            foreach (SpeechSpectrum spectrum in SpeechSpectrums) {
                 if (spectrum != active) {
-                    spectrum.StopMusic();
+                    spectrum.StopSpeech();
                 }
             }
 
@@ -141,19 +141,19 @@ namespace OpenHuman {
         }
 
         protected override void DerivedDraw(MotionEditor editor) {
-            if (AudioSpectrum == null) {
+            if (SpeechSpectrum == null) {
                 return;
             }
             ExtractSeries(editor.GetTimeSeries(), editor.GetTimestamp(), editor.Mirror).Draw();
         }
 
         protected override void DerivedInspector(MotionEditor editor) {
-            AudioSpectrum = EditorGUILayout.ObjectField("Audio Spectrum", AudioSpectrum, typeof(AudioSpectrum), true) as AudioSpectrum;
-            for (int i = 0; i < AudioSpectrums.Length; i++) {
-                AudioSpectrums[i] = EditorGUILayout.ObjectField("Audio Spectrum " + (i + 1), AudioSpectrums[i], typeof(AudioSpectrum), true) as AudioSpectrum;
+            SpeechSpectrum = EditorGUILayout.ObjectField("Audio Spectrum", SpeechSpectrum, typeof(SpeechSpectrum), true) as SpeechSpectrum;
+            for (int i = 0; i < SpeechSpectrums.Length; i++) {
+                SpeechSpectrums[i] = EditorGUILayout.ObjectField("Audio Spectrum " + (i + 1), SpeechSpectrums[i], typeof(SpeechSpectrum), true) as SpeechSpectrum;
             }
-            if (AudioSpectrum != null) {
-                EditorGUILayout.HelpBox("Clip Length: " + AudioSpectrum.Clip.length, MessageType.None);
+            if (SpeechSpectrum != null) {
+                EditorGUILayout.HelpBox("Clip Length: " + SpeechSpectrum.Clip.length, MessageType.None);
             }
             AdaptiveLowpass = EditorGUILayout.Toggle("Adaptive Lowpass", AdaptiveLowpass);
         }
@@ -162,10 +162,10 @@ namespace OpenHuman {
 
             public static float[] AS, AB, AF, AMFCC, AC, AZC;
 
-            public AudioSpectrum.Sample[] Values;
+            public SpeechSpectrum.Sample[] Values;
 
             public Series(TimeSeries global) : base(global) {
-                Values = new AudioSpectrum.Sample[Samples.Length];
+                Values = new SpeechSpectrum.Sample[Samples.Length];
             }
 
             public override void Increment(int start, int end) {
@@ -192,7 +192,7 @@ namespace OpenHuman {
                         AS = AS.Validate(Values[0].Spectogram.Length);
                         float[][] spectrums = new float[KeyCount][];
                         for (int i = 0; i < KeyCount; i++) {
-                            AudioSpectrum.Sample sample = Values[GetKey(i).Index];
+                            SpeechSpectrum.Sample sample = Values[GetKey(i).Index];
                             float[] v = sample.Spectogram;
                             spectrums[i] = new float[v.Length];
                             for (int j = 0; j < v.Length; j++) {
@@ -207,7 +207,7 @@ namespace OpenHuman {
                         AB = AB.Validate(Values[0].Beats.Length);
                         float[][] beats = new float[KeyCount][];
                         for (int i = 0; i < KeyCount; i++) {
-                            AudioSpectrum.Sample sample = Values[GetKey(i).Index];
+                            SpeechSpectrum.Sample sample = Values[GetKey(i).Index];
                             float[] v = sample.Beats;
                             beats[i] = new float[v.Length];
                             for (int j = 0; j < v.Length; j++) {
@@ -222,7 +222,7 @@ namespace OpenHuman {
                         AF = AF.Validate(Values[0].Flux.Length);
                         float[][] flux = new float[KeyCount][];
                         for (int i = 0; i < KeyCount; i++) {
-                            AudioSpectrum.Sample sample = Values[GetKey(i).Index];
+                            SpeechSpectrum.Sample sample = Values[GetKey(i).Index];
                             float[] v = sample.Flux;
                             flux[i] = new float[v.Length];
                             for (int j = 0; j < v.Length; j++) {
@@ -237,7 +237,7 @@ namespace OpenHuman {
                         AMFCC = AMFCC.Validate(Values[0].MFCC.Length);
                         float[][] mfcc = new float[KeyCount][];
                         for (int i = 0; i < KeyCount; i++) {
-                            AudioSpectrum.Sample sample = Values[GetKey(i).Index];
+                            SpeechSpectrum.Sample sample = Values[GetKey(i).Index];
                             float[] v = sample.MFCC;
                             mfcc[i] = new float[v.Length];
                             for (int j = 0; j < v.Length; j++) {
@@ -252,7 +252,7 @@ namespace OpenHuman {
                         AC = AC.Validate(Values[0].Chroma.Length);
                         float[][] chroma = new float[KeyCount][];
                         for (int i = 0; i < KeyCount; i++) {
-                            AudioSpectrum.Sample sample = Values[GetKey(i).Index];
+                            SpeechSpectrum.Sample sample = Values[GetKey(i).Index];
                             float[] v = sample.Chroma;
                             chroma[i] = new float[v.Length];
                             for (int j = 0; j < v.Length; j++) {
@@ -267,7 +267,7 @@ namespace OpenHuman {
                         AZC = AZC.Validate(Values[0].ZeroCrossing.Length);
                         float[][] zc = new float[KeyCount][];
                         for (int i = 0; i < KeyCount; i++) {
-                            AudioSpectrum.Sample sample = Values[GetKey(i).Index];
+                            SpeechSpectrum.Sample sample = Values[GetKey(i).Index];
                             float[] v = sample.ZeroCrossing;
                             zc[i] = new float[v.Length];
                             for (int j = 0; j < v.Length; j++) {

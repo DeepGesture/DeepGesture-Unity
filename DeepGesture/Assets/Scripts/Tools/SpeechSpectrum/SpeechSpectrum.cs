@@ -44,7 +44,7 @@ namespace OpenHuman {
             }
         }
 
-        public void StopMusic() {
+        public void StopSpeech() {
             if (AudioSource != null) {
                 Utility.Destroy(AudioSource.gameObject);
             }
