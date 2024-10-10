@@ -6,10 +6,8 @@ using System.Collections;
 using System.Linq;
 using OpenHuman;
 
-namespace DeepGesture
-{
-    public class GesturePipeline : AssetPipelineSetup
-    {
+namespace DeepGesture {
+    public class GesturePipeline : AssetPipelineSetup {
         public enum Mode { ProcessAssets, ExportController };
         public Mode mode = Mode.ProcessAssets;
         public string audioPath = string.Empty;
@@ -38,22 +36,18 @@ namespace DeepGesture
         private AssetPipeline.Data.File s;
         private AssetPipeline.Data x, y;
 
-        public override void Inspector()
-        {
+        public override void Inspector() {
 
             mode = (Mode)EditorGUILayout.EnumPopup("Mode", mode);
 
-            if (mode == Mode.ProcessAssets)
-            {
+            if (mode == Mode.ProcessAssets) {
                 ProcessAssetsMode();
             }
-            else if (mode == Mode.ExportController)
-            {
+            else if (mode == Mode.ExportController) {
                 ExportMode();
             }
 
-            void ExportMode()
-            {
+            void ExportMode() {
                 EditorGUI.BeginDisabledGroup(true);
                 EditorGUILayout.FloatField("Export Framerate", Pipeline.GetEditor().TargetFramerate);
                 EditorGUILayout.TextField("Export Path", AssetPipeline.Data.GetExportPath());
@@ -61,8 +55,7 @@ namespace DeepGesture
                 channels = EditorGUILayout.IntField("Channels", channels);
                 writeMirror = EditorGUILayout.Toggle("Write Mirror", writeMirror);
                 Utility.SetGUIColor(UltiDraw.DarkGrey);
-                using (new EditorGUILayout.VerticalScope("Box"))
-                {
+                using (new EditorGUILayout.VerticalScope("Box")) {
                     Utility.ResetGUIColor();
                     EditorGUILayout.LabelField("Music Series");
                     m_pastKeys = Mathf.Max(EditorGUILayout.IntField("Past Keys", m_pastKeys), 0);
@@ -71,8 +64,7 @@ namespace DeepGesture
                     m_futureWindow = EditorGUILayout.FloatField("Future Window", m_futureWindow);
                     m_resolution = Mathf.Max(EditorGUILayout.IntField("Resolution", m_resolution), 1);
                 }
-                if (Pipeline.IsProcessing() || Pipeline.IsAborting())
-                {
+                if (Pipeline.IsProcessing() || Pipeline.IsAborting()) {
                     EditorGUI.BeginDisabledGroup(true);
                     EditorGUILayout.FloatField("Samples Per Second", m_samplesPerSecond);
                     EditorGUI.EndDisabledGroup();
@@ -87,8 +79,7 @@ namespace DeepGesture
                 }
             }
 
-            void ProcessAssetsMode()
-            {
+            void ProcessAssetsMode() {
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField("Update Contact Sensors", GUILayout.Width(150));
                 updateContact = EditorGUILayout.Toggle(updateContact);
@@ -98,8 +89,7 @@ namespace DeepGesture
                 EditorGUILayout.LabelField("Update Audio Assets", GUILayout.Width(150));
                 updateAudios = EditorGUILayout.Toggle(updateAudios);
                 EditorGUILayout.EndHorizontal();
-                if (updateAudios)
-                {
+                if (updateAudios) {
                     EditorGUILayout.LabelField("Audio Path");
 
                     EditorGUILayout.BeginHorizontal();
@@ -108,8 +98,7 @@ namespace DeepGesture
                     EditorGUILayout.EndHorizontal();
                 }
 
-                if (updateContact && (Pipeline.IsProcessing() || Pipeline.IsAborting()))
-                {
+                if (updateContact && (Pipeline.IsProcessing() || Pipeline.IsAborting())) {
                     EditorGUILayout.LabelField("Capture Contact");
                     EditorGUI.DrawRect(
                         new Rect(
@@ -127,17 +116,14 @@ namespace DeepGesture
 
         public override bool CanProcess() { return true; }
 
-        public override void Begin()
-        {
-            if (mode == Mode.ProcessAssets)
-            {
+        public override void Begin() {
+            if (mode == Mode.ProcessAssets) {
                 m_audioPath = string.IsNullOrEmpty(audioPath) ? "Assets" : "Assets/" + audioPath;
                 m_progress = 0;
                 m_updateAudioAssets = updateAudios;
                 m_updateContact = updateContact;
             }
-            if (mode == Mode.ExportController)
-            {
+            if (mode == Mode.ExportController) {
                 m_samples = 0;
                 m_sequence = 0;
                 m_progress = 0;
@@ -148,43 +134,34 @@ namespace DeepGesture
             }
         }
 
-        public override IEnumerator Iterate(MotionAsset asset)
-        {
+        public override IEnumerator Iterate(MotionAsset asset) {
             Pipeline.GetEditor().LoadSession(Utility.GetAssetGUID(asset));
 
-            if (mode == Mode.ProcessAssets)
-            {
+            if (mode == Mode.ProcessAssets) {
                 yield return EditorCoroutines.StartCoroutine(ProcessAssets(asset), this);
             }
 
-            if (mode == Mode.ExportController)
-            {
+            if (mode == Mode.ExportController) {
                 yield return EditorCoroutines.StartCoroutine(ProcessControllerAssets(asset), this);
             }
 
             yield return new WaitForSeconds(0);
         }
 
-        public override void Callback()
-        {
-            if (mode == Mode.ProcessAssets)
-            {
+        public override void Callback() {
+            if (mode == Mode.ProcessAssets) {
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
                 Resources.UnloadUnusedAssets();
             }
-            if (mode == Mode.ExportController)
-            {
+            if (mode == Mode.ExportController) {
                 Resources.UnloadUnusedAssets();
             }
         }
 
-        public override void Finish()
-        {
-            if (mode == Mode.ProcessAssets)
-            {
-                foreach (string t in Pipeline.GetEditor().Assets)
-                {
+        public override void Finish() {
+            if (mode == Mode.ProcessAssets) {
+                foreach (string t in Pipeline.GetEditor().Assets) {
                     // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[i]).ResetSequences();
                     MotionAsset asset = MotionAsset.Retrieve(t);
                     asset.Export = true;
@@ -196,16 +173,14 @@ namespace DeepGesture
                 AssetDatabase.Refresh();
                 Resources.UnloadUnusedAssets();
             }
-            if (mode == Mode.ExportController)
-            {
+            if (mode == Mode.ExportController) {
                 s.Close();
                 x.Finish();
                 y.Finish();
             }
         }
 
-        private IEnumerator ProcessAssets(MotionAsset asset)
-        {
+        private IEnumerator ProcessAssets(MotionAsset asset) {
 
             asset.MirrorAxis = Axis.XPositive;
             asset.Model = "Character";
@@ -221,8 +196,7 @@ namespace DeepGesture
 
             {
                 ContactModule module = asset.HasModule<ContactModule>() ? asset.GetModule<ContactModule>() : asset.AddModule<ContactModule>();
-                if (m_updateContact)
-                {
+                if (m_updateContact) {
                     module.Clear();
                     module.AddSensor("LeftFoot", Vector3.zero, Vector3.zero, 1f / 7f * Vector3.one, 1f, LayerMask.GetMask("Ground"), ContactModule.ContactType.Translational, ContactModule.ColliderType.Sphere);
                     module.AddSensor("RightFoot", Vector3.zero, Vector3.zero, 1f / 7f * Vector3.one, 1f, LayerMask.GetMask("Ground"), ContactModule.ContactType.Translational, ContactModule.ColliderType.Sphere);
@@ -232,30 +206,25 @@ namespace DeepGesture
 
             {
                 AudioSpectrumModule module = asset.HasModule<AudioSpectrumModule>() ? asset.GetModule<AudioSpectrumModule>() : asset.AddModule<AudioSpectrumModule>();
-                if (m_updateAudioAssets)
-                {
+                if (m_updateAudioAssets) {
                     string audioName = asset.name.EndsWith(".bvh") ? asset.name.Substring(0, asset.name.Length - 4) : asset.name;
                     string searchFilter = $"{audioName} t:AudioSpectrum";
                     string[] guids = AssetDatabase.FindAssets(searchFilter, new[] { m_audioPath });
                     AudioSpectrum[] audios = new AudioSpectrum[guids.Length];
-                    for (int i = 0; i < guids.Length; i++)
-                    {
+                    for (int i = 0; i < guids.Length; i++) {
                         string path = AssetDatabase.GUIDToAssetPath(guids[i]);
                         audios[i] = AssetDatabase.LoadAssetAtPath<AudioSpectrum>(path);
                     }
 
-                    if (audios.Length == 1 && audios[0].Clip != null)
-                    {
+                    if (audios.Length == 1 && audios[0].Clip != null) {
                         module.AudioSpectrum = audios[0];
                         module.AudioSpectrums = Array.Empty<AudioSpectrum>();
                     }
-                    else if (audios.Length > 1 && audios.All(audio => audio.Clip != null))
-                    {
+                    else if (audios.Length > 1 && audios.All(audio => audio.Clip != null)) {
                         module.AudioSpectrum = null;
                         module.AudioSpectrums = audios;
                     }
-                    else
-                    {
+                    else {
                         module.AudioSpectrum = null;
                         module.AudioSpectrums = Array.Empty<AudioSpectrum>();
                         Debug.LogError($"AudioSpectrum called {audioName} was not set properly in {m_audioPath}.");
@@ -268,32 +237,24 @@ namespace DeepGesture
             yield return new WaitForSeconds(0);
         }
 
-        private IEnumerator ProcessControllerAssets(MotionAsset asset)
-        {
-            if (asset.Export)
-            {
-                for (int i = 1; i <= 2; i++)
-                {
-                    if (i == 1)
-                    {
+        private IEnumerator ProcessControllerAssets(MotionAsset asset) {
+            if (asset.Export) {
+                for (int i = 1; i <= 2; i++) {
+                    if (i == 1) {
                         Pipeline.GetEditor().SetMirror(false);
                     }
-                    else if (i == 2 && writeMirror)
-                    {
+                    else if (i == 2 && writeMirror) {
                         Pipeline.GetEditor().SetMirror(true);
                     }
-                    else
-                    {
+                    else {
                         break;
                     }
-                    foreach (Interval seq in asset.Sequences)
-                    {
+                    foreach (Interval seq in asset.Sequences) {
                         m_sequence += 1;
                         float start = asset.GetFrame(asset.GetFrame(seq.Start).Timestamp).Timestamp;
                         float end = asset.GetFrame(asset.GetFrame(seq.End).Timestamp - 1f / Pipeline.GetEditor().TargetFramerate).Timestamp;
                         int index = 0;
-                        while (Pipeline.IsProcessing() && (start + index / Pipeline.GetEditor().TargetFramerate < end || Mathf.Approximately(start + index / Pipeline.GetEditor().TargetFramerate, end)))
-                        {
+                        while (Pipeline.IsProcessing() && (start + index / Pipeline.GetEditor().TargetFramerate < end || Mathf.Approximately(start + index / Pipeline.GetEditor().TargetFramerate, end))) {
                             float tCurrent = start + index / Pipeline.GetEditor().TargetFramerate;
                             float tNext = start + (index + 1) / Pipeline.GetEditor().TargetFramerate;
                             index += 1;
@@ -305,8 +266,7 @@ namespace DeepGesture
                             WriteSequenceInfo(m_sequence, tCurrent, Pipeline.GetEditor().Mirror, asset);
 
                             m_samples += 1;
-                            if (Utility.GetElapsedTime(m_timestamp) >= 0.2f)
-                            {
+                            if (Utility.GetElapsedTime(m_timestamp) >= 0.2f) {
                                 m_progress = (Math.Abs(end - start) < 0.001f) ? 1f : ((tCurrent - start) / (end - start));
                                 m_samplesPerSecond = m_samples / (float)Utility.GetElapsedTime(m_timestamp);
                                 m_samples = 0;
@@ -321,8 +281,7 @@ namespace DeepGesture
 
         }
 
-        private void WriteSequenceInfo(int sequence, float timestamp, bool mirrored, MotionAsset asset)
-        {
+        private void WriteSequenceInfo(int sequence, float timestamp, bool mirrored, MotionAsset asset) {
             // Sequence - Timestamp - Mirroring - Name - GUID
             s.WriteLine(
                 sequence + AssetPipeline.Data.Separator +
@@ -332,10 +291,8 @@ namespace DeepGesture
                 Utility.GetAssetGUID(asset));
         }
 
-        private static class GestureControllerSetup
-        {
-            public static void Export(GesturePipeline setup, AssetPipeline.Data x, AssetPipeline.Data y, float tCurrent, float tNext, TimeSeries musicSeries)
-            {
+        private static class GestureControllerSetup {
+            public static void Export(GesturePipeline setup, AssetPipeline.Data x, AssetPipeline.Data y, float tCurrent, float tNext, TimeSeries musicSeries) {
                 Container current = new Container(setup, tCurrent, musicSeries);
                 Container next = new Container(setup, tNext, musicSeries);
 
@@ -343,16 +300,14 @@ namespace DeepGesture
 
                 // Input
                 // Control
-                for (int k = 0; k < current.TimeSeries.Samples.Length; k++)
-                {
+                for (int k = 0; k < current.TimeSeries.Samples.Length; k++) {
                     x.FeedXZ(next.RootSeries.GetPosition(k).PositionTo(current.Root), "TrajectoryPosition" + (k + 1));
                     x.FeedXZ(next.RootSeries.GetDirection(k).DirectionTo(current.Root), "TrajectoryDirection" + (k + 1));
                     x.FeedXZ(next.RootSeries.GetVelocity(k).DirectionTo(current.Root), "TrajectoryVelocity" + (k + 1));
                 }
 
                 // Audio Features
-                for (int k = 0; k < current.SpectrumSeries.Samples.Length; k++)
-                {
+                for (int k = 0; k < current.SpectrumSeries.Samples.Length; k++) {
                     x.Feed(current.SpectrumSeries.Values[k].Spectogram, "Spectogram" + (k + 1) + "-");
                     x.Feed(current.SpectrumSeries.Values[k].Beats, "Beats" + (k + 1) + "-");
                     x.Feed(current.SpectrumSeries.Values[k].Flux, "Flux" + (k + 1) + "-");
@@ -362,8 +317,7 @@ namespace DeepGesture
                 }
 
                 // Auto-Regressive Posture
-                for (int k = 0; k < current.ActorPosture.Length; k++)
-                {
+                for (int k = 0; k < current.ActorPosture.Length; k++) {
                     x.Feed(current.ActorPosture[k].GetPosition().PositionTo(current.Root), "Bone" + (k + 1) + setup.Pipeline.GetEditor().GetSession().GetActor().Bones[k].GetName() + "Position");
                     x.Feed(current.ActorPosture[k].GetForward().DirectionTo(current.Root), "Bone" + (k + 1) + setup.Pipeline.GetEditor().GetSession().GetActor().Bones[k].GetName() + "Forward");
                     x.Feed(current.ActorPosture[k].GetUp().DirectionTo(current.Root), "Bone" + (k + 1) + setup.Pipeline.GetEditor().GetSession().GetActor().Bones[k].GetName() + "Up");
@@ -381,16 +335,14 @@ namespace DeepGesture
 
 
                 // Control
-                for (int k = next.TimeSeries.Pivot + 1; k < next.TimeSeries.Samples.Length; k++)
-                {
+                for (int k = next.TimeSeries.Pivot + 1; k < next.TimeSeries.Samples.Length; k++) {
                     y.FeedXZ(next.RootSeries.GetPosition(k).PositionTo(next.Root), "TrajectoryPosition" + (k + 1));
                     y.FeedXZ(next.RootSeries.GetDirection(k).DirectionTo(next.Root), "TrajectoryDirection" + (k + 1));
                     y.FeedXZ(next.RootSeries.GetVelocity(k).DirectionTo(next.Root), "TrajectoryVelocity" + (k + 1));
                 }
 
                 // Auto-Regressive Posture
-                for (int k = 0; k < next.ActorPosture.Length; k++)
-                {
+                for (int k = 0; k < next.ActorPosture.Length; k++) {
                     y.Feed(next.ActorPosture[k].GetPosition().PositionTo(next.Root), "Bone" + (k + 1) + setup.Pipeline.GetEditor().GetSession().GetActor().Bones[k].GetName() + "Position");
                     y.Feed(next.ActorPosture[k].GetForward().DirectionTo(next.Root), "Bone" + (k + 1) + setup.Pipeline.GetEditor().GetSession().GetActor().Bones[k].GetName() + "Forward");
                     y.Feed(next.ActorPosture[k].GetUp().DirectionTo(next.Root), "Bone" + (k + 1) + setup.Pipeline.GetEditor().GetSession().GetActor().Bones[k].GetName() + "Up");
@@ -404,8 +356,7 @@ namespace DeepGesture
                 y.Feed(next.PhaseSeries.GetUpdate(), "PhaseUpdate-");
             }
 
-            private class Container
-            {
+            private class Container {
                 public MotionAsset Asset;
                 public Frame Frame;
                 public Actor Actor;
@@ -422,8 +373,7 @@ namespace DeepGesture
                 public Matrix4x4[] ActorPosture;
                 public Vector3[] ActorVelocities;
 
-                public Container(GesturePipeline setup, float timestamp, TimeSeries musicSeries)
-                {
+                public Container(GesturePipeline setup, float timestamp, TimeSeries musicSeries) {
                     MotionEditor editor = setup.Pipeline.GetEditor();
                     editor.LoadFrame(timestamp);
                     Asset = editor.GetSession().Asset;

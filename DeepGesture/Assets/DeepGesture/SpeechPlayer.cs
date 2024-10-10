@@ -4,10 +4,8 @@ using UnityEngine;
 using UnityEditor;
 using OpenHuman;
 
-namespace DeepGesture
-{
-    public class SpeechPlayer : MonoBehaviour
-    {
+namespace DeepGesture {
+    public class SpeechPlayer : MonoBehaviour {
 
         public AudioSpectrum AudioSpectrum;
 
@@ -20,24 +18,19 @@ namespace DeepGesture
 
         public float Timestamp = 0f;
 
-        void Update()
-        {
+        void Update() {
             Utility.SetFPS(Mathf.RoundToInt(Framerate));
-            if (AudioSpectrum == null)
-            {
+            if (AudioSpectrum == null) {
                 Debug.Log("AudioSpectrum is null");
                 return;
             }
 
-            if (RealTime)
-            {
+            if (RealTime) {
                 Timestamp = AudioSpectrum.GetTimestamp();
             }
-            else
-            {
+            else {
                 Timestamp += Pitch / Framerate;
-                if (GetTimeDifference() > 0.25f)
-                {
+                if (GetTimeDifference() > 0.25f) {
                     AudioSpectrum.PlayMusic(Timestamp, true);
                 }
             }
@@ -51,35 +44,27 @@ namespace DeepGesture
             });
         }
 
-        float GetTimeDifference()
-        {
-            if (AudioSpectrum == null)
-            {
+        float GetTimeDifference() {
+            if (AudioSpectrum == null) {
                 return 0f;
             }
             return AudioSpectrum.GetTimestamp() - Timestamp;
         }
 
-        public void SetTimestamp(float timestamp)
-        {
-            if (Timestamp != timestamp)
-            {
+        public void SetTimestamp(float timestamp) {
+            if (Timestamp != timestamp) {
                 AudioSpectrum.PlayMusic(timestamp, true);
                 Timestamp = timestamp;
             }
         }
 
-        public void SetAudioSpectrum(AudioSpectrum spectrum)
-        {
-            if (AudioSpectrum != spectrum)
-            {
-                if (Application.isPlaying)
-                {
+        public void SetAudioSpectrum(AudioSpectrum spectrum) {
+            if (AudioSpectrum != spectrum) {
+                if (Application.isPlaying) {
                     AudioSpectrum.StopMusic();
                 }
                 AudioSpectrum = spectrum;
-                if (Application.isPlaying)
-                {
+                if (Application.isPlaying) {
                     AudioSpectrum.PlayMusic(0f, false);
                     Timestamp = 0f;
                 }
@@ -87,25 +72,21 @@ namespace DeepGesture
         }
 
         [CustomEditor(typeof(SpeechPlayer))]
-        public class SpeechPlayer_Editor : Editor
-        {
+        public class SpeechPlayer_Editor : Editor {
 
             public SpeechPlayer Target;
 
-            void Awake()
-            {
+            void Awake() {
                 Target = (SpeechPlayer)target;
             }
 
-            public override void OnInspectorGUI()
-            {
+            public override void OnInspectorGUI() {
                 Target.SetAudioSpectrum(EditorGUILayout.ObjectField("Audio Spectrum", Target.AudioSpectrum, typeof(AudioSpectrum), true) as AudioSpectrum);
                 Target.Controller = EditorGUILayout.ObjectField("Controller", Target.Controller, typeof(GestureController), true) as GestureController;
                 Target.RealTime = EditorGUILayout.Toggle("Real Time", Target.RealTime);
                 Target.Framerate = EditorGUILayout.FloatField("Framerate", Target.Framerate);
                 Target.Pitch = EditorGUILayout.Slider("Pitch", Target.Pitch, 0.5f, 1.5f);
-                if (Target.AudioSpectrum != null)
-                {
+                if (Target.AudioSpectrum != null) {
                     Target.SetTimestamp(EditorGUILayout.Slider("Timestamp", Target.Timestamp, 0f, Target.AudioSpectrum.GetLength()));
                     EditorGUILayout.HelpBox("Time Difference: " + Target.GetTimeDifference(), MessageType.Info);
                 }
