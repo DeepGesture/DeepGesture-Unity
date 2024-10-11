@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
+using System;
 
 public class GameCamera : MonoBehaviour {
 
@@ -9,7 +10,7 @@ public class GameCamera : MonoBehaviour {
 	public Vector3 TargetOffset = Vector3.zero;
     
     [Range(0f, 1f)] public float Smoothing = 0f;
-    [Range(0f, 10f)] public float FOV = 1.5f;
+    [Range(0f, 10f)] public float FOV = 1.25f;
 
     private Camera Camera;
 
@@ -26,6 +27,5 @@ public class GameCamera : MonoBehaviour {
         transform.position = target + FOV*SelfOffset;
         transform.LookAt(target + TargetOffset);
     }
-
 }
 #endif

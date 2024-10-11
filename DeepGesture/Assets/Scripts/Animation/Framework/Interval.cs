@@ -40,21 +40,21 @@ namespace OpenHuman {
 		}
 
 		public int[] GetIndices() {
-			int[] indices = new int[End-Start+1];
-			for(int i=0; i<indices.Length; i++) {
-				indices[i] = Start+i-1;
+			int[] indices = new int[End - Start + 1];
+			for (int i = 0; i < indices.Length; i++) {
+				indices[i] = Start + i - 1;
 			}
 			return indices;
 		}
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 		public bool Inspector() {
 			EditorGUI.BeginChangeCheck();
 			Utility.SetGUIColor(UltiDraw.DarkGrey);
-			using(new EditorGUILayout.VerticalScope ("Box")) {
+			using (new EditorGUILayout.VerticalScope("Box")) {
 				Utility.ResetGUIColor();
 				Utility.SetGUIColor(UltiDraw.White);
-				using(new EditorGUILayout.VerticalScope ("Box")) {
+				using (new EditorGUILayout.VerticalScope("Box")) {
 					Utility.ResetGUIColor();
 					EditorGUILayout.BeginHorizontal();
 					Start = EditorGUILayout.IntField("Start", Start);
@@ -68,10 +68,10 @@ namespace OpenHuman {
 		public bool Inspector(int min, int max) {
 			EditorGUI.BeginChangeCheck();
 			Utility.SetGUIColor(UltiDraw.DarkGrey);
-			using(new EditorGUILayout.VerticalScope ("Box")) {
+			using (new EditorGUILayout.VerticalScope("Box")) {
 				Utility.ResetGUIColor();
 				Utility.SetGUIColor(UltiDraw.White);
-				using(new EditorGUILayout.VerticalScope ("Box")) {
+				using (new EditorGUILayout.VerticalScope("Box")) {
 					Utility.ResetGUIColor();
 					EditorGUILayout.BeginHorizontal();
 					Start = Mathf.Clamp(EditorGUILayout.IntField("Start", Start), min, max);
@@ -81,6 +81,6 @@ namespace OpenHuman {
 			}
 			return EditorGUI.EndChangeCheck();
 		}
-		#endif
+#endif
 	}
 }

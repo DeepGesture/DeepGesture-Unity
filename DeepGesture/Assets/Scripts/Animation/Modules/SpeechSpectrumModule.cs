@@ -10,7 +10,6 @@ namespace OpenHuman {
         public bool AdaptiveLowpass = true;
 
         public override void DerivedResetPrecomputation() {
-
         }
 
         public override TimeSeries.Component DerivedExtractSeries(TimeSeries global, float timestamp, bool mirrored, params object[] parameters) {
@@ -148,9 +147,9 @@ namespace OpenHuman {
         }
 
         protected override void DerivedInspector(MotionEditor editor) {
-            SpeechSpectrum = EditorGUILayout.ObjectField("Audio Spectrum", SpeechSpectrum, typeof(SpeechSpectrum), true) as SpeechSpectrum;
+            SpeechSpectrum = EditorGUILayout.ObjectField("Speech Spectrum", SpeechSpectrum, typeof(SpeechSpectrum), true) as SpeechSpectrum;
             for (int i = 0; i < SpeechSpectrums.Length; i++) {
-                SpeechSpectrums[i] = EditorGUILayout.ObjectField("Audio Spectrum " + (i + 1), SpeechSpectrums[i], typeof(SpeechSpectrum), true) as SpeechSpectrum;
+                SpeechSpectrums[i] = EditorGUILayout.ObjectField("Speech Spectrum " + (i + 1), SpeechSpectrums[i], typeof(SpeechSpectrum), true) as SpeechSpectrum;
             }
             if (SpeechSpectrum != null) {
                 EditorGUILayout.HelpBox("Clip Length: " + SpeechSpectrum.Clip.length, MessageType.None);
