@@ -774,12 +774,12 @@ public static class Utility
 			// Debug.LogWarning("Magnitude for computing phase value was zero. Returning zero.");
 			return 0f;
 		}
-		float angle = -Vector2.SignedAngle(Vector2.up, phase.normalized);
-		if (angle < 0f)
+		float angle360 = -Vector2.SignedAngle(Vector2.up, phase.normalized);
+		if (angle360 < 0f) // [-180, 180] -> [0, 360]
 		{
-			angle = 360f + angle;
+			angle360 = 360f + angle360;
 		}
-		return Mathf.Repeat(angle / 360f, 1f);
+		return Mathf.Repeat(angle360 / 360f, 1f);
 	}
 
 	public static float FilterPhaseLinear(float[] values)

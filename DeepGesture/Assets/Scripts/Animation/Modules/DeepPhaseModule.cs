@@ -370,15 +370,17 @@ namespace OpenHuman {
 
         public override TimeSeries.Component DerivedExtractSeries(TimeSeries global, float timestamp, bool mirrored, params object[] parameters) {
             Series instance = new Series(global, Channels.Length);
-            for (int i = 0; i < instance.Samples.Length; i++) {
+            for (int i = 0; i < instance.Samples.Length; i++) { // 121 - [0, 120]
                 instance.Phases[i] = GetPhaseValues(timestamp + instance.Samples[i].Timestamp, mirrored);
                 instance.Amplitudes[i] = GetAmplitudes(timestamp + instance.Samples[i].Timestamp, mirrored);
                 instance.Frequencies[i] = GetFrequencies(timestamp + instance.Samples[i].Timestamp, mirrored);
+                // instance.AddGatingHistory(instance.Phases[instance.Pivot]);
             }
             // instance.Phases = GetPhaseVectors(timestamp, mirrored);
             // instance.Amplitudes = GetAmplitudes(timestamp, mirrored);
             // instance.Frequencies = GetFrequencies(timestamp, mirrored);
             // instance.ComputeAlignment();
+            
             instance.DrawScene = DrawPhaseSpace;
             instance.DrawGUI = DrawPhaseSpace;
             return instance;
@@ -779,7 +781,7 @@ namespace OpenHuman {
 
         public float[] GetPhaseValues(float timestamp, bool mirrored) {
             float[] values = new float[Channels.Length];
-            for (int i = 0; i < values.Length; i++) {
+            for (int i = 0; i < values.Length; i++) { // [0, 8) - Channels.Length
                 values[i] = Channels[i].GetPhaseValue(timestamp, mirrored);
             }
             return values;
@@ -1098,7 +1100,9 @@ namespace OpenHuman {
                     for (int i = 0; i < manifold.Length; i++) {
                         manifold[i] = Amplitudes[Pivot][i] * Utility.PhaseVector(Phases[Pivot][i]);
                     }
-                    DrawPhaseState(new Vector2(PhaseWindow.X, 0.7875f + HeightOffset), 0.06f, Amplitudes[Pivot], manifold, Channels, Peak);
+                    float max = Amplitudes[Pivot].Max();
+                    // DrawPhaseState(new Vector2(PhaseWindow.X, 0.7875f + HeightOffset), 0.06f, Amplitudes[Pivot], manifold, Channels, Peak);
+                    DrawPhaseState(new Vector2(PhaseWindow.X, 0.7875f + HeightOffset), 0.06f, Amplitudes[Pivot], manifold, Channels, max);
 
                     if (GatingHistory.Count > 0) {
                         UltiDraw.Begin();

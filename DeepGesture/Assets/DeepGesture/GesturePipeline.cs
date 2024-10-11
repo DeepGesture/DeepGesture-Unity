@@ -187,6 +187,7 @@ namespace DeepGesture {
             asset.Scale = 0.01f;
             asset.Export = true;
             asset.ClearSequences();
+            asset.RemoveAllModules<DeepPhaseModule>();
 
             {
                 RootModule module = asset.HasModule<RootModule>() ? asset.GetModule<RootModule>() : asset.AddModule<RootModule>();
