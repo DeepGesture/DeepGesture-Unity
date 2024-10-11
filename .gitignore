@@ -142,3 +142,6 @@ Desktop.ini
 DeepGesture/Assets/DeepGesture/Assets/*.asset
 DeepGesture/Assets/DeepGesture/Assets/Speech/features/*.asset
 DeepGesture/Assets/Project/**/*.asset
+
+# DeepLearning
+DeepLearning/Dataset/*
