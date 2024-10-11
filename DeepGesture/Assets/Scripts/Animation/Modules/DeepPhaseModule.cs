@@ -14,6 +14,7 @@ namespace OpenHuman {
         [NonSerialized] private bool DrawPhaseSpace = true;
         [NonSerialized] private bool DrawPivot = true;
 
+        // ****************** DistanceSeries ******************
         public static DistanceSeries Distances;
         public class DistanceSeries {
             public MotionAsset Asset;
@@ -84,6 +85,7 @@ namespace OpenHuman {
             }
         }
 
+        // ****************** CurveSeries ******************
         public static CurveSeries Curves;
         public class CurveSeries {
             public MotionAsset Asset;
@@ -219,6 +221,7 @@ namespace OpenHuman {
             }
         }
 
+        // ****************** Channel ******************
         [Serializable]
         public class Channel {
             public DeepPhaseModule Module;
@@ -355,7 +358,6 @@ namespace OpenHuman {
         }
 
         public override void DerivedResetPrecomputation() {
-
         }
 
         public static void ComputeCurves(MotionAsset asset, Actor actor, TimeSeries timeSeries) {
@@ -383,7 +385,6 @@ namespace OpenHuman {
         }
 
         protected override void DerivedInitialize() {
-
         }
 
         protected override void DerivedLoad(MotionEditor editor) {
@@ -393,7 +394,6 @@ namespace OpenHuman {
         protected override void DerivedUnload(MotionEditor editor) {
 
         }
-
 
         protected override void DerivedCallback(MotionEditor editor) {
 
@@ -840,152 +840,7 @@ namespace OpenHuman {
             return true;
         }
 
-
-        // public class Series : TimeSeries.Component {
-        //     public int Channels;
-        //     public Vector2[] Phases;
-        //     public float[] Amplitudes;
-        //     public float[] Frequencies;
-
-        //     public Vector2[][] Manifold;
-
-        //     private float Max = float.MinValue;
-
-        //     private UltiDraw.GUIRect Rect = new UltiDraw.GUIRect(0.875f, 0.15f, 0.2f, 0.15f);
-
-        //     public Series(TimeSeries global, int channels) : base(global) {
-        //         Channels = channels;
-        //         Phases = new Vector2[channels];
-        //         Amplitudes = new float[channels];
-        //         Frequencies = new float[channels];
-        //         Phases.SetAll(Vector2.up);
-        //         Amplitudes.SetAll(0f);
-        //         Frequencies.SetAll(0f);
-        //         Manifold = new Vector2[channels][];
-        //         for(int i=0; i<channels; i++) {
-        //             Manifold[i] = new Vector2[Samples.Length];
-        //         }
-        //     }
-
-        //     public void UpdateAlignment(float[] values, float stability, float deltaTime) {
-        //         int pivot = 0;
-        //         for(int b=0; b<Channels; b++) {
-        //             Vector2 p = Phases[b];
-        //             float a = Amplitudes[b];
-        //             float f = Frequencies[b];
-        //             Vector2 update = Quaternion.AngleAxis(-f*360f*deltaTime, Vector3.forward) * p;
-
-        //             Vector2 next = new Vector2(values[pivot+0], values[pivot+1]).normalized;
-        //             float amp = Mathf.Abs(values[pivot+2]);
-        //             float freq = Mathf.Abs(values[pivot+3]);
-        //             // Debug.Log(next + " / " + amp + " / " + freq);
-        //             pivot += 4;
-
-        //             Phases[b] = Vector3.Slerp(update.normalized, next.normalized, stability).ZeroZ().normalized;
-        //             Amplitudes[b] = amp;
-        //             Frequencies[b] = freq;
-
-        //             Max = Mathf.Max(Max, amp);
-        //         }
-        //         ComputeAlignment();
-        //     }
-
-        //     public void ComputeAlignment() {
-        //         for(int i=0; i<Channels; i++) {
-        //             Vector2 p = Phases[i];
-        //             float a = Amplitudes[i];
-        //             float f = Frequencies[i];
-        //             for(int j=0; j<Samples.Length; j++) {
-        //                 float t = Samples[j].Timestamp;
-        //                 Manifold[i][j] = a * (Quaternion.AngleAxis(-f*360f*t, Vector3.forward) * p);
-        //             }
-        //         }
-        //     }
-
-        //     public float[] GetAlignment() {
-        //         int pivot = 0;
-        //         float[] alignment = new float[Channels * KeyCount * 2];
-        //         for(int i=0; i<Channels; i++) {
-        //             for(int j=0; j<KeyCount; j++) {
-        //                 int index = GetKey(j).Index;
-        //                 alignment[pivot] = Manifold[i][index].x; pivot += 1;
-        //                 alignment[pivot] = Manifold[i][index].y; pivot += 1;
-        //             }
-        //         }
-        //         return alignment;
-        //     }
-
-        //     public float[] GetUpdate() {
-        //         int pivot = 0;
-        //         float[] update = new float[Channels * 4];
-        //         for(int b=0; b<Channels; b++) {
-        //             Vector2 phase = Phases[b];
-        //             float amp = Amplitudes[b];
-        //             float freq = Frequencies[b];
-        //             phase *= amp;
-        //             update[pivot] = phase.x; pivot += 1;
-        //             update[pivot] = phase.y; pivot += 1;
-        //             update[pivot] = amp; pivot += 1;
-        //             update[pivot] = freq; pivot += 1;
-        //         }
-        //         return update;
-        //     }
-
-        //     public override void Increment(int start, int end) {
-
-        //     }
-
-        //     public override void Interpolate(int start, int end) {
-
-        //     }
-
-        //     public override void GUI() {
-        //         if(DrawGUI) {
-
-        //         }
-        //     }
-
-        //     public override void Draw() {
-        //         if(DrawScene) {
-        //             UltiDraw.Begin();
-        //             float min = 0.05f;
-        //             float max = 0.2f;
-        //             float amplitude = Max == float.MinValue ? 1f : Max;
-        //             float h = (max-min)/Channels;
-        //             // Vector2[][] phases = Phases.GetTranspose();
-        //             // float[][] amplitudes = Amplitudes.GetTranspose();
-        //             // float[][] frequencies = Frequencies.GetTranspose();
-        //             for(int i=0; i<Channels; i++) {
-        //                 float ratio = i.Ratio(0, Channels-1);
-
-        //                 UltiDraw.PlotFunctions(new Vector2(0.5f, ratio.Normalize(0f, 1f, min+h/2f, max-h/2f)), new Vector2(0.75f, h), Manifold[i], -amplitude, amplitude, backgroundColor:UltiDraw.Black, lineColors:new Color[]{UltiDraw.Magenta, UltiDraw.Cyan});
-
-        //                 //Phases
-        //                 float[] a = new float[Samples.Length];
-        //                 float[] p = new float[Samples.Length];
-        //                 Color[] c = new Color[Samples.Length];
-        //                 for(int j=0; j<Samples.Length; j++) {
-        //                     p[j] = Utility.PhaseValue(Manifold[i][j]);
-        //                     a[j] = Manifold[i][j].magnitude;
-        //                     c[j] = UltiDraw.White.Opacity(a[j].Normalize(0f, amplitude, 0f, 1f));
-        //                 }
-        //                 UltiDraw.PlotBars(new Vector2(0.5f, ratio.Normalize(0f, 1f, min+h/2f, max-h/2f)), new Vector2(0.75f, h), p, 0f, 1f, backgroundColor:UltiDraw.Transparent, barColors:c);
-        //                 // UltiDraw.PlotBars(new Vector2(0.25f, ratio.Normalize(0f, 1f, max+h/2f, max+(max-min)-h/2f)), new Vector2(0.25f, h), p, 0f, 1f, barColors:c);
-
-        //                 // //Amplitudes
-        //                 // UltiDraw.PlotFunction(new Vector2(0.3f, ratio.Normalize(0f, 1f, max+h/2f, max+(max-min)-h/2f)), new Vector2(0.35f, h), a, 0f, amplitude);
-
-        //                 // //Frequencies
-        //                 // UltiDraw.PlotFunction(new Vector2(0.7f, ratio.Normalize(0f, 1f, max+h/2f, max+(max-min)-h/2f)), new Vector2(0.35f, h), frequencies[i], 0f, 3.25f);
-        //             }
-        //             UltiDraw.End();
-        //         }
-        //     }
-        // }
-
-
-
-
+        // *************** Series (Phases, Amplitudes, Frequencies) ***************
         public class Series : TimeSeries.Component {
             public int Channels;
             public float[][] Phases;
@@ -1311,6 +1166,151 @@ namespace OpenHuman {
                 // }
             }
         }
+
+        // public class Series : TimeSeries.Component {
+        //     public int Channels;
+        //     public Vector2[] Phases;
+        //     public float[] Amplitudes;
+        //     public float[] Frequencies;
+
+        //     public Vector2[][] Manifold;
+
+        //     private float Max = float.MinValue;
+
+        //     private UltiDraw.GUIRect Rect = new UltiDraw.GUIRect(0.875f, 0.15f, 0.2f, 0.15f);
+
+        //     public Series(TimeSeries global, int channels) : base(global) {
+        //         Channels = channels;
+        //         Phases = new Vector2[channels];
+        //         Amplitudes = new float[channels];
+        //         Frequencies = new float[channels];
+        //         Phases.SetAll(Vector2.up);
+        //         Amplitudes.SetAll(0f);
+        //         Frequencies.SetAll(0f);
+        //         Manifold = new Vector2[channels][];
+        //         for(int i=0; i<channels; i++) {
+        //             Manifold[i] = new Vector2[Samples.Length];
+        //         }
+        //     }
+
+        //     public void UpdateAlignment(float[] values, float stability, float deltaTime) {
+        //         int pivot = 0;
+        //         for(int b=0; b<Channels; b++) {
+        //             Vector2 p = Phases[b];
+        //             float a = Amplitudes[b];
+        //             float f = Frequencies[b];
+        //             Vector2 update = Quaternion.AngleAxis(-f*360f*deltaTime, Vector3.forward) * p;
+
+        //             Vector2 next = new Vector2(values[pivot+0], values[pivot+1]).normalized;
+        //             float amp = Mathf.Abs(values[pivot+2]);
+        //             float freq = Mathf.Abs(values[pivot+3]);
+        //             // Debug.Log(next + " / " + amp + " / " + freq);
+        //             pivot += 4;
+
+        //             Phases[b] = Vector3.Slerp(update.normalized, next.normalized, stability).ZeroZ().normalized;
+        //             Amplitudes[b] = amp;
+        //             Frequencies[b] = freq;
+
+        //             Max = Mathf.Max(Max, amp);
+        //         }
+        //         ComputeAlignment();
+        //     }
+
+        //     public void ComputeAlignment() {
+        //         for(int i=0; i<Channels; i++) {
+        //             Vector2 p = Phases[i];
+        //             float a = Amplitudes[i];
+        //             float f = Frequencies[i];
+        //             for(int j=0; j<Samples.Length; j++) {
+        //                 float t = Samples[j].Timestamp;
+        //                 Manifold[i][j] = a * (Quaternion.AngleAxis(-f*360f*t, Vector3.forward) * p);
+        //             }
+        //         }
+        //     }
+
+        //     public float[] GetAlignment() {
+        //         int pivot = 0;
+        //         float[] alignment = new float[Channels * KeyCount * 2];
+        //         for(int i=0; i<Channels; i++) {
+        //             for(int j=0; j<KeyCount; j++) {
+        //                 int index = GetKey(j).Index;
+        //                 alignment[pivot] = Manifold[i][index].x; pivot += 1;
+        //                 alignment[pivot] = Manifold[i][index].y; pivot += 1;
+        //             }
+        //         }
+        //         return alignment;
+        //     }
+
+        //     public float[] GetUpdate() {
+        //         int pivot = 0;
+        //         float[] update = new float[Channels * 4];
+        //         for(int b=0; b<Channels; b++) {
+        //             Vector2 phase = Phases[b];
+        //             float amp = Amplitudes[b];
+        //             float freq = Frequencies[b];
+        //             phase *= amp;
+        //             update[pivot] = phase.x; pivot += 1;
+        //             update[pivot] = phase.y; pivot += 1;
+        //             update[pivot] = amp; pivot += 1;
+        //             update[pivot] = freq; pivot += 1;
+        //         }
+        //         return update;
+        //     }
+
+        //     public override void Increment(int start, int end) {
+
+        //     }
+
+        //     public override void Interpolate(int start, int end) {
+
+        //     }
+
+        //     public override void GUI() {
+        //         if(DrawGUI) {
+
+        //         }
+        //     }
+
+        //     public override void Draw() {
+        //         if(DrawScene) {
+        //             UltiDraw.Begin();
+        //             float min = 0.05f;
+        //             float max = 0.2f;
+        //             float amplitude = Max == float.MinValue ? 1f : Max;
+        //             float h = (max-min)/Channels;
+        //             // Vector2[][] phases = Phases.GetTranspose();
+        //             // float[][] amplitudes = Amplitudes.GetTranspose();
+        //             // float[][] frequencies = Frequencies.GetTranspose();
+        //             for(int i=0; i<Channels; i++) {
+        //                 float ratio = i.Ratio(0, Channels-1);
+
+        //                 UltiDraw.PlotFunctions(new Vector2(0.5f, ratio.Normalize(0f, 1f, min+h/2f, max-h/2f)), new Vector2(0.75f, h), Manifold[i], -amplitude, amplitude, backgroundColor:UltiDraw.Black, lineColors:new Color[]{UltiDraw.Magenta, UltiDraw.Cyan});
+
+        //                 //Phases
+        //                 float[] a = new float[Samples.Length];
+        //                 float[] p = new float[Samples.Length];
+        //                 Color[] c = new Color[Samples.Length];
+        //                 for(int j=0; j<Samples.Length; j++) {
+        //                     p[j] = Utility.PhaseValue(Manifold[i][j]);
+        //                     a[j] = Manifold[i][j].magnitude;
+        //                     c[j] = UltiDraw.White.Opacity(a[j].Normalize(0f, amplitude, 0f, 1f));
+        //                 }
+        //                 UltiDraw.PlotBars(new Vector2(0.5f, ratio.Normalize(0f, 1f, min+h/2f, max-h/2f)), new Vector2(0.75f, h), p, 0f, 1f, backgroundColor:UltiDraw.Transparent, barColors:c);
+        //                 // UltiDraw.PlotBars(new Vector2(0.25f, ratio.Normalize(0f, 1f, max+h/2f, max+(max-min)-h/2f)), new Vector2(0.25f, h), p, 0f, 1f, barColors:c);
+
+        //                 // //Amplitudes
+        //                 // UltiDraw.PlotFunction(new Vector2(0.3f, ratio.Normalize(0f, 1f, max+h/2f, max+(max-min)-h/2f)), new Vector2(0.35f, h), a, 0f, amplitude);
+
+        //                 // //Frequencies
+        //                 // UltiDraw.PlotFunction(new Vector2(0.7f, ratio.Normalize(0f, 1f, max+h/2f, max+(max-min)-h/2f)), new Vector2(0.35f, h), frequencies[i], 0f, 3.25f);
+        //             }
+        //             UltiDraw.End();
+        //         }
+        //     }
+        // }
+
+
+
 
     }
 }
