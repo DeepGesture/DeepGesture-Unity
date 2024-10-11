@@ -396,11 +396,11 @@ namespace OpenHuman {
 				yield return new WaitForSeconds(0f);
 			}
 		}
-
 		void OnGUI() {
 			if (GetSession() != null) {
 				GetSession().Asset.GUI(this);
 			}
+			
 		}
 
 		void OnRenderObject() {
