@@ -56,6 +56,7 @@ namespace OpenHuman {
 			return GameObject.FindObjectOfType<MotionEditor>();
 		}
 
+		// ******************* AssetDirectory *******************
 		[Serializable]
 		public class AssetDirectory {
 			public string Path = string.Empty;
@@ -99,6 +100,7 @@ namespace OpenHuman {
 			}
 		}
 
+		// ******************* AssetSession *******************
 		public class AssetSession {
 			public MotionAsset Asset = null;
 
@@ -676,6 +678,7 @@ namespace OpenHuman {
 			}
 		}
 
+		// Inspector
 		[CustomEditor(typeof(MotionEditor))]
 		public class MotionEditor_Editor : Editor {
 

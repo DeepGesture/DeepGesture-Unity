@@ -10,10 +10,10 @@ namespace OpenHuman {
 	[ExecuteInEditMode]
 	public class Actor : MonoBehaviour {
 
-		public enum DRAW {Skeleton, Sketch};
+		public enum DRAW { Skeleton, Sketch };
 
 		public static bool Inspect = false;
-		
+
 		public bool AllowRealignment = true;
 
 		public bool DrawRoot = false;
@@ -46,7 +46,7 @@ namespace OpenHuman {
 		public void RenameBones(string from, string to) {
 			void Recursion(Transform t) {
 				t.name = t.name.Replace(from, to);
-				for(int i=0; i<t.childCount; i++) {
+				for (int i = 0; i < t.childCount; i++) {
 					Recursion(t.GetChild(i));
 				}
 			}
@@ -57,13 +57,13 @@ namespace OpenHuman {
 		public void SwitchNames(string a, string b) {
 			void Recursion(Transform t) {
 				string name = t.name;
-				if(name.Contains(a)) {
+				if (name.Contains(a)) {
 					t.name = t.name.Replace(a, b);
 				}
-				if(name.Contains(b)) {
+				if (name.Contains(b)) {
 					t.name = t.name.Replace(b, a);
 				}
-				for(int i=0; i<t.childCount; i++) {
+				for (int i = 0; i < t.childCount; i++) {
 					Recursion(t.GetChild(i));
 				}
 			}
@@ -77,8 +77,8 @@ namespace OpenHuman {
 
 		public Bone[] GetRootBones() {
 			List<Bone> bones = new List<Bone>();
-			for(int i=0; i<Bones.Length; i++) {
-				if(Bones[i].GetParent() == null) {
+			for (int i = 0; i < Bones.Length; i++) {
+				if (Bones[i].GetParent() == null) {
 					bones.Add(Bones[i]);
 				}
 			}
@@ -87,21 +87,21 @@ namespace OpenHuman {
 
 		public float[] GetBoneLengths() {
 			float[] lengths = new float[Bones.Length];
-			for(int i=0; i<Bones.Length; i++) {
+			for (int i = 0; i < Bones.Length; i++) {
 				lengths[i] = Bones[i].GetLength();
 			}
 			return lengths;
 		}
 
 		public void SetBoneLengths(float[] values) {
-			for(int i=0; i<Bones.Length; i++) {
+			for (int i = 0; i < Bones.Length; i++) {
 				Bones[i].SetLength(values[i]);
 			}
 		}
 
 		public Transform[] FindTransforms(params string[] names) {
 			Transform[] transforms = new Transform[names.Length];
-			for(int i=0; i<transforms.Length; i++) {
+			for (int i = 0; i < transforms.Length; i++) {
 				transforms[i] = FindTransform(names[i]);
 			}
 			return transforms;
@@ -111,16 +111,16 @@ namespace OpenHuman {
 			Transform element = null;
 			Action<Transform> recursion = null;
 			recursion = new Action<Transform>((transform) => {
-				if(transform.name == name) {
+				if (transform.name == name) {
 					element = transform;
 					return;
 				}
-				for(int i=0; i<transform.childCount; i++) {
+				for (int i = 0; i < transform.childCount; i++) {
 					recursion(transform.GetChild(i));
 				}
 			});
 			recursion(GetRoot());
-			if(element == null) {
+			if (element == null) {
 				Debug.Log("Could not find transform of name " + name + ".");
 			}
 			return element;
@@ -128,7 +128,7 @@ namespace OpenHuman {
 
 		public Bone[] FindBones(params Transform[] transforms) {
 			Bone[] bones = new Bone[transforms.Length];
-			for(int i=0; i<bones.Length; i++) {
+			for (int i = 0; i < bones.Length; i++) {
 				bones[i] = FindBone(transforms[i]);
 			}
 			return bones;
@@ -136,7 +136,7 @@ namespace OpenHuman {
 
 		public Bone[] FindBones(params string[] names) {
 			Bone[] bones = new Bone[names.Length];
-			for(int i=0; i<bones.Length; i++) {
+			for (int i = 0; i < bones.Length; i++) {
 				bones[i] = FindBone(names[i]);
 			}
 			return bones;
@@ -151,9 +151,9 @@ namespace OpenHuman {
 		}
 
 		public string[] GetBoneNames() {
-			if(BoneNames == null || BoneNames.Length != Bones.Length) {
+			if (BoneNames == null || BoneNames.Length != Bones.Length) {
 				BoneNames = new string[Bones.Length];
-				for(int i=0; i<BoneNames.Length; i++) {
+				for (int i = 0; i < BoneNames.Length; i++) {
 					BoneNames[i] = Bones[i].GetName();
 				}
 			}
@@ -162,7 +162,7 @@ namespace OpenHuman {
 
 		public int[] GetBoneIndices(params string[] names) {
 			int[] indices = new int[names.Length];
-			for(int i=0; i<indices.Length; i++) {
+			for (int i = 0; i < indices.Length; i++) {
 				indices[i] = FindBone(names[i]).GetIndex();
 			}
 			return indices;
@@ -170,7 +170,7 @@ namespace OpenHuman {
 
 		public Transform[] GetBoneTransforms(params string[] names) {
 			Transform[] transforms = new Transform[names.Length];
-			for(int i=0; i<names.Length; i++) {
+			for (int i = 0; i < names.Length; i++) {
 				transforms[i] = FindTransform(names[i]);
 			}
 			return transforms;
@@ -184,12 +184,12 @@ namespace OpenHuman {
 			ArrayExtensions.Clear(ref Bones);
 			Action<Transform, Bone> recursion = null;
 			recursion = new Action<Transform, Bone>((transform, parent) => {
-				if(bones == null || System.Array.Find(bones, x => x == transform)) {
+				if (bones == null || System.Array.Find(bones, x => x == transform)) {
 					Bone bone = new Bone(this, transform, Bones.Length, parent);
 					ArrayExtensions.Append(ref Bones, bone);
 					parent = bone;
 				}
-				for(int i=0; i<transform.childCount; i++) {
+				for (int i = 0; i < transform.childCount; i++) {
 					recursion(transform.GetChild(i), parent);
 				}
 			});
@@ -203,7 +203,7 @@ namespace OpenHuman {
 
 		public void CreateSimplifiedSkeleton() {
 			Transform actor = new GameObject(name + "_Simplified").transform;
-			for(int i=0; i<Bones.Length; i++) {
+			for (int i = 0; i < Bones.Length; i++) {
 				Transform bone = new GameObject(Bones[i].GetName()).transform;
 				bone.SetParent(Bones[i].GetParent() != null ? actor.FindRecursive(Bones[i].GetParent().GetName()) : actor);
 				bone.transform.position = Bones[i].GetPosition();
@@ -212,30 +212,30 @@ namespace OpenHuman {
 		}
 
 		public void SetBoneTransformations(Matrix4x4[] values) {
-			if(values.Length != Bones.Length) {
+			if (values.Length != Bones.Length) {
 				return;
 			}
-			for(int i=0; i<Bones.Length; i++) {
+			for (int i = 0; i < Bones.Length; i++) {
 				Bones[i].SetTransformation(values[i]);
 			}
 		}
 
 		public void SetBoneTransformations(Matrix4x4[] values, params string[] bones) {
-			for(int i=0; i<bones.Length; i++) {
+			for (int i = 0; i < bones.Length; i++) {
 				SetBoneTransformation(values[i], bones[i]);
 			}
 		}
 
 		public void SetBoneTransformation(Matrix4x4 value, string bone) {
 			Bone b = FindBone(bone);
-			if(b != null) {
+			if (b != null) {
 				b.SetTransformation(value);
 			}
 		}
 
 		public Matrix4x4[] GetBoneTransformations() {
 			Matrix4x4[] transformations = new Matrix4x4[Bones.Length];
-			for(int i=0; i<transformations.Length; i++) {
+			for (int i = 0; i < transformations.Length; i++) {
 				transformations[i] = Bones[i].GetTransformation();
 			}
 			return transformations;
@@ -243,7 +243,7 @@ namespace OpenHuman {
 
 		public Matrix4x4[] GetBoneTransformations(params int[] bones) {
 			Matrix4x4[] transformations = new Matrix4x4[bones.Length];
-			for(int i=0; i<transformations.Length; i++) {
+			for (int i = 0; i < transformations.Length; i++) {
 				transformations[i] = Bones[bones[i]].GetTransformation();
 			}
 			return transformations;
@@ -251,7 +251,7 @@ namespace OpenHuman {
 
 		public Matrix4x4[] GetBoneTransformations(params string[] bones) {
 			Matrix4x4[] transformations = new Matrix4x4[bones.Length];
-			for(int i=0; i<transformations.Length; i++) {
+			for (int i = 0; i < transformations.Length; i++) {
 				transformations[i] = GetBoneTransformation(bones[i]);
 			}
 			return transformations;
@@ -262,30 +262,30 @@ namespace OpenHuman {
 		}
 
 		public void SetBoneVelocities(Vector3[] values) {
-			if(values.Length != Bones.Length) {
+			if (values.Length != Bones.Length) {
 				return;
 			}
-			for(int i=0; i<Bones.Length; i++) {
+			for (int i = 0; i < Bones.Length; i++) {
 				Bones[i].SetVelocity(values[i]);
 			}
 		}
 
 		public void SetBoneVelocities(Vector3[] values, params string[] bones) {
-			for(int i=0; i<bones.Length; i++) {
+			for (int i = 0; i < bones.Length; i++) {
 				SetBoneVelocity(values[i], bones[i]);
 			}
 		}
 
 		public void SetBoneVelocity(Vector3 value, string bone) {
 			Bone b = FindBone(bone);
-			if(b != null) {
+			if (b != null) {
 				b.SetVelocity(value);
 			}
 		}
 
 		public Vector3[] GetBoneVelocities() {
 			Vector3[] velocities = new Vector3[Bones.Length];
-			for(int i=0; i<velocities.Length; i++) {
+			for (int i = 0; i < velocities.Length; i++) {
 				velocities[i] = Bones[i].GetVelocity();
 			}
 			return velocities;
@@ -293,7 +293,7 @@ namespace OpenHuman {
 
 		public Vector3[] GetBoneVelocities(params int[] bones) {
 			Vector3[] velocities = new Vector3[bones.Length];
-			for(int i=0; i<velocities.Length; i++) {
+			for (int i = 0; i < velocities.Length; i++) {
 				velocities[i] = Bones[bones[i]].GetVelocity();
 			}
 			return velocities;
@@ -301,7 +301,7 @@ namespace OpenHuman {
 
 		public Vector3[] GetBoneVelocities(params string[] bones) {
 			Vector3[] velocities = new Vector3[bones.Length];
-			for(int i=0; i<velocities.Length; i++) {
+			for (int i = 0; i < velocities.Length; i++) {
 				velocities[i] = GetBoneVelocity(bones[i]);
 			}
 			return velocities;
@@ -313,30 +313,30 @@ namespace OpenHuman {
 
 
 		public void SetBoneAccelerations(Vector3[] values) {
-			if(values.Length != Bones.Length) {
+			if (values.Length != Bones.Length) {
 				return;
 			}
-			for(int i=0; i<Bones.Length; i++) {
+			for (int i = 0; i < Bones.Length; i++) {
 				Bones[i].SetAcceleration(values[i]);
 			}
 		}
 
 		public void SetBoneAccelerations(Vector3[] values, params string[] bones) {
-			for(int i=0; i<bones.Length; i++) {
+			for (int i = 0; i < bones.Length; i++) {
 				SetBoneAcceleration(values[i], bones[i]);
 			}
 		}
 
 		public void SetBoneAcceleration(Vector3 value, string bone) {
 			Bone b = FindBone(bone);
-			if(b != null) {
+			if (b != null) {
 				b.SetAcceleration(value);
 			}
 		}
 
 		public Vector3[] GetBoneAccelerations() {
 			Vector3[] values = new Vector3[Bones.Length];
-			for(int i=0; i<values.Length; i++) {
+			for (int i = 0; i < values.Length; i++) {
 				values[i] = Bones[i].GetAcceleration();
 			}
 			return values;
@@ -344,7 +344,7 @@ namespace OpenHuman {
 
 		public Vector3[] GetBoneAccelerations(params int[] bones) {
 			Vector3[] values = new Vector3[bones.Length];
-			for(int i=0; i<values.Length; i++) {
+			for (int i = 0; i < values.Length; i++) {
 				values[i] = Bones[bones[i]].GetAcceleration();
 			}
 			return values;
@@ -352,7 +352,7 @@ namespace OpenHuman {
 
 		public Vector3[] GetBoneAccelerations(params string[] bones) {
 			Vector3[] values = new Vector3[bones.Length];
-			for(int i=0; i<values.Length; i++) {
+			for (int i = 0; i < values.Length; i++) {
 				values[i] = GetBoneAcceleration(bones[i]);
 			}
 			return values;
@@ -364,7 +364,7 @@ namespace OpenHuman {
 
 		public Vector3[] GetBonePositions() {
 			Vector3[] positions = new Vector3[Bones.Length];
-			for(int i=0; i<positions.Length; i++) {
+			for (int i = 0; i < positions.Length; i++) {
 				positions[i] = Bones[i].GetPosition();
 			}
 			return positions;
@@ -372,7 +372,7 @@ namespace OpenHuman {
 
 		public Vector3[] GetBonePositions(params int[] bones) {
 			Vector3[] positions = new Vector3[bones.Length];
-			for(int i=0; i<positions.Length; i++) {
+			for (int i = 0; i < positions.Length; i++) {
 				positions[i] = Bones[bones[i]].GetPosition();
 			}
 			return positions;
@@ -380,7 +380,7 @@ namespace OpenHuman {
 
 		public Vector3[] GetBonePositions(params string[] bones) {
 			Vector3[] positions = new Vector3[bones.Length];
-			for(int i=0; i<positions.Length; i++) {
+			for (int i = 0; i < positions.Length; i++) {
 				positions[i] = GetBonePosition(bones[i]);
 			}
 			return positions;
@@ -392,7 +392,7 @@ namespace OpenHuman {
 
 		public Quaternion[] GetBoneRotations() {
 			Quaternion[] rotation = new Quaternion[Bones.Length];
-			for(int i=0; i<rotation.Length; i++) {
+			for (int i = 0; i < rotation.Length; i++) {
 				rotation[i] = Bones[i].GetRotation();
 			}
 			return rotation;
@@ -400,7 +400,7 @@ namespace OpenHuman {
 
 		public Quaternion[] GetBoneRotations(params string[] bones) {
 			Quaternion[] rotation = new Quaternion[bones.Length];
-			for(int i=0; i<rotation.Length; i++) {
+			for (int i = 0; i < rotation.Length; i++) {
 				rotation[i] = GetBoneRotation(bones[i]);
 			}
 			return rotation;
@@ -408,7 +408,7 @@ namespace OpenHuman {
 
 		public Quaternion[] GetBoneRotations(params int[] bones) {
 			Quaternion[] rotations = new Quaternion[bones.Length];
-			for(int i=0; i<rotations.Length; i++) {
+			for (int i = 0; i < rotations.Length; i++) {
 				rotations[i] = Bones[bones[i]].GetRotation();
 			}
 			return rotations;
@@ -423,56 +423,56 @@ namespace OpenHuman {
 		}
 
 		public void RestoreAlignment() {
-			foreach(Bone bone in Bones) {
+			foreach (Bone bone in Bones) {
 				bone.RestoreAlignment();
 			}
 		}
 
 		public void Draw(Matrix4x4[] transformations, Color boneColor, Color jointColor, DRAW mode) {
-			if(transformations.Length != Bones.Length) {
+			if (transformations.Length != Bones.Length) {
 				Debug.Log("Number of given transformations does not match number of bones.");
 				return;
 			}
 			UltiDraw.Begin();
-			if(mode == DRAW.Skeleton) {
+			if (mode == DRAW.Skeleton) {
 				void Recursion(Bone bone) {
 					Matrix4x4 current = transformations[bone.GetIndex()];
-					if(bone.GetParent() != null) {
+					if (bone.GetParent() != null) {
 						Matrix4x4 parent = transformations[bone.GetParent().GetIndex()];
 						UltiDraw.DrawBone(
 							parent.GetPosition(),
 							Quaternion.FromToRotation(parent.GetForward(), current.GetPosition() - parent.GetPosition()) * parent.GetRotation(),
-							12.5f*BoneSize*bone.GetLength(), bone.GetLength(),
+							12.5f * BoneSize * bone.GetLength(), bone.GetLength(),
 							boneColor
 						);
 					}
 					UltiDraw.DrawSphere(
 						current.GetPosition(),
 						Quaternion.identity,
-						5f/8f * BoneSize,
+						5f / 8f * BoneSize,
 						jointColor
 					);
-					for(int i=0; i<bone.GetChildCount(); i++) {
+					for (int i = 0; i < bone.GetChildCount(); i++) {
 						Recursion(bone.GetChild(i));
 					}
 				}
-				foreach(Bone bone in GetRootBones()) {
+				foreach (Bone bone in GetRootBones()) {
 					Recursion(bone);
 				}
 			}
-			if(mode == DRAW.Sketch) {
+			if (mode == DRAW.Sketch) {
 				void Recursion(Bone bone) {
 					Matrix4x4 current = transformations[bone.GetIndex()];
-					if(bone.GetParent() != null) {
+					if (bone.GetParent() != null) {
 						Matrix4x4 parent = transformations[bone.GetParent().GetIndex()];
 						UltiDraw.DrawLine(parent.GetPosition(), current.GetPosition(), boneColor);
 					}
 					UltiDraw.DrawCube(current.GetPosition(), current.GetRotation(), 0.02f, jointColor);
-					for(int i=0; i<bone.GetChildCount(); i++) {
+					for (int i = 0; i < bone.GetChildCount(); i++) {
 						Recursion(bone.GetChild(i));
 					}
 				}
-				foreach(Bone bone in GetRootBones()) {
+				foreach (Bone bone in GetRootBones()) {
 					Recursion(bone);
 				}
 			}
@@ -481,59 +481,59 @@ namespace OpenHuman {
 
 
 		public void Draw(Matrix4x4[] transformations, string[] bones, Color boneColor, Color jointColor, DRAW mode) {
-			if(transformations.Length != bones.Length) {
+			if (transformations.Length != bones.Length) {
 				Debug.Log("Number of given transformations does not match number of given bones.");
 				return;
 			}
 			UltiDraw.Begin();
-			if(mode == DRAW.Skeleton) {
+			if (mode == DRAW.Skeleton) {
 				void Recursion(Bone bone, int parent) {
 					int index = bones.FindIndex(bone.GetName());
-					if(index >= 0) {
+					if (index >= 0) {
 						Matrix4x4 boneMatrix = transformations[index];
-						if(parent >= 0) {
+						if (parent >= 0) {
 							Matrix4x4 parentMatrix = transformations[parent];
 							float length = Vector3.Distance(parentMatrix.GetPosition(), boneMatrix.GetPosition());
 							UltiDraw.DrawBone(
 								parentMatrix.GetPosition(),
 								Quaternion.FromToRotation(parentMatrix.GetForward(), boneMatrix.GetPosition() - parentMatrix.GetPosition()) * parentMatrix.GetRotation(),
-								12.5f*BoneSize*length, length,
+								12.5f * BoneSize * length, length,
 								boneColor
 							);
 						}
 						UltiDraw.DrawSphere(
 							boneMatrix.GetPosition(),
 							Quaternion.identity,
-							5f/8f * BoneSize,
+							5f / 8f * BoneSize,
 							jointColor
 						);
 						parent = index;
 					}
-					for(int i=0; i<bone.GetChildCount(); i++) {
+					for (int i = 0; i < bone.GetChildCount(); i++) {
 						Recursion(bone.GetChild(i), parent);
 					}
 				}
-				foreach(Bone bone in GetRootBones()) {
+				foreach (Bone bone in GetRootBones()) {
 					Recursion(bone, -1);
 				}
 			}
-			if(mode == DRAW.Sketch) {
+			if (mode == DRAW.Sketch) {
 				void Recursion(Bone bone, int parent) {
 					int index = bones.FindIndex(bone.GetName());
-					if(index >= 0) {
+					if (index >= 0) {
 						Matrix4x4 boneMatrix = transformations[index];
-						if(parent >= 0) {
+						if (parent >= 0) {
 							Matrix4x4 parentMatrix = transformations[parent];
 							UltiDraw.DrawLine(parentMatrix.GetPosition(), boneMatrix.GetPosition(), boneColor);
 						}
 						UltiDraw.DrawCube(boneMatrix.GetPosition(), boneMatrix.GetRotation(), 0.02f, jointColor);
 						parent = index;
 					}
-					for(int i=0; i<bone.GetChildCount(); i++) {
+					for (int i = 0; i < bone.GetChildCount(); i++) {
 						Recursion(bone.GetChild(i), parent);
 					}
 				}
-				foreach(Bone bone in GetRootBones()) {
+				foreach (Bone bone in GetRootBones()) {
 					Recursion(bone, -1);
 				}
 			}
@@ -542,16 +542,17 @@ namespace OpenHuman {
 
 		public void DrawIcon(Color color) {
 			UltiDraw.Begin();
-			UltiDraw.DrawPyramid(transform.position.SetY(GetBonePositions().Max().y+0.6f), transform.rotation, 0.3f, -0.3f, color);
+			UltiDraw.DrawPyramid(transform.position.SetY(GetBonePositions().Max().y + 0.6f), transform.rotation, 0.3f, -0.3f, color);
 			UltiDraw.End();
 		}
 
 		public Transform CreateVisualInstance() {
 			Transform instance = Instantiate(gameObject).transform;
-			foreach(Component c in instance.GetComponentsInChildren<Component>()) {
-				if(c is SkinnedMeshRenderer || c is Renderer) {
-					
-				} else {
+			foreach (Component c in instance.GetComponentsInChildren<Component>()) {
+				if (c is SkinnedMeshRenderer || c is Renderer) {
+
+				}
+				else {
 					Utility.Destroy(c);
 				}
 			}
@@ -559,19 +560,19 @@ namespace OpenHuman {
 		}
 
 		void OnRenderObject() {
-			if(DrawSkeleton) {
+			if (DrawSkeleton) {
 				Draw(GetBoneTransformations(), BoneColor, JointColor, DRAW.Skeleton);
 			}
 
 			UltiDraw.Begin();
-			if(DrawRoot) {
+			if (DrawRoot) {
 				UltiDraw.DrawWireCube(GetRoot().position, GetRoot().rotation, 0.1f, UltiDraw.Magenta);
 				UltiDraw.DrawCube(GetRoot().position, GetRoot().rotation, 0.075f, UltiDraw.Cyan.Opacity(0.75f));
 				UltiDraw.DrawTranslateGizmo(GetRoot().position, GetRoot().rotation, 0.1f);
 			}
 
-			if(DrawVelocities) {
-				for(int i=0; i<Bones.Length; i++) {
+			if (DrawVelocities) {
+				for (int i = 0; i < Bones.Length; i++) {
 					UltiDraw.DrawArrow(
 						Bones[i].GetPosition(),
 						Bones[i].GetPosition() + Bones[i].GetVelocity(),
@@ -583,8 +584,8 @@ namespace OpenHuman {
 				}
 			}
 
-			if(DrawAccelerations) {
-				for(int i=0; i<Bones.Length; i++) {
+			if (DrawAccelerations) {
+				for (int i = 0; i < Bones.Length; i++) {
 					UltiDraw.DrawArrow(
 						Bones[i].GetPosition(),
 						Bones[i].GetPosition() + Bones[i].GetAcceleration(),
@@ -596,14 +597,14 @@ namespace OpenHuman {
 				}
 			}
 
-			if(DrawTransforms) {
-				foreach(Bone bone in Bones) {
+			if (DrawTransforms) {
+				foreach (Bone bone in Bones) {
 					UltiDraw.DrawTranslateGizmo(bone.GetPosition(), bone.GetRotation(), 0.05f);
 				}
 			}
 
-			if(DrawAlignment) {
-				foreach(Bone bone in Bones) {
+			if (DrawAlignment) {
+				foreach (Bone bone in Bones) {
 					UltiDraw.DrawLine(bone.GetPosition(), bone.GetPosition() + bone.GetRotation() * bone.GetAlignment(), 0.05f, 0f, UltiDraw.Magenta);
 				}
 			}
@@ -635,10 +636,11 @@ namespace OpenHuman {
 				AngularVelocity = Quaternion.identity;
 				Index = index;
 				Childs = new int[0];
-				if(parent != null) {
+				if (parent != null) {
 					Parent = parent.Index;
 					ArrayExtensions.Append(ref parent.Childs, Index);
-				} else {
+				}
+				else {
 					Parent = -1;
 				}
 			}
@@ -672,11 +674,11 @@ namespace OpenHuman {
 			}
 
 			public void SetLength(float value) {
-				if(GetParent() == null) {
+				if (GetParent() == null) {
 					return;
 				}
 				Transform.position = GetParent().Transform.position + value * (Transform.position - GetParent().Transform.position).normalized;
-				if(GetParent().HasAlignment()) {
+				if (GetParent().HasAlignment()) {
 					GetParent().Alignment = value * GetParent().Alignment.normalized;
 				}
 			}
@@ -743,22 +745,23 @@ namespace OpenHuman {
 			}
 
 			public void ComputeAlignment() {
-				if(Childs.Length != 1) {
+				if (Childs.Length != 1) {
 					Alignment = Vector3.zero;
-				} else {
+				}
+				else {
 					Alignment = (GetChild(0).GetPosition() - GetPosition()).DirectionTo(GetTransformation());
 				}
 			}
 
 			public void RestoreAlignment() {
-				if(!Actor.AllowRealignment || !HasAlignment()) {
+				if (!Actor.AllowRealignment || !HasAlignment()) {
 					return;
 				}
 				Vector3 position = GetPosition();
 				Quaternion rotation = GetRotation();
 				Vector3 childPosition = GetChild(0).GetPosition();
 				Quaternion childRotation = GetChild(0).GetRotation();
-				Vector3 target = (childPosition-position);
+				Vector3 target = (childPosition - position);
 				Vector3 aligned = rotation * Alignment;
 				// float[] angles = new float[] {
 				// 	Vector3.Angle(rotation.GetRight(), target),
@@ -795,7 +798,7 @@ namespace OpenHuman {
 			}
 		}
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 		[CustomEditor(typeof(Actor))]
 		public class Actor_Editor : Editor {
 
@@ -820,14 +823,14 @@ namespace OpenHuman {
 				Target.DrawAlignment = EditorGUILayout.Toggle("Draw Alignment", Target.DrawAlignment);
 
 				Utility.SetGUIColor(Color.grey);
-				using(new EditorGUILayout.VerticalScope ("Box")) {
+				using (new EditorGUILayout.VerticalScope("Box")) {
 					Utility.ResetGUIColor();
-					if(Utility.GUIButton("Skeleton", UltiDraw.DarkGrey, UltiDraw.White)) {
+					if (Utility.GUIButton("Skeleton", UltiDraw.DarkGrey, UltiDraw.White)) {
 						Inspect = !Inspect;
 					}
-					if(Inspect) {
+					if (Inspect) {
 						Actor reference = (Actor)EditorGUILayout.ObjectField("Reference", null, typeof(Actor), true);
-						if(reference != null) {
+						if (reference != null) {
 							Target.CopySetup(reference);
 						}
 
@@ -835,26 +838,26 @@ namespace OpenHuman {
 						AName = EditorGUILayout.TextField(AName, GUILayout.Width(175f));
 						EditorGUILayout.LabelField(">", GUILayout.Width(10f));
 						BName = EditorGUILayout.TextField(BName, GUILayout.Width(175f));
-						if(Utility.GUIButton("Rename", UltiDraw.DarkGrey, UltiDraw.White)) {
+						if (Utility.GUIButton("Rename", UltiDraw.DarkGrey, UltiDraw.White)) {
 							Target.RenameBones(AName, BName);
 						}
-						if(Utility.GUIButton("Switch", UltiDraw.DarkGrey, UltiDraw.White)) {
+						if (Utility.GUIButton("Switch", UltiDraw.DarkGrey, UltiDraw.White)) {
 							Target.SwitchNames(AName, BName);
 						}
 						EditorGUILayout.EndHorizontal();
 
 						EditorGUILayout.BeginHorizontal();
 						EditorGUILayout.LabelField("Bones: " + Target.Bones.Length);
-						if(Utility.GUIButton("Clear", UltiDraw.DarkGrey, UltiDraw.White)) {
+						if (Utility.GUIButton("Clear", UltiDraw.DarkGrey, UltiDraw.White)) {
 							Target.Create(new Transform[0]);
 						}
 						EditorGUILayout.EndHorizontal();
-						if(Utility.GUIButton("Compute Alignment", UltiDraw.DarkGrey, UltiDraw.White)) {
-							foreach(Bone bone in Target.Bones) {
+						if (Utility.GUIButton("Compute Alignment", UltiDraw.DarkGrey, UltiDraw.White)) {
+							foreach (Bone bone in Target.Bones) {
 								bone.ComputeAlignment();
 							}
 						}
-						if(Utility.GUIButton("Create Simplified Skeleton", UltiDraw.DarkGrey, UltiDraw.White)) {
+						if (Utility.GUIButton("Create Simplified Skeleton", UltiDraw.DarkGrey, UltiDraw.White)) {
 							Target.CreateSimplifiedSkeleton();
 						}
 						Target.BoneSize = EditorGUILayout.FloatField("Bone Size", Target.BoneSize);
@@ -864,7 +867,7 @@ namespace OpenHuman {
 					}
 				}
 
-				if(GUI.changed) {
+				if (GUI.changed) {
 					EditorUtility.SetDirty(Target);
 				}
 			}
@@ -873,45 +876,46 @@ namespace OpenHuman {
 				float indentSpace = 10f;
 				Bone bone = Target.FindBone(transform);
 				Utility.SetGUIColor(bone == null ? UltiDraw.LightGrey : UltiDraw.Mustard);
-				using(new EditorGUILayout.HorizontalScope ("Box")) {
+				using (new EditorGUILayout.HorizontalScope("Box")) {
 					Utility.ResetGUIColor();
 					EditorGUILayout.BeginHorizontal();
-					for(int i=0; i<indent; i++) {
+					for (int i = 0; i < indent; i++) {
 						EditorGUILayout.LabelField("|", GUILayout.Width(indentSpace));
 					}
 					EditorGUILayout.LabelField("-", GUILayout.Width(indentSpace));
-					EditorGUILayout.LabelField(transform.name, GUILayout.Width(400f - indent*indentSpace));
+					EditorGUILayout.LabelField(transform.name, GUILayout.Width(400f - indent * indentSpace));
 					GUILayout.FlexibleSpace();
-					if(bone != null) {
+					if (bone != null) {
 						// EditorGUILayout.LabelField("Parent: " + (bone.GetParent() == null ? "None" : bone.GetParent().GetName()));
 						EditorGUILayout.LabelField("Index: " + bone.GetIndex().ToString(), GUILayout.Width(60f));
 						EditorGUILayout.LabelField("Length: " + bone.GetLength().ToString("F3"), GUILayout.Width(90f));
-						if(bone.HasAlignment()) {
+						if (bone.HasAlignment()) {
 							EditorGUILayout.LabelField(bone.GetAlignment().ToString(), GUILayout.Width(100f));
 						}
 					}
-					if(Utility.GUIButton("Bone", bone == null ? UltiDraw.White : UltiDraw.DarkGrey, bone == null ? UltiDraw.DarkGrey : UltiDraw.White)) {
+					if (Utility.GUIButton("Bone", bone == null ? UltiDraw.White : UltiDraw.DarkGrey, bone == null ? UltiDraw.DarkGrey : UltiDraw.White)) {
 						Transform[] bones = new Transform[Target.Bones.Length];
-						for(int i=0; i<bones.Length; i++) {
+						for (int i = 0; i < bones.Length; i++) {
 							bones[i] = Target.Bones[i].GetTransform();
 						}
-						if(bone == null) {
+						if (bone == null) {
 							ArrayExtensions.Append(ref bones, transform);
 							Target.Create(bones);
-						} else {
+						}
+						else {
 							ArrayExtensions.Remove(ref bones, transform);
 							Target.Create(bones);
 						}
 					}
 					EditorGUILayout.EndHorizontal();
 				}
-				for(int i=0; i<transform.childCount; i++) {
-					InspectSkeleton(transform.GetChild(i), indent+1);
+				for (int i = 0; i < transform.childCount; i++) {
+					InspectSkeleton(transform.GetChild(i), indent + 1);
 				}
 			}
 
 		}
-		#endif
+#endif
 
 	}
 }
