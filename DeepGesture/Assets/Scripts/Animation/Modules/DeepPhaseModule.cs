@@ -842,16 +842,16 @@ namespace OpenHuman {
 
         // *************** Series (Phases, Amplitudes, Frequencies) ***************
         public class Series : TimeSeries.Component {
-            public int Channels;
-            public float[][] Phases;
-            public float[][] Amplitudes;
-            public float[][] Frequencies;
+            public int Channels; // 8
+            public float[][] Phases; // [121][Channels.Length]
+            public float[][] Amplitudes; // [121][Channels.Length]
+            public float[][] Frequencies; // [121][Channels.Length]
 
             private float Peak = 1f;
             private Queue<float> Peaks = new Queue<float>();
             private int MaxPeakCount = 100;
 
-            private List<float[]> GatingHistory = new List<float[]>();
+            private List<float[]> GatingHistory = new List<float[]>(); // [100][Channels.Length]
 
             private UltiDraw.GUIRect Rect = new UltiDraw.GUIRect(0.875f, 0.125f, 0.2f, 0.125f);
 
@@ -1052,7 +1052,11 @@ namespace OpenHuman {
                     UltiDraw.Begin();
                     UltiDraw.OnGUILabel(PhaseWindow.GetCenter(), PhaseWindow.GetSize(), TextScale, "Phase State", Color.white);
                     // UltiDraw.OnGUILabel(Rect.GetCenter() + new Vector2(0f, 0.0875f), Rect.GetSize(), 0.0175f, "Motion Content", UltiDraw.Black);
-                    UltiDraw.OnGUILabel(ExpertWindow.GetCenter(), ExpertWindow.GetSize(), TextScale, "Expert Activation", Color.white);
+
+                    if (GatingHistory.Count > 0) {
+                        UltiDraw.OnGUILabel(ExpertWindow.GetCenter(), ExpertWindow.GetSize(), TextScale, "Expert Activation", Color.white);
+                    }
+
                     UltiDraw.End();
                 }
             }
@@ -1094,8 +1098,9 @@ namespace OpenHuman {
                     for (int i = 0; i < manifold.Length; i++) {
                         manifold[i] = Amplitudes[Pivot][i] * Utility.PhaseVector(Phases[Pivot][i]);
                     }
-                    DrawPhaseState(new Vector2(PhaseWindow.X, 0.7875f + HeightOffset), 0.04f, Amplitudes[Pivot], manifold, Channels, Peak);
-                    if (GatingHistory != null) {
+                    DrawPhaseState(new Vector2(PhaseWindow.X, 0.7875f + HeightOffset), 0.06f, Amplitudes[Pivot], manifold, Channels, Peak);
+
+                    if (GatingHistory.Count > 0) {
                         UltiDraw.Begin();
                         UltiDraw.DrawInterpolationSpace(GatingWindow, GatingHistory);
                         UltiDraw.End();

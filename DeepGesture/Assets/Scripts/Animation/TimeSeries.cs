@@ -53,7 +53,7 @@ public class TimeSeries {
 		for (int i = 0; i < Pivot; i++) {
 			Samples[i] = new Sample(i, -PastWindow + i * PastWindow / PastSampleCount);
 		}
-
+		
 		// 60
 		Samples[Pivot] = new Sample(Pivot, 0f);
 
