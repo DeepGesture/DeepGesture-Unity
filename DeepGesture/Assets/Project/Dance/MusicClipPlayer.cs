@@ -9,7 +9,7 @@ namespace DeepGesture {
 
         public AudioSpectrum AudioSpectrum;
 
-        public GestureController Controller;
+        public DanceController Controller;
 
         public bool RealTime = true;
 
@@ -81,7 +81,7 @@ namespace DeepGesture {
 
 			public override void OnInspectorGUI() {
                 Target.SetAudioSpectrum(EditorGUILayout.ObjectField("Audio Spectrum", Target.AudioSpectrum, typeof(AudioSpectrum), true) as AudioSpectrum);
-                Target.Controller = EditorGUILayout.ObjectField("Controller", Target.Controller, typeof(GestureController), true) as GestureController;
+                Target.Controller = EditorGUILayout.ObjectField("Controller", Target.Controller, typeof(DanceController), true) as DanceController;
                 Target.RealTime = EditorGUILayout.Toggle("Real Time", Target.RealTime);
                 Target.Framerate = EditorGUILayout.FloatField("Framerate", Target.Framerate);
                 Target.Pitch = EditorGUILayout.Slider("Pitch", Target.Pitch, 0.5f, 1.5f);
