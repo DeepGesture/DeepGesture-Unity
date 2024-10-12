@@ -27,11 +27,11 @@ namespace DeepGesture {
         private bool m_updateContact = true;
 
         private TimeSeries m_musicSerious;
-        private int m_pastKeys = 20;
-        private int m_futureKeys = 20;
+        private int m_pastKeys = 6;
+        private int m_futureKeys = 6;
         private float m_pastWindow = 1f;
         private float m_futureWindow = 1f;
-        private int m_resolution = 1;
+        private int m_resolution = 10;
 
         private AssetPipeline.Data.File s;
         private AssetPipeline.Data x, y;
@@ -162,7 +162,7 @@ namespace DeepGesture {
         public override void Finish() {
             if (mode == Mode.ProcessAssets) {
                 foreach (var t in Pipeline.GetEditor().Assets) {
-                    //MotionAsset.Retrieve(Pipeline.GetEditor().Assets[i]).ResetSequences();
+                    // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[i]).ResetSequences();
                     MotionAsset.Retrieve(t).Export = true;
                 }
 
@@ -176,9 +176,9 @@ namespace DeepGesture {
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[5]).SetSequence(0, 700, 43000);
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[6]).SetSequence(0, 500, 20000);
 
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[7]).SetSequence(0, 2000, 23000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[8]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[9]).SetSequence(0, 2000, 24000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[7]).SetSequence(0, 2000, 23000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[8]).SetSequence(0, 2000, 20000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[9]).SetSequence(0, 2000, 24000);
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[7]).Export = false;
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[8]).Export = false;
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[9]).Export = false;
@@ -186,9 +186,9 @@ namespace DeepGesture {
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[10]).SetSequence(0, 2000, 30000);
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[11]).SetSequence(0, 1000, 16000);
 
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[12]).SetSequence(0, 1000, 19500);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[13]).SetSequence(0, 1000, 19500);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[14]).SetSequence(0, 2000, 30000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[12]).SetSequence(0, 1000, 19500);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[13]).SetSequence(0, 1000, 19500);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[14]).SetSequence(0, 2000, 30000);
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[12]).Export = false;
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[13]).Export = false;
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[14]).Export = false;
@@ -197,8 +197,8 @@ namespace DeepGesture {
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[15]).SetSequence(0, 2000, 30000);
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[16]).SetSequence(0, 1500, 24000);
 
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[17]).SetSequence(0, 1000, 8000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[18]).SetSequence(0, 2000, 20000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[17]).SetSequence(0, 1000, 8000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[18]).SetSequence(0, 2000, 20000);
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[17]).Export = false;
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[18]).Export = false;
 
@@ -208,12 +208,12 @@ namespace DeepGesture {
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[21]).SetSequence(0, 2000, 18000);
 
 
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[22]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[23]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[24]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[25]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[26]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[27]).SetSequence(0, 2000, 20000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[22]).SetSequence(0, 2000, 20000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[23]).SetSequence(0, 2000, 20000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[24]).SetSequence(0, 2000, 20000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[25]).SetSequence(0, 2000, 20000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[26]).SetSequence(0, 2000, 20000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[27]).SetSequence(0, 2000, 20000);
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[22]).Export = false;
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[23]).Export = false;
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[24]).Export = false;
@@ -230,10 +230,10 @@ namespace DeepGesture {
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[32]).SetSequence(0, 2000, 20000);
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[33]).SetSequence(0, 2000, 30000);
 
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[34]).SetSequence(0, 2000, 10000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[35]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[36]).SetSequence(0, 2000, 3000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[37]).SetSequence(0, 2000, 20000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[34]).SetSequence(0, 2000, 10000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[35]).SetSequence(0, 2000, 20000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[36]).SetSequence(0, 2000, 3000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[37]).SetSequence(0, 2000, 20000);
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[34]).Export = false;
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[35]).Export = false;
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[36]).Export = false;
@@ -248,12 +248,12 @@ namespace DeepGesture {
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[42]).SetSequence(0, 2000, 20000);
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[43]).SetSequence(0, 2000, 15000);
 
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[44]).SetSequence(0, 2000, 30000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[45]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[46]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[47]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[48]).SetSequence(0, 2000, 18000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[49]).SetSequence(0, 2000, 10000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[44]).SetSequence(0, 2000, 30000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[45]).SetSequence(0, 2000, 20000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[46]).SetSequence(0, 2000, 20000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[47]).SetSequence(0, 2000, 20000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[48]).SetSequence(0, 2000, 18000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[49]).SetSequence(0, 2000, 10000);
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[44]).Export = false;
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[45]).Export = false;
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[46]).Export = false;
@@ -264,11 +264,11 @@ namespace DeepGesture {
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[50]).SetSequence(0, 2000, 20000);
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[51]).SetSequence(0, 2000, 20000);
 
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[52]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[53]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[54]).SetSequence(0, 2000, 15000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[55]).SetSequence(0, 2000, 20000);
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[56]).SetSequence(0, 2000, 15000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[52]).SetSequence(0, 2000, 20000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[53]).SetSequence(0, 2000, 20000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[54]).SetSequence(0, 2000, 15000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[55]).SetSequence(0, 2000, 20000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[56]).SetSequence(0, 2000, 15000);
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[52]).Export = false;
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[53]).Export = false;
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[54]).Export = false;
@@ -278,7 +278,7 @@ namespace DeepGesture {
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[57]).SetSequence(0, 2000, 10000);
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[58]).SetSequence(0, 2000, 15000);
 
-                // MotionAsset.Retrieve(Pipeline.GetEditor().Assets[59]).SetSequence(0, 2000, 20000);
+                //  MotionAsset.Retrieve(Pipeline.GetEditor().Assets[59]).SetSequence(0, 2000, 20000);
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[59]).Export = false;
 
                 MotionAsset.Retrieve(Pipeline.GetEditor().Assets[60]).SetSequence(0, 2000, 15000);
@@ -415,27 +415,29 @@ namespace DeepGesture {
                 Container current = new Container(setup, tCurrent, musicSeries);
                 Container next = new Container(setup, tNext, musicSeries);
 
+                // Series.Length = [(m_pastKeys + m_futureKeys) * m_resolution  + 1] = 121
+
                 string[] contacts = { "LeftFoot", "RightFoot" };
 
-                //Input
-                //Control
+                // ******************* Input *******************
+                // Control - 3 * 2 * 13 = 78
                 for (int k = 0; k < current.TimeSeries.Samples.Length; k++) {
                     x.FeedXZ(next.RootSeries.GetPosition(k).PositionTo(current.Root), "TrajectoryPosition" + (k + 1));
                     x.FeedXZ(next.RootSeries.GetDirection(k).DirectionTo(current.Root), "TrajectoryDirection" + (k + 1));
                     x.FeedXZ(next.RootSeries.GetVelocity(k).DirectionTo(current.Root), "TrajectoryVelocity" + (k + 1));
                 }
 
-                //Audio Features
+                // Audio Features (80 + 2 + 1 + 20 + 12 + 1) * 13 = 1508
                 for (int k = 0; k < current.SpectrumSeries.Samples.Length; k++) {
-                    x.Feed(current.SpectrumSeries.Values[k].Spectogram, "Spectogram" + (k + 1) + "-");
-                    x.Feed(current.SpectrumSeries.Values[k].Beats, "Beats" + (k + 1) + "-");
-                    x.Feed(current.SpectrumSeries.Values[k].Flux, "Flux" + (k + 1) + "-");
-                    x.Feed(current.SpectrumSeries.Values[k].MFCC, "MFCC" + (k + 1) + "-");
-                    x.Feed(current.SpectrumSeries.Values[k].Chroma, "Chroma" + (k + 1) + "-");
-                    x.Feed(current.SpectrumSeries.Values[k].ZeroCrossing, "ZeroCrossing" + (k + 1) + "-");
+                    x.Feed(current.SpectrumSeries.Values[k].Spectogram, "Spectogram" + (k + 1) + "-"); // 80
+                    x.Feed(current.SpectrumSeries.Values[k].Beats, "Beats" + (k + 1) + "-"); // 2
+                    x.Feed(current.SpectrumSeries.Values[k].Flux, "Flux" + (k + 1) + "-"); // 1
+                    x.Feed(current.SpectrumSeries.Values[k].MFCC, "MFCC" + (k + 1) + "-"); // 20
+                    x.Feed(current.SpectrumSeries.Values[k].Chroma, "Chroma" + (k + 1) + "-"); // 12
+                    x.Feed(current.SpectrumSeries.Values[k].ZeroCrossing, "ZeroCrossing" + (k + 1) + "-"); // 1
                 }
 
-                //Auto-Regressive Posture
+                // Auto-Regressive Posture - 4 * 24 * 3 = 288
                 for (int k = 0; k < current.ActorPosture.Length; k++) {
                     x.Feed(current.ActorPosture[k].GetPosition().PositionTo(current.Root), "Bone" + (k + 1) + setup.Pipeline.GetEditor().GetSession().GetActor().Bones[k].GetName() + "Position");
                     x.Feed(current.ActorPosture[k].GetForward().DirectionTo(current.Root), "Bone" + (k + 1) + setup.Pipeline.GetEditor().GetSession().GetActor().Bones[k].GetName() + "Forward");
@@ -443,24 +445,24 @@ namespace DeepGesture {
                     x.Feed(current.ActorVelocities[k].DirectionTo(current.Root), "Bone" + (k + 1) + setup.Pipeline.GetEditor().GetSession().GetActor().Bones[k].GetName() + "Velocity");
                 }
 
-                //Gating Variables
+                // Gating Variables - Channels * KeyCount * 2 = 8 * 13 * 2 = 208
                 x.Feed(current.PhaseSeries.GetAlignment(), "PhaseSpace-");
 
-                //Output
-                //Root Update
+                // ******************* Output *******************
+                // Root Update
                 Matrix4x4 delta = next.Root.TransformationTo(current.Root);
                 y.Feed(new Vector3(delta.GetPosition().x, Vector3.SignedAngle(Vector3.forward, delta.GetForward(), Vector3.up), delta.GetPosition().z), "RootUpdate");
                 y.FeedXZ(next.RootSeries.Velocities[next.TimeSeries.Pivot].DirectionTo(next.Root), "RootVelocity");
 
 
-                //Control
+                // Control
                 for (int k = next.TimeSeries.Pivot + 1; k < next.TimeSeries.Samples.Length; k++) {
                     y.FeedXZ(next.RootSeries.GetPosition(k).PositionTo(next.Root), "TrajectoryPosition" + (k + 1));
                     y.FeedXZ(next.RootSeries.GetDirection(k).DirectionTo(next.Root), "TrajectoryDirection" + (k + 1));
                     y.FeedXZ(next.RootSeries.GetVelocity(k).DirectionTo(next.Root), "TrajectoryVelocity" + (k + 1));
                 }
 
-                //Auto-Regressive Posture
+                // Auto-Regressive Posture
                 for (int k = 0; k < next.ActorPosture.Length; k++) {
                     y.Feed(next.ActorPosture[k].GetPosition().PositionTo(next.Root), "Bone" + (k + 1) + setup.Pipeline.GetEditor().GetSession().GetActor().Bones[k].GetName() + "Position");
                     y.Feed(next.ActorPosture[k].GetForward().DirectionTo(next.Root), "Bone" + (k + 1) + setup.Pipeline.GetEditor().GetSession().GetActor().Bones[k].GetName() + "Forward");
@@ -468,10 +470,10 @@ namespace DeepGesture {
                     y.Feed(next.ActorVelocities[k].DirectionTo(next.Root), "Bone" + (k + 1) + setup.Pipeline.GetEditor().GetSession().GetActor().Bones[k].GetName() + "Velocity");
                 }
 
-                //Contacts
+                // Contacts
                 y.Feed(next.ContactSeries.GetContacts(next.TimeSeries.Pivot, contacts), "Contacts-");
 
-                //Phase Update
+                // Phase Update
                 y.Feed(next.PhaseSeries.GetUpdate(), "PhaseUpdate-");
             }
 
@@ -487,7 +489,7 @@ namespace DeepGesture {
                 public DeepPhaseModule.Series PhaseSeries;
                 public AudioSpectrumModule.Series SpectrumSeries;
 
-                //Actor Features
+                // Actor Features
                 public Matrix4x4 Root;
                 public Matrix4x4[] ActorPosture;
                 public Vector3[] ActorVelocities;

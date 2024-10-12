@@ -60,7 +60,7 @@ public class CameraController : MonoBehaviour {
 	private GUIStyle GetButtonStyle() {
 		if(ButtonStyle == null) {
 			ButtonStyle = new GUIStyle(GUI.skin.button);
-			ButtonStyle.font = (Font)Resources.Load("Fonts/Coolvetica");
+			ButtonStyle.font = (Font)Resources.Load("Fonts/Segoe UI");
 			ButtonStyle.normal.textColor = Color.white;
 			ButtonStyle.alignment = TextAnchor.MiddleCenter;
 		}
@@ -84,7 +84,7 @@ public class CameraController : MonoBehaviour {
 	private GUIStyle GetFontStyle() {
 		if(FontStyle == null) {
 			FontStyle = new GUIStyle();
-			FontStyle.font = (Font)Resources.Load("Fonts/Coolvetica");
+			FontStyle.font = (Font)Resources.Load("Fonts/Segoe UI");
 			FontStyle.normal.textColor = Color.white;
 			FontStyle.alignment = TextAnchor.MiddleLeft;
 		}
