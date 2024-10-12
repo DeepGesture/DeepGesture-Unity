@@ -121,8 +121,11 @@ Desktop.ini
 116.onnx
 150_GVNN.onnx
 
-*.meta
 *.bvh
+*.bvh.meta
+*.asset.meta
+*.wav.meta
+
 DeepGesture/Assets/DeepGesture/Assets/*.asset
 DeepGesture/Assets/DeepGesture/Assets/Speech/features/*.asset
 DeepGesture/Assets/Project/**/*.asset
