@@ -31,7 +31,7 @@ namespace DeepGesture {
         private int m_futureKeys = 6; //  20
         private float m_pastWindow = 1f;
         private float m_futureWindow = 1f;
-        private int m_resolution = 10;//  1;
+        private int m_resolution = 1;//  10;
 
         private AssetPipeline.Data.File s;
         private AssetPipeline.Data x, y;
@@ -300,24 +300,24 @@ namespace DeepGesture {
                 string[] contacts = { "LeftFoot", "RightFoot" };
 
                 // *************** Input ***************
-                // Control
+                // Control - 13 * 3  * 2 = 78
                 for (int k = 0; k < current.TimeSeries.Samples.Length; k++) {
                     x.FeedXZ(next.RootSeries.GetPosition(k).PositionTo(current.Root), "TrajectoryPosition" + (k + 1));
                     x.FeedXZ(next.RootSeries.GetDirection(k).DirectionTo(current.Root), "TrajectoryDirection" + (k + 1));
                     x.FeedXZ(next.RootSeries.GetVelocity(k).DirectionTo(current.Root), "TrajectoryVelocity" + (k + 1));
                 }
 
-                // Audio Features
+                // Audio Features - (80+2+1+20+12+1)*13 = 1508
                 for (int k = 0; k < current.SpectrumSeries.Samples.Length; k++) {
-                    x.Feed(current.SpectrumSeries.Values[k].Spectogram, "Spectogram" + (k + 1) + "-");
-                    x.Feed(current.SpectrumSeries.Values[k].Beats, "Beats" + (k + 1) + "-");
-                    x.Feed(current.SpectrumSeries.Values[k].Flux, "Flux" + (k + 1) + "-");
-                    x.Feed(current.SpectrumSeries.Values[k].MFCC, "MFCC" + (k + 1) + "-");
-                    x.Feed(current.SpectrumSeries.Values[k].Chroma, "Chroma" + (k + 1) + "-");
-                    x.Feed(current.SpectrumSeries.Values[k].ZeroCrossing, "ZeroCrossing" + (k + 1) + "-");
+                    x.Feed(current.SpectrumSeries.Values[k].Spectogram, "Spectogram" + (k + 1) + "-"); // 80
+                    x.Feed(current.SpectrumSeries.Values[k].Beats, "Beats" + (k + 1) + "-"); // 2
+                    x.Feed(current.SpectrumSeries.Values[k].Flux, "Flux" + (k + 1) + "-"); // 1
+                    x.Feed(current.SpectrumSeries.Values[k].MFCC, "MFCC" + (k + 1) + "-"); // 20
+                    x.Feed(current.SpectrumSeries.Values[k].Chroma, "Chroma" + (k + 1) + "-"); // 12
+                    x.Feed(current.SpectrumSeries.Values[k].ZeroCrossing, "ZeroCrossing" + (k + 1) + "-"); // 1
                 }
 
-                // Auto-Regressive Posture
+                // Auto-Regressive Posture - 3 * 4 * 75 = 900
                 for (int k = 0; k < current.ActorPosture.Length; k++) {
                     x.Feed(current.ActorPosture[k].GetPosition().PositionTo(current.Root), "Bone" + (k + 1) + setup.Pipeline.GetEditor().GetSession().GetActor().Bones[k].GetName() + "Position");
                     x.Feed(current.ActorPosture[k].GetForward().DirectionTo(current.Root), "Bone" + (k + 1) + setup.Pipeline.GetEditor().GetSession().GetActor().Bones[k].GetName() + "Forward");
@@ -325,7 +325,7 @@ namespace DeepGesture {
                     x.Feed(current.ActorVelocities[k].DirectionTo(current.Root), "Bone" + (k + 1) + setup.Pipeline.GetEditor().GetSession().GetActor().Bones[k].GetName() + "Velocity");
                 }
 
-                // Gating Variables
+                // Gating Variables - 8 * 13 * 2 = 208
                 x.Feed(current.PhaseSeries.GetAlignment(), "PhaseSpace-");
 
                 // *************** Output ***************
