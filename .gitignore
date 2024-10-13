@@ -10,6 +10,10 @@
 /[Bb]uild/
 /[Bb]uilds/
 /[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+
+DeepGesture/UserSettings/
+DeepGesture/ProjectSettings/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
@@ -126,10 +130,11 @@ Desktop.ini
 *.wav.meta
 
 DeepGesture/Assets/DeepGesture/Assets/*.asset
+DeepGesture/Assets/DeepGesture/Assets/Motion/*.meta
+DeepGesture/Assets/DeepGesture/Assets/Motion/*/*.meta
 DeepGesture/Assets/DeepGesture/Assets/Speech/features/*.asset
 DeepGesture/Assets/Project/**/*.asset
 
 # DeepLearning
 DeepLearning/Dataset/*.bin
 DeepLearning/Dataset/*.txt
-
