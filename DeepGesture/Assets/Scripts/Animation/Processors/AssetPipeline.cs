@@ -194,7 +194,7 @@ namespace OpenHuman {
 				string path = Application.dataPath;
 				path = path.Substring(0, path.LastIndexOf("/"));
 				path = path.Substring(0, path.LastIndexOf("/"));
-				path += "/DeepLearning/Dataset";
+				path += "/Output/Dataset";
 				return path;
 			}
 
