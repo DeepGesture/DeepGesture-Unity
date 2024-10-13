@@ -120,16 +120,23 @@ crashlytics-build.properties
 Thumbs.db
 Desktop.ini
 
-*.wav
-*.bvh.unity
-*.onnx
-*.bvh.asset
-116.onnx
-150_GVNN.onnx
-
+# Project Assets
 *.bvh
 *.bvh.meta
+
+*.wav
 *.wav.meta
+
+*.bvh.unity
+*.bvh.asset
+*.bvh.unity.meta
+
+*.onnx
+*.onnx.meta
+
+
+
+
 
 DeepGesture/Assets/DeepGesture/Assets/*.asset
 DeepGesture/Assets/DeepGesture/Assets/Motion/*.meta
