@@ -1225,7 +1225,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Framerate: 60
   NeuralNetwork:
-    Model: {fileID: 5022602860645237092, guid: 2ebe1cfe88e7bfd42bb77d4200bb67b4, type: 3}
+    Model: {fileID: 5022602860645237092, guid: 0d973a433a56a4abea2f7a4143b661e7, type: 3}
     Device: 256
   NoiseSampler: 110
   DrawGUI: 1
@@ -5041,7 +5041,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AudioSpectrum: {fileID: 11400000, guid: 4be3d396a305afe4d893f2287321f2ec, type: 2}
-  Controller: {fileID: 462216938}
+  Controller: {fileID: 0}
   RealTime: 1
   Framerate: 60
   Pitch: 1

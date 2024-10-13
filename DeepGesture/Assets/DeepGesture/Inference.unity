@@ -876,7 +876,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Framerate: 60
   NeuralNetwork:
-    Model: {fileID: 5022602860645237092, guid: 5693d9258f6a74214b0cd42365a9a18b, type: 3}
+    Model: {fileID: 5022602860645237092, guid: 09ea6a4d129c148b2983d5226390b08b, type: 3}
     Device: 512
   NoiseSampler: 110
   DrawGUI: 1

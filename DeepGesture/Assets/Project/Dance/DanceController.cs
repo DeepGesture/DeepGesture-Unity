@@ -56,8 +56,9 @@ namespace DeepGesture {
         void Start() {
             Actor = GetComponent<Actor>();
 
-            TimeSeries = new TimeSeries(6, 6, 1f, 1f, 10);
+            TimeSeries = new TimeSeries(6, 6, 1f, 1f, 1);
             MusicSeries = new TimeSeries(20, 20, 1f, 1f, 3);
+            // MusicSeries = new TimeSeries(6, 6, 1f, 1f, 1);
 
             RootSeries = new RootModule.Series(TimeSeries, transform);
             ContactSeries = new ContactModule.Series(TimeSeries, "LeftFoot", "RightFoot");
@@ -180,7 +181,7 @@ namespace DeepGesture {
             Matrix4x4 prev = RootSeries.Transformations[RootSeries.Pivot-1];
             Matrix4x4 root = Actor.GetRoot().GetWorldMatrix();
 
-            //Input Timeseries
+            //Input Timeseries - 
             for(int i=0; i<TimeSeries.KeyCount; i++) {
                 int index = TimeSeries.GetKey(i).Index;
                 NeuralNetwork.FeedXZ(RootSeries.GetPosition(index).PositionTo(prev));
