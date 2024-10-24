@@ -144,3 +144,4 @@ DeepGesture/Assets/Project/**/*.asset
 # DeepLearning
 DeepLearning/Dataset/*.bin
 DeepLearning/Dataset/*.txt
+DeepGesture/Packages/*

@@ -54,7 +54,8 @@ namespace DeepGesture {
 
         void Start() {
             Debug.Log("GestureController Start");
-            Actor = GetComponent<Actor>();
+            // Actor = GetComponent<Actor>();
+            Actor = GetComponentInChildren<Actor>();
 
             GestureSeries = new TimeSeries(6, 6, 1f, 1f, 1);
             SpeechSeries = new TimeSeries(6, 6, 1f, 1f, 1);
@@ -125,29 +126,29 @@ namespace DeepGesture {
             Read();
         }
 
-        private void HandleNoise() {
-            // Sample Noise
-            if (Input.GetKeyDown(NoiseSampler)) {
-                for (int i = 0; i < NoiseSamples; i++) {
-                    NoiseA[i] = Utility.GaussianValue(0f, NoiseStrength);
-                    NoiseB[i] = NoiseA[i];
-                }
-                NoiseTimer = NoiseReset;
-            }
-            if (NoiseTimer <= 0f) {
-                for (int i = 0; i < NoiseSamples; i++) {
-                    NoiseA[i] = NoiseB[i];
-                    NoiseB[i] = Utility.GaussianValue(0f, NoiseStrength);
-                }
-                NoiseTimer = NoiseReset;
-            }
-            NoiseTimer -= 1f / Framerate;
+        // private void HandleNoise() {
+        //     // Sample Noise
+        //     if (Input.GetKeyDown(NoiseSampler)) {
+        //         for (int i = 0; i < NoiseSamples; i++) {
+        //             NoiseA[i] = Utility.GaussianValue(0f, NoiseStrength);
+        //             NoiseB[i] = NoiseA[i];
+        //         }
+        //         NoiseTimer = NoiseReset;
+        //     }
+        //     if (NoiseTimer <= 0f) {
+        //         for (int i = 0; i < NoiseSamples; i++) {
+        //             NoiseA[i] = NoiseB[i];
+        //             NoiseB[i] = Utility.GaussianValue(0f, NoiseStrength);
+        //         }
+        //         NoiseTimer = NoiseReset;
+        //     }
+        //     NoiseTimer -= 1f / Framerate;
 
-            float lerp = GetLerp();
-            for (int i = 0; i < NoiseSamples; i++) {
-                Noise[i] = Mathf.Lerp(NoiseA[i], NoiseB[i], lerp);
-            }
-        }
+        //     float lerp = GetLerp();
+        //     for (int i = 0; i < NoiseSamples; i++) {
+        //         Noise[i] = Mathf.Lerp(NoiseA[i], NoiseB[i], lerp);
+        //     }
+        // }
 
         private float GetLerp() {
             float min = 0f;
@@ -173,7 +174,7 @@ namespace DeepGesture {
             }
 
             // Noise Sampler
-            HandleNoise();
+            // HandleNoise();
         }
 
         private void Feed() {

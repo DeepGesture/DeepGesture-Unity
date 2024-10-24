@@ -55,7 +55,7 @@ namespace DeepGesture {
         }
 
         void Start() {
-            Debug.Log("GestureController Start");
+            // Debug.Log("GestureController Start");
             Actor = GetComponentInChildren<Actor>();
             // Actor = GetComponent<Actor>();
 
@@ -129,13 +129,19 @@ namespace DeepGesture {
         public void PlayAnimation(object[] parameters) {
             float timestamp = (float)parameters[1];
             Actor.DrawRoot = true;
+            Vector3 rootPosition = Actor.transform.position;
             // Actor.transform
             BoneMapping = Asset.Source.GetBoneIndices(Actor.GetBoneNames());
             //Apply posture on character
             for (int i = 0; i < Actor.Bones.Length; i++) {
                 if (BoneMapping[i] != -1) {
+                    Matrix4x4 boneMatrix = Asset.GetFrame(timestamp).GetBoneTransformation(BoneMapping[i], Mirror);
+                    Matrix4x4 rootMatrix = Matrix4x4.TRS(rootPosition, Quaternion.identity, Vector3.zero);
+                    // boneMatrix.TransformationFrom(rootMatrix);
+
+
                     Actor.Bones[i].SetTransformation(
-                        Asset.GetFrame(timestamp).GetBoneTransformation(BoneMapping[i], Mirror)
+                        boneMatrix 
                     );
                     Actor.Bones[i].SetVelocity(
                         Asset.GetFrame(timestamp).GetBoneVelocity(BoneMapping[i], Mirror)
@@ -279,29 +285,29 @@ namespace DeepGesture {
         }
 
         void OnGUI() {
-            RootSeries.DrawGUI = DrawGUI;
-            RootSeries.GUI();
+            // RootSeries.DrawGUI = DrawGUI;
+            // RootSeries.GUI();
 
             // ContactSeries.DrawGUI = DrawGUI;
             // ContactSeries.GUI();
 
-            PhaseSeries.DrawGUI = DrawGUI;
-            PhaseSeries.GUI();
+            // PhaseSeries.DrawGUI = DrawGUI;
+            // PhaseSeries.GUI();
 
-            if (DrawAudio) {
-                SpectrumSeries.Draw();
-            }
+            // if (DrawAudio) {
+            //     SpectrumSeries.Draw();
+            // }
         }
 
         void OnRenderObject() {
-            RootSeries.DrawScene = DrawDebug;
-            RootSeries.Draw();
+            // RootSeries.DrawScene = DrawDebug;
+            // RootSeries.Draw();
 
             // ContactSeries.DrawScene = DrawDebug;
             // ContactSeries.Draw();
 
-            PhaseSeries.DrawScene = DrawDebug;
-            PhaseSeries.Draw();
+            // PhaseSeries.DrawScene = DrawDebug;
+            // PhaseSeries.Draw();
 
             // UltiDraw.Begin();
             // List<float> values = new List<float>();
@@ -313,15 +319,15 @@ namespace DeepGesture {
             // UltiDraw.PlotFunction(new Vector2(0.5f, 0.5f), new Vector2(0.75f, 0.25f), values.ToArray(), 0f, 1f);
             // UltiDraw.End();
 
-            if (DrawNoise) {
-                UltiDraw.Begin();
-                UltiDraw.PlotBars(new Vector2(0.5f, 0.1f), new Vector2(0.5f, 0.1f), Noise);
-                UltiDraw.End();
-            }
+            // if (DrawNoise) {
+            //     UltiDraw.Begin();
+            //     UltiDraw.PlotBars(new Vector2(0.5f, 0.1f), new Vector2(0.5f, 0.1f), Noise);
+            //     UltiDraw.End();
+            // }
 
-            if (DrawAudio) {
-                SpectrumSeries.Draw();
-            }
+            // if (DrawAudio) {
+            //     SpectrumSeries.Draw();
+            // }
         }
     }
 }
