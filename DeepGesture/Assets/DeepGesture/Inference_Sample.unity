@@ -228,7 +228,7 @@ MonoBehaviour:
   Pivot: 1
   Height: 1.5
   Distance: 3
-  Speed: 30
+  Speed: 0
   Smoothing: 0.95
 --- !u!114 &141282630
 MonoBehaviour:
@@ -2224,7 +2224,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Framerate: 60
   NeuralNetwork:
-    Model: {fileID: 5022602860645237092, guid: 7a47a0a3fd2910249ad2718620e23674, type: 3}
+    Model: {fileID: 5022602860645237092, guid: c2f3e8ec2bfe9b34782678089bf26b63, type: 3}
     Device: 256
   NoiseSampler: 110
   DrawGUI: 1

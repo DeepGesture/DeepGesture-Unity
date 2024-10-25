@@ -145,3 +145,5 @@ DeepGesture/Assets/Project/**/*.asset
 DeepLearning/Dataset/*.bin
 DeepLearning/Dataset/*.txt
 DeepGesture/Packages/*
+DeepGesture/Packages/manifest.json
+DeepGesture/Packages/packages-lock.json
