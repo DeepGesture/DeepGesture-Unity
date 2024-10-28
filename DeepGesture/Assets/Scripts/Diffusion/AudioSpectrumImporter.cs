@@ -101,7 +101,7 @@ namespace OpenHuman {
 			string fullFileName = Path.GetFileName(item.ID);
 			string rawFileName = Path.GetFileNameWithoutExtension(item.ID);
 
-			string wavDestination = destination + "/wav";
+			string wavDestination = destination;
 			if (!Directory.Exists(wavDestination)) {
 				Directory.CreateDirectory(wavDestination);
 			}
@@ -112,7 +112,7 @@ namespace OpenHuman {
 				clip = AssetDatabase.LoadAssetAtPath<AudioClip>(wavDestination + "/" + fullFileName);
 			}
 
-			string featuresDestination = destination + "/features";
+			string featuresDestination = destination;
 			if (!Directory.Exists(featuresDestination)) {
 				Directory.CreateDirectory(featuresDestination);
 			}
