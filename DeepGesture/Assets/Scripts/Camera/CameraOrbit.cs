@@ -35,7 +35,7 @@ public class CameraOrbit : MonoBehaviour {
 		Vector3 targetPosition = TargetPosition;
 		targetPosition.y += Pivot;
 		transform.LookAt(targetPosition, Vector3.up);
-		Angle += Speed * Time.deltaTime;
+		// Angle += Speed * Time.deltaTime;
 	}
 
 }

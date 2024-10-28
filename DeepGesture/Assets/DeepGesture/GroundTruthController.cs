@@ -123,12 +123,13 @@ namespace DeepGesture {
             // SpeechControl(parameters);
             // Feed();
             // Read();
+            Debug.Log("AnimateGroundTruth");
             PlayAnimation(parameters);
         }
 
         public void PlayAnimation(object[] parameters) {
             float timestamp = (float)parameters[1];
-            Actor.DrawRoot = true;
+            // Actor.DrawRoot = true;
             Vector3 rootPosition = Actor.transform.position;
             // Actor.transform
             BoneMapping = Asset.Source.GetBoneIndices(Actor.GetBoneNames());
