@@ -96,12 +96,17 @@ namespace OpenHuman {
 		}
 
 		public override IEnumerator DerivedProcess(Item item) {
-			string destination = "Assets/" + Destination;
+			string destination = "Assets/" +  Destination;
 
 			string fullFileName = Path.GetFileName(item.ID);
 			string rawFileName = Path.GetFileNameWithoutExtension(item.ID);
 
-			string wavDestination = destination;
+			string folder = rawFileName;
+			if (!Directory.Exists(folder)) {
+				Directory.CreateDirectory(folder);
+			}
+
+			string wavDestination = destination + "/" + folder;
 			if (!Directory.Exists(wavDestination)) {
 				Directory.CreateDirectory(wavDestination);
 			}
@@ -112,7 +117,7 @@ namespace OpenHuman {
 				clip = AssetDatabase.LoadAssetAtPath<AudioClip>(wavDestination + "/" + fullFileName);
 			}
 
-			string featuresDestination = destination;
+			string featuresDestination = destination + "/" + folder;
 			if (!Directory.Exists(featuresDestination)) {
 				Directory.CreateDirectory(featuresDestination);
 			}

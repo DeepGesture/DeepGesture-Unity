@@ -309,19 +309,19 @@ namespace OpenHuman {
 						audios[i] = AssetDatabase.LoadAssetAtPath<AudioSpectrum>(path);
 					}
 
-					if (audios.Length == 1 && audios[0].Clip != null) {
-						module.AudioSpectrum = audios[0];
-						module.AudioSpectrums = Array.Empty<AudioSpectrum>();
-					}
-					else if (audios.Length > 1) {
-						module.AudioSpectrum = null;
-						module.AudioSpectrums = audios;
-					}
-					else {
-						module.AudioSpectrum = null;
-						module.AudioSpectrums = Array.Empty<AudioSpectrum>();
-						Debug.LogError($"AudioSpectrum called {audioName} was not set properly in {m_audioPath}.");
-					}
+					// if (audios.Length == 1 && audios[0].Clip != null) {
+					// 	module.AudioSpectrum = audios[0];
+					// 	module.AudioSpectrums = Array.Empty<AudioSpectrum>();
+					// }
+					// else if (audios.Length > 1) {
+					// 	module.AudioSpectrum = null;
+					// 	module.AudioSpectrums = audios;
+					// }
+					// else {
+					// 	module.AudioSpectrum = null;
+					// 	module.AudioSpectrums = Array.Empty<AudioSpectrum>();
+					// 	Debug.LogError($"AudioSpectrum called {audioName} was not set properly in {m_audioPath}.");
+					// }
 				}
 
 				//Save
