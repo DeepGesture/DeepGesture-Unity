@@ -52,8 +52,8 @@ namespace DeepGesture {
 
         public void Update() {
             if (Application.isPlaying) {
-				LoadFrame(Mathf.Repeat(Timestamp + Time.deltaTime, Asset.Frames.Last().Timestamp));
-			}
+                LoadFrame(Mathf.Repeat(Timestamp + Time.deltaTime, Asset.Frames.Last().Timestamp));
+            }
         }
 
         public void Play(bool value) {
@@ -90,7 +90,8 @@ namespace DeepGesture {
         }
 
         public void OnPlayWithParam(object[] parameters) {
-            float timestamp = (float)parameters[1];
+            float timestamp = (float)parameters[0];
+            Debug.Log("OnPlayWithParam.timestamp: " + timestamp);
             LoadFrame(timestamp);
             // Vector3 rootPosition = Actor.transform.position;
             // BoneMapping = Asset.Source.GetBoneIndices(Actor.GetBoneNames());
@@ -122,7 +123,7 @@ namespace DeepGesture {
             LoadFrame();
         }
 
-        public void LoadFrame(){
+        public void LoadFrame() {
             Actor actor = GetActor();
             Vector3 rootPosition = actor.transform.position;
             BoneMapping = Asset.Source.GetBoneIndices(actor.GetBoneNames());
@@ -176,7 +177,7 @@ namespace DeepGesture {
     public class GesturePlayer_Editor : Editor {
         public GesturePlayer Target;
 
-        void Awake(){
+        void Awake() {
             // Timestamp = Utility.GetTimestamp();
             Target = (GesturePlayer)target;
         }
@@ -197,11 +198,13 @@ namespace DeepGesture {
 
                 GUILayout.FlexibleSpace();
                 if (Target.IsPlaying()) {
+                    // || - Pause
                     if (Utility.GUIButton("⌧", Color.red, Color.white, 50f, 40f)) {
                         Target.Play(false);
                     }
                 }
                 else {
+                    // |> - Play
                     if (Utility.GUIButton("▶", Color.green, Color.white, 50f, 40f)) {
                         Target.Play(true);
                     }
