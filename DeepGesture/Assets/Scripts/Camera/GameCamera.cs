@@ -10,7 +10,7 @@ public class GameCamera : MonoBehaviour {
     public Vector3 TargetOffset = Vector3.zero;
 
     [Range(0f, 1f)] public float Smoothing = 0f;
-    [Range(0f, 10f)] public float FOV = 3.0f; // 1.25f;
+    [Range(0f, 10f)] public float FOV = 5.0f; // 1.25f;
 
     private Camera Camera;
 
@@ -19,9 +19,9 @@ public class GameCamera : MonoBehaviour {
     void Awake() {
         Camera = GetComponent<Camera>();
         PreviousTarget = Target.position;
-        SelfOffset = new Vector3(0.0f, 0.25f, 0.66f);
+        SelfOffset = new Vector3(0.0f, 0.25f, 0.5f);
         TargetOffset = new Vector3(0.0f, 0.8f, 0.0f);
-        FOV = 3.0f;
+        FOV = 5.0f;
     }
 
     void Update() {
