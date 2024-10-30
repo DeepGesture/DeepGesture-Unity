@@ -2,10 +2,8 @@
 using UnityEngine;
 using UnityEditor;
 using OpenHuman;
-using Google.Protobuf.WellKnownTypes;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace DeepGesture {
 
@@ -19,9 +17,13 @@ namespace DeepGesture {
         private float Timescale = 1f;
         private float Timestamp = 0f;
 
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        public Boolean UseAudio = false;
+        public AudioClip AudioClip;
+        public AudioSource AudioSource;
+
         public float Zoom = 1f;
 
-        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         private EditorCoroutines.EditorCoroutine Coroutine = null;
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -65,9 +67,22 @@ namespace DeepGesture {
             }
 
             if (value) {
+                if (AudioSource != null) {
+                    AudioSource.time = Timestamp;
+                    AudioSource.Play();
+                }
+                else {
+                    AudioSource = gameObject.AddComponent<AudioSource>();
+                    AudioSource.clip = AudioClip;
+                    AudioSource.time = Timestamp;
+                    AudioSource.Play();
+                }
                 Coroutine = EditorCoroutines.StartCoroutine(OnPlay(), this);
             }
             else {
+                if (AudioSource != null) {
+                    AudioSource.Stop();
+                }
                 EditorCoroutines.StopCoroutine(OnPlay(), this);
                 Coroutine = null;
             }
@@ -151,7 +166,14 @@ namespace DeepGesture {
         }
 
         public Frame GetCurrentFrame() {
-            return Asset.GetFrame(GetTimestamp());
+            return GetAsset().GetFrame(GetTimestamp());
+        }
+
+        public MotionAsset GetAsset() {
+            if (Asset == null) {
+                Debug.Log("Asset is null");
+            }
+            return Asset;
         }
 
         public float GetTimestamp() {
@@ -187,9 +209,19 @@ namespace DeepGesture {
         }
 
         public override void OnInspectorGUI() {
-            Frame frame = Target.GetCurrentFrame();
-
             Target.Asset = EditorGUILayout.ObjectField("Motion Asset", Target.Asset, typeof(MotionAsset), true) as MotionAsset;
+            bool useAudio = EditorGUILayout.Toggle("Use Audio", Target.UseAudio);
+            if (useAudio) {
+                Target.UseAudio = useAudio;
+                Target.AudioClip = EditorGUILayout.ObjectField("Audio Clip", Target.AudioClip, typeof(AudioClip), true) as AudioClip;
+
+            }
+
+            if (Target.Asset == null) {
+                return;
+            }
+            
+
             Target.Mirror = EditorGUILayout.Toggle("Mirror", Target.Mirror);
             Target.Framerate = EditorGUILayout.FloatField("Framerate", Target.Framerate);
 
@@ -213,6 +245,7 @@ namespace DeepGesture {
                 GUILayout.FlexibleSpace();
 
                 EditorGUILayout.BeginVertical();
+                Frame frame = Target.GetCurrentFrame();
                 int index = EditorGUILayout.IntSlider(frame.Index, 1, Target.Asset.GetTotalFrames());
                 if (index != frame.Index) {
                     Target.LoadFrame(Target.Asset.GetFrame(index).Timestamp);
