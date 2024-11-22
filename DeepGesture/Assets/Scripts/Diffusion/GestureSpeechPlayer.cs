@@ -8,9 +8,6 @@ namespace DeepGesture {
     public class GestureSpeechPlayer : MonoBehaviour {
 
         // public AudioSpectrum AudioSpectrum;
-
-        public GesturePlayer GesturePredict;
-        public GesturePlayer GestureGroundTruth;
         public AudioClip AudioClip;
         public AudioSource AudioSource;
 
@@ -69,13 +66,10 @@ namespace DeepGesture {
                 AudioSource.Play();
             }
 
-            if (GesturePredict != null) {
-                GesturePredict.PlayAnimation();
-                // SendMessage("PlayAnimation", SendMessageOptions.DontRequireReceiver);
-            }
-            if (GestureGroundTruth != null) {
-                GestureGroundTruth.PlayAnimation();
-                // SendMessage("PlayAnimation", SendMessageOptions.DontRequireReceiver);
+            
+            GesturePlayer[] gestures = FindObjectsOfType<GesturePlayer>();
+            foreach (GesturePlayer gesture in gestures) {
+                gesture.PlayAnimation();
             }
         }
 
@@ -83,13 +77,9 @@ namespace DeepGesture {
             if (AudioSource != null) {
                 AudioSource.Stop();
             }
-            if (GesturePredict != null) {
-                GesturePredict.StopAnimation();
-                //SendMessage("StopAnimation", SendMessageOptions.DontRequireReceiver);
-            }
-            if (GestureGroundTruth != null) {
-                GestureGroundTruth.StopAnimation();
-                // SendMessage("StopAnimation", SendMessageOptions.DontRequireReceiver);
+            GesturePlayer[] gestures = FindObjectsOfType<GesturePlayer>();
+            foreach (GesturePlayer gesture in gestures) {
+                gesture.StopAnimation();
             }
         }
 
@@ -169,8 +159,6 @@ namespace DeepGesture {
 
             public override void OnInspectorGUI() {
                 // Target.SetAudioSpectrum(EditorGUILayout.ObjectField("Audio Spectrum", Target.AudioSpectrum, typeof(AudioSpectrum), true) as AudioSpectrum);
-                Target.GestureGroundTruth = EditorGUILayout.ObjectField("Gesture Ground Truth", Target.GestureGroundTruth, typeof(GesturePlayer), true) as GesturePlayer;
-                Target.GesturePredict = EditorGUILayout.ObjectField("Gesture Predict", Target.GesturePredict, typeof(GesturePlayer), true) as GesturePlayer;
                 Target.RealTime = EditorGUILayout.Toggle("Real Time", Target.RealTime);
                 Target.AudioClip = EditorGUILayout.ObjectField("Audio Clip", Target.AudioClip, typeof(AudioClip), true) as AudioClip;
 
