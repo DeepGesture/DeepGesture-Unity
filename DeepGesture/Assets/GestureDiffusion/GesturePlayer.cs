@@ -12,10 +12,11 @@ namespace DeepGesture {
         public bool Mirror = false;
         private int[] BoneMapping = null;
         public float Framerate = 60f;
-        public MotionAsset Asset;
+        public MotionAsset Asset = null;
         private Actor Actor = null;
         private float Timescale = 1f;
         private float Timestamp = 0f;
+
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         public Boolean UseAudio = false;
@@ -50,17 +51,17 @@ namespace DeepGesture {
             Play(false);
         }
 
-        public void InitializeDance(params object[] objects) {
-            MotionAsset asset = (MotionAsset)objects[0];
-            float timestamp = (float)objects[1];
-            bool mirrored = (bool)objects[2];
-            Matrix4x4 reference = asset.GetModule<RootModule>().GetRootTransformation(timestamp, mirrored);
-            Matrix4x4 root = reference;
-            Actor.GetRoot().transform.position = reference.GetPosition();
-            Actor.GetRoot().transform.rotation = reference.GetRotation();
-            Actor.SetBoneTransformations(asset.GetFrame(timestamp).GetBoneTransformations(Actor.GetBoneNames(), mirrored).TransformationsFromTo(reference, root, true));
-            Actor.SetBoneVelocities(asset.GetFrame(timestamp).GetBoneVelocities(Actor.GetBoneNames(), mirrored).DirectionsFromTo(reference, root, true));
-        }
+        // public void InitializeDance(params object[] objects) {
+        //     MotionAsset asset = (MotionAsset)objects[0];
+        //     float timestamp = (float)objects[1];
+        //     bool mirrored = (bool)objects[2];
+        //     Matrix4x4 reference = asset.GetModule<RootModule>().GetRootTransformation(timestamp, mirrored);
+        //     Matrix4x4 root = reference;
+        //     Actor.GetRoot().transform.position = reference.GetPosition();
+        //     Actor.GetRoot().transform.rotation = reference.GetRotation();
+        //     Actor.SetBoneTransformations(asset.GetFrame(timestamp).GetBoneTransformations(Actor.GetBoneNames(), mirrored).TransformationsFromTo(reference, root, true));
+        //     Actor.SetBoneVelocities(asset.GetFrame(timestamp).GetBoneVelocities(Actor.GetBoneNames(), mirrored).DirectionsFromTo(reference, root, true));
+        // }
 
         public void Update() {
             if (Application.isPlaying) {
@@ -176,7 +177,13 @@ namespace DeepGesture {
         }
 
         public Frame GetCurrentFrame() {
-            return GetAsset().GetFrame(GetTimestamp());
+            MotionAsset asset = GetAsset();
+            if (asset != null) {
+                return GetAsset().GetFrame(GetTimestamp());
+            }
+            else {
+                return null;
+            }
         }
 
         public MotionAsset GetAsset() {
@@ -219,7 +226,6 @@ namespace DeepGesture {
         }
 
         public override void OnInspectorGUI() {
-            Target.Asset = EditorGUILayout.ObjectField("Motion Asset", Target.Asset, typeof(MotionAsset), true) as MotionAsset;
             // bool useAudio = EditorGUILayout.Toggle("Use Audio", Target.UseAudio);
             // if (useAudio) {
             //     Target.AudioClip = EditorGUILayout.ObjectField("Audio Clip", Target.AudioClip, typeof(AudioClip), true) as AudioClip;
@@ -229,7 +235,7 @@ namespace DeepGesture {
             //     return;
             // }
 
-
+            Target.Asset = EditorGUILayout.ObjectField("Motion Asset", Target.Asset, typeof(MotionAsset), true) as MotionAsset;
             Target.Mirror = EditorGUILayout.Toggle("Mirror", Target.Mirror);
             Target.Framerate = EditorGUILayout.FloatField("Framerate", Target.Framerate);
 
@@ -254,11 +260,14 @@ namespace DeepGesture {
 
                 EditorGUILayout.BeginVertical();
                 Frame frame = Target.GetCurrentFrame();
-                int index = EditorGUILayout.IntSlider(frame.Index, 1, Target.Asset.GetTotalFrames());
-                if (index != frame.Index) {
-                    Target.LoadFrame(Target.Asset.GetFrame(index).Timestamp);
+                if (frame != null) {
+                    int index = EditorGUILayout.IntSlider(frame.Index, 1, Target.Asset.GetTotalFrames());
+                    if (index != frame.Index) {
+                        Target.LoadFrame(Target.Asset.GetFrame(index).Timestamp);
+                    }
+                    Target.Zoom = EditorGUILayout.Slider(Target.Zoom, 0f, 1f);
                 }
-                Target.Zoom = EditorGUILayout.Slider(Target.Zoom, 0f, 1f);
+
                 EditorGUILayout.EndVertical();
 
                 EditorGUILayout.EndHorizontal();

@@ -69,20 +69,35 @@ namespace DeepGesture {
                 AudioSource.Play();
             }
 
-            GesturePredict.SendMessage("PlayAnimation");
-            GestureGroundTruth.SendMessage("PlayAnimation");
-
+            if (GesturePredict != null) {
+                GesturePredict.PlayAnimation();
+                // SendMessage("PlayAnimation", SendMessageOptions.DontRequireReceiver);
+            }
+            if (GestureGroundTruth != null) {
+                GestureGroundTruth.PlayAnimation();
+                // SendMessage("PlayAnimation", SendMessageOptions.DontRequireReceiver);
+            }
         }
 
         public void StopAnimation() {
             if (AudioSource != null) {
                 AudioSource.Stop();
             }
-            GesturePredict.SendMessage("StopAnimation");
-            GestureGroundTruth.SendMessage("StopAnimation");
+            if (GesturePredict != null) {
+                GesturePredict.StopAnimation();
+                //SendMessage("StopAnimation", SendMessageOptions.DontRequireReceiver);
+            }
+            if (GestureGroundTruth != null) {
+                GestureGroundTruth.StopAnimation();
+                // SendMessage("StopAnimation", SendMessageOptions.DontRequireReceiver);
+            }
         }
 
         public bool IsPlaying() {
+            if (AudioSource == null) {
+                return false;
+            }
+
             return AudioSource.isPlaying;
         }
 
@@ -189,7 +204,7 @@ namespace DeepGesture {
 
                     EditorGUILayout.BeginVertical();
 
-                    Target.AudioPosition = EditorGUILayout.Slider("Audio Position", Target.AudioPosition, 0f, Target.AudioSource.clip.length);
+                    // Target.AudioPosition = EditorGUILayout.Slider("Audio Position", Target.AudioPosition, 0f, Target.AudioSource.clip.length);
 
                     // if (Target.AudioSource != null) {
                     //     // Add a slider to control the audio position
