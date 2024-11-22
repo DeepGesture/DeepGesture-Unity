@@ -40,6 +40,16 @@ namespace DeepGesture {
             return Coroutine != null;
         }
 
+        public void PlayAnimation() {
+            LoadFrame(0f);
+            Play(true);
+        }
+
+        public void StopAnimation() {
+            LoadFrame(0f);
+            Play(false);
+        }
+
         public void InitializeDance(params object[] objects) {
             MotionAsset asset = (MotionAsset)objects[0];
             float timestamp = (float)objects[1];
@@ -210,17 +220,15 @@ namespace DeepGesture {
 
         public override void OnInspectorGUI() {
             Target.Asset = EditorGUILayout.ObjectField("Motion Asset", Target.Asset, typeof(MotionAsset), true) as MotionAsset;
-            bool useAudio = EditorGUILayout.Toggle("Use Audio", Target.UseAudio);
-            if (useAudio) {
-                Target.UseAudio = useAudio;
-                Target.AudioClip = EditorGUILayout.ObjectField("Audio Clip", Target.AudioClip, typeof(AudioClip), true) as AudioClip;
+            // bool useAudio = EditorGUILayout.Toggle("Use Audio", Target.UseAudio);
+            // if (useAudio) {
+            //     Target.AudioClip = EditorGUILayout.ObjectField("Audio Clip", Target.AudioClip, typeof(AudioClip), true) as AudioClip;
+            // }
 
-            }
+            // if (Target.Asset == null) {
+            //     return;
+            // }
 
-            if (Target.Asset == null) {
-                return;
-            }
-            
 
             Target.Mirror = EditorGUILayout.Toggle("Mirror", Target.Mirror);
             Target.Framerate = EditorGUILayout.FloatField("Framerate", Target.Framerate);
