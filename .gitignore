@@ -147,4 +147,11 @@ DeepLearning/Dataset/*.txt
 DeepGesture/Packages/*
 DeepGesture/Packages/manifest.json
 DeepGesture/Packages/packages-lock.json
-DeepGesture/Assets/DeepGesture/Assets/Motion/003_Neutral_2_x_1_0/003_Neutral_2_x_1_0.bvh.asset.meta
+*.lab
+*.lab.meta
+*.txt
+*.csv
+OpenHumanDataset/
+Recordings/
+*.meta
+DeepGesture/Assets/TextMesh Pro/
