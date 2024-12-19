@@ -66,8 +66,8 @@ namespace DeepGesture {
                 AudioSource.Play();
             }
 
-            
-            GesturePlayer[] gestures = FindObjectsOfType<GesturePlayer>();
+            GesturePlayer[] gestures = GetComponentsInChildren<GesturePlayer>();
+            // GesturePlayer[] gestures = FindObjectsOfType<GesturePlayer>();
             foreach (GesturePlayer gesture in gestures) {
                 gesture.PlayAnimation();
             }
@@ -77,7 +77,8 @@ namespace DeepGesture {
             if (AudioSource != null) {
                 AudioSource.Stop();
             }
-            GesturePlayer[] gestures = FindObjectsOfType<GesturePlayer>();
+            GesturePlayer[] gestures = GetComponentsInChildren<GesturePlayer>();
+            // GesturePlayer[] gestures = FindObjectsOfType<GesturePlayer>();
             foreach (GesturePlayer gesture in gestures) {
                 gesture.StopAnimation();
             }
